@@ -88,15 +88,6 @@ const Hero = () => {
               <FaLinkedin />
             </a>
             <a
-              href="https://tez861910.github.io/Resume/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-amber-300 transition-colors"
-              aria-label="Portfolio"
-            >
-              <FaGlobe />
-            </a>
-            <a
               href="mailto:tejassureshofficial@gmail.com"
               className="hover:text-amber-300 transition-colors"
               aria-label="Email"

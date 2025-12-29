@@ -39,11 +39,6 @@ const Contact = () => {
       label: 'LinkedIn',
       url: 'https://linkedin.com/in/',
     },
-    {
-      icon: <FaGlobe />,
-      label: 'Portfolio',
-      url: 'https://tez861910.github.io/Resume/',
-    },
   ]
 
   return (
