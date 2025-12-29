@@ -1,0 +1,38 @@
+{
+  // Prefer pdflatex (available in most TeX distros) with two-pass build
+  "latex-workshop.latex.tools": [
+    {
+      "name": "pdflatex",
+      "command": "pdflatex",
+      "args": [
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "%DOC%"
+      ]
+    },
+    {
+      "name": "latexmk",
+      "command": "latexmk",
+      "args": ["-pdf", "-interaction=nonstopmode", "-halt-on-error", "%DOC%"]
+    }
+  ],
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "pdflatex * 2",
+      "tools": ["pdflatex", "pdflatex"]
+    },
+    {
+      "name": "latexmk",
+      "tools": ["latexmk"]
+    }
+  ],
+  // Auto-build on save (set to never if you prefer manual)
+  "latex-workshop.latex.autoBuild.run": "onSave",
+  // Set the main tex file (root)
+  "latex-workshop.latex.rootFile.useSubFile": false,
+  // PDF viewer (built-in)
+  "latex-workshop.view.pdf.viewer": "tab",
+  // Clean aux files on build success
+  "latex-workshop.latex.clean.enabled": true,
+  "latex-workshop.latex.clean.subfolder.enabled": true
+}

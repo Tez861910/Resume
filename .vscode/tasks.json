@@ -1,0 +1,44 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "LaTeX: Build PDF (latexmk)",
+      "type": "shell",
+      "command": "latexmk",
+      "args": ["-pdf", "-interaction=nonstopmode", "-halt-on-error", "Tejas-Suresh-Resume.tex"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "LaTeX: Build PDF (pdflatex x2)",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "pdflatex -interaction=nonstopmode Tejas-Suresh-Resume.tex; pdflatex -interaction=nonstopmode Tejas-Suresh-Resume.tex"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "LaTeX: Build via script",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}/compile-resume.ps1"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    }
+  ]
+}
