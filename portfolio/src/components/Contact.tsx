@@ -12,8 +12,8 @@ const Contact = () => {
     {
       icon: <FaEnvelope className="text-2xl" />,
       label: 'Email',
-      value: 'tejassuresh98@gmail.com',
-      link: 'mailto:tejassuresh98@gmail.com',
+      value: 'tejassureshofficial@gmail.com',
+      link: 'mailto:tejassureshofficial@gmail.com',
     },
     {
       icon: <FaPhone className="text-2xl" />,
@@ -42,7 +42,7 @@ const Contact = () => {
     {
       icon: <FaGlobe />,
       label: 'Portfolio',
-      url: 'https://bold.pro/my/tejas-s-241209174812/656r',
+      url: 'https://tez861910.github.io/Resume/',
     },
   ]
 
@@ -106,7 +106,7 @@ const Contact = () => {
               ))}
             </div>
             <a
-              href="mailto:tejassuresh98@gmail.com"
+              href="mailto:tejassureshofficial@gmail.com"
               className="inline-block px-8 py-3 bg-slate-900 text-amber-100 font-semibold rounded-lg hover:bg-slate-800 transition-colors"
             >
               Send Me an Email

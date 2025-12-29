@@ -88,7 +88,7 @@ const Hero = () => {
               <FaLinkedin />
             </a>
             <a
-              href="https://bold.pro/my/tejas-s-241209174812/656r"
+              href="https://tez861910.github.io/Resume/"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-amber-300 transition-colors"
@@ -97,7 +97,7 @@ const Hero = () => {
               <FaGlobe />
             </a>
             <a
-              href="mailto:tejassuresh98@gmail.com"
+              href="mailto:tejassureshofficial@gmail.com"
               className="hover:text-amber-300 transition-colors"
               aria-label="Email"
             >
