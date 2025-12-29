@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { FaReact, FaNode, FaDatabase, FaCode } from 'react-icons/fa'
-import { SiTypescript, SiTailwindcss, SiDotnet, SiMysql } from 'react-icons/si'
+import { SiTypescript, SiDotnet } from 'react-icons/si'
 
 const Skills = () => {
   const [ref, inView] = useInView({
