@@ -27,7 +27,7 @@ const Hero = () => {
           </div>
 
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-4 leading-tight tracking-tight text-slate-50">
-            Tejas Suresh
+            Tejas S
           </h1>
           <p className="text-xl sm:text-2xl lg:text-3xl mb-6 text-amber-100">
             Full-Stack Developer crafting performant web and 3D desktop experiences
