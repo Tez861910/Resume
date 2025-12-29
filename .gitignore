@@ -1,0 +1,29 @@
+# Resume source files (keep locally, don't push)
+Tejas-Suresh-Resume.tex
+Tejas-Suresh-Resume.md
+Tejas-Suresh-Resume-v2.md
+*.pdf
+
+# Dependencies
+node_modules/
+
+# Build outputs
+portfolio/dist/
+
+# IDE
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment
+.env
+.env.local
+.env.*.local
