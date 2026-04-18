@@ -3,9 +3,9 @@ import { FaGithub, FaLinkedin, FaEnvelope } from 'react-icons/fa'
 
 const Hero = () => {
   const githubUrl = 'https://github.com/Tez861910'
-  const linkedinUrl = 'https://www.linkedin.com/in/tejas-suresh/'
+  const linkedinUrl = 'https://www.linkedin.com/in/tejas-s-57138816a/'
   const emailAddress = 'tejassureshofficial@gmail.com'
-  const emailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(emailAddress)}`
+  const emailUrl = `mailto:${emailAddress}`
 
   return (
     <section
@@ -94,8 +94,6 @@ const Hero = () => {
             </a>
             <a
               href={emailUrl}
-              target="_blank"
-              rel="noopener noreferrer"
               className="hover:text-amber-300 transition-colors"
               aria-label="Email"
             >
@@ -107,7 +105,7 @@ const Hero = () => {
 
       {/* Scroll Indicator */}
       <motion.div
-        className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
+        className="absolute bottom-10 left-1/2 hidden -translate-x-1/2 md:block"
         animate={{ y: [0, 10, 0] }}
         transition={{ repeat: Infinity, duration: 1.5 }}
       >

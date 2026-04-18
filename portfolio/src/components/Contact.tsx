@@ -4,9 +4,9 @@ import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaGithub, FaLinkedin } from 'react
 
 const Contact = () => {
   const githubUrl = 'https://github.com/Tez861910'
-  const linkedinUrl = 'https://www.linkedin.com/in/tejas-suresh/'
+  const linkedinUrl = 'https://www.linkedin.com/in/tejas-s-57138816a/'
   const emailAddress = 'tejassureshofficial@gmail.com'
-  const emailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(emailAddress)}`
+  const emailUrl = `mailto:${emailAddress}`
 
   const [ref, inView] = useInView({
     triggerOnce: true,
@@ -107,8 +107,6 @@ const Contact = () => {
             </div>
             <a
               href={emailUrl}
-              target="_blank"
-              rel="noopener noreferrer"
               className="inline-block px-8 py-3 bg-slate-900 text-amber-100 font-semibold rounded-lg hover:bg-slate-800 transition-colors"
             >
               Send Me an Email
