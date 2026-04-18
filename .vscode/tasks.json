@@ -39,6 +39,40 @@
       ],
       "group": "build",
       "problemMatcher": []
+    },
+    {
+      "label": "Portfolio: Build",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "build"],
+      "options": {
+        "cwd": "${workspaceFolder}/portfolio"
+      },
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Portfolio: Dev Server",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "dev"],
+      "options": {
+        "cwd": "${workspaceFolder}/portfolio"
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "custom",
+        "pattern": [
+          {
+            "regexp": "^$"
+          }
+        ],
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "VITE",
+          "endsPattern": "Local:\\s+http://localhost:\\d+/"
+        }
+      }
     }
   ]
 }

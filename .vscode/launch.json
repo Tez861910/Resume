@@ -1,0 +1,20 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Portfolio: Launch in Chrome",
+      "type": "pwa-chrome",
+      "request": "launch",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/portfolio/src",
+      "preLaunchTask": "Portfolio: Dev Server"
+    },
+    {
+      "name": "Portfolio: Run Dev Server (Terminal)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run dev",
+      "cwd": "${workspaceFolder}/portfolio"
+    }
+  ]
+}

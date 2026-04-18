@@ -23,6 +23,16 @@
     <meta property="twitter:description" content="Full-stack developer with 1+ year building performant web apps (React/Node/MySQL) and 3D desktop tools (WPF/DirectX)." />
     
     <title>Tejas S | Full-Stack Developer</title>
+    <script>
+      // GitHub Pages SPA: restore route from 404.html redirect
+      (function () {
+        var redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect !== location.href) {
+          history.replaceState(null, null, redirect);
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

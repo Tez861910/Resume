@@ -3,6 +3,11 @@ import { useInView } from 'react-intersection-observer'
 import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaGithub, FaLinkedin } from 'react-icons/fa'
 
 const Contact = () => {
+  const githubUrl = 'https://github.com/Tez861910'
+  const linkedinUrl = 'https://www.linkedin.com/in/tejas-suresh/'
+  const emailAddress = 'tejassureshofficial@gmail.com'
+  const emailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(emailAddress)}`
+
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -12,8 +17,8 @@ const Contact = () => {
     {
       icon: <FaEnvelope className="text-2xl" />,
       label: 'Email',
-      value: 'tejassureshofficial@gmail.com',
-      link: 'mailto:tejassureshofficial@gmail.com',
+      value: emailAddress,
+      link: emailUrl,
     },
     {
       icon: <FaPhone className="text-2xl" />,
@@ -32,12 +37,12 @@ const Contact = () => {
     {
       icon: <FaGithub />,
       label: 'GitHub',
-      url: 'https://github.com/',
+      url: githubUrl,
     },
     {
       icon: <FaLinkedin />,
       label: 'LinkedIn',
-      url: 'https://linkedin.com/in/',
+      url: linkedinUrl,
     },
   ]
 
@@ -101,7 +106,9 @@ const Contact = () => {
               ))}
             </div>
             <a
-              href="mailto:tejassureshofficial@gmail.com"
+              href={emailUrl}
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-block px-8 py-3 bg-slate-900 text-amber-100 font-semibold rounded-lg hover:bg-slate-800 transition-colors"
             >
               Send Me an Email

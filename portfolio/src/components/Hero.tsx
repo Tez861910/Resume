@@ -2,6 +2,11 @@ import { motion } from 'framer-motion'
 import { FaGithub, FaLinkedin, FaEnvelope } from 'react-icons/fa'
 
 const Hero = () => {
+  const githubUrl = 'https://github.com/Tez861910'
+  const linkedinUrl = 'https://www.linkedin.com/in/tejas-suresh/'
+  const emailAddress = 'tejassureshofficial@gmail.com'
+  const emailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(emailAddress)}`
+
   return (
     <section
       id="home"
@@ -70,7 +75,7 @@ const Hero = () => {
 
           <div className="flex justify-center gap-6 text-3xl text-amber-100">
             <a
-              href="https://github.com/"
+              href={githubUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-amber-300 transition-colors"
@@ -79,7 +84,7 @@ const Hero = () => {
               <FaGithub />
             </a>
             <a
-              href="https://linkedin.com/in/"
+              href={linkedinUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-amber-300 transition-colors"
@@ -88,7 +93,9 @@ const Hero = () => {
               <FaLinkedin />
             </a>
             <a
-              href="mailto:tejassureshofficial@gmail.com"
+              href={emailUrl}
+              target="_blank"
+              rel="noopener noreferrer"
               className="hover:text-amber-300 transition-colors"
               aria-label="Email"
             >
