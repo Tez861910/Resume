@@ -1,46 +1,55 @@
-import { motion } from 'framer-motion'
-import { useInView } from 'react-intersection-observer'
-import { FaReact, FaNode, FaDatabase, FaCode } from 'react-icons/fa'
-import { SiTypescript, SiDotnet } from 'react-icons/si'
+import { Suspense } from "react";
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+import { FaReact, FaNode, FaDatabase, FaCode } from "react-icons/fa";
+import { SiTypescript, SiDotnet } from "react-icons/si";
+import SkillConstellation from "../three/scenes/SkillConstellation";
 
 const Skills = () => {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
-  })
+  });
 
   const skillCategories = [
     {
-      title: 'Languages',
+      title: "Languages",
       icon: <FaCode className="text-4xl text-primary-600" />,
-      skills: ['JavaScript', 'TypeScript', 'C#', 'Java', 'PHP'],
+      skills: ["JavaScript", "TypeScript", "C#", "Java", "PHP"],
     },
     {
-      title: 'Frontend',
+      title: "Frontend",
       icon: <FaReact className="text-4xl text-primary-600" />,
-      skills: ['React', 'Vite', 'Material UI', 'Tailwind', 'Framer Motion', 'PWA'],
+      skills: [
+        "React",
+        "Vite",
+        "Material UI",
+        "Tailwind",
+        "Framer Motion",
+        "PWA",
+      ],
     },
     {
-      title: 'Backend',
+      title: "Backend",
       icon: <FaNode className="text-4xl text-primary-600" />,
-      skills: ['Node.js', 'Express.js', 'REST APIs', 'Sequelize ORM'],
+      skills: ["Node.js", "Express.js", "REST APIs", "Sequelize ORM"],
     },
     {
-      title: 'Desktop',
+      title: "Desktop",
       icon: <SiDotnet className="text-4xl text-primary-600" />,
-      skills: ['WPF/.NET 8', 'DirectX/HelixToolkit', 'MVVM', 'DI'],
+      skills: ["WPF/.NET 8", "DirectX/HelixToolkit", "MVVM", "DI"],
     },
     {
-      title: 'Databases',
+      title: "Databases",
       icon: <FaDatabase className="text-4xl text-primary-600" />,
-      skills: ['MySQL', 'SQLite', 'Query Optimization'],
+      skills: ["MySQL", "SQLite", "Query Optimization"],
     },
     {
-      title: 'Tools',
+      title: "Tools",
       icon: <SiTypescript className="text-4xl text-primary-600" />,
-      skills: ['Git', 'VS Code', 'GoDaddy', 'App Insights'],
+      skills: ["Git", "VS Code", "GoDaddy", "App Insights"],
     },
-  ]
+  ];
 
   return (
     <section id="skills" className="section-container">
@@ -52,6 +61,30 @@ const Skills = () => {
       >
         <h2 className="section-title">Technical Skills</h2>
 
+        {/* ── Phase 2: 3-D Skill Constellation ─────────────────────────── */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.97 }}
+          animate={inView ? { opacity: 1, scale: 1 } : {}}
+          transition={{ duration: 0.7, delay: 0.15 }}
+          className="relative w-full h-[480px] rounded-2xl overflow-hidden border border-white/10 mb-4"
+        >
+          <Suspense
+            fallback={
+              <div className="w-full h-full flex items-center justify-center text-amber-400/50 text-sm tracking-widest uppercase">
+                Loading constellation…
+              </div>
+            }
+          >
+            <SkillConstellation />
+          </Suspense>
+        </motion.div>
+
+        {/* Subtle interaction hint */}
+        <p className="text-center text-xs tracking-[0.18em] text-slate-400/40 uppercase select-none mb-10 pointer-events-none">
+          ✦ drag to explore &nbsp;·&nbsp; hover to inspect
+        </p>
+
+        {/* ── Accessible tag grid (SEO + screen-readers) ───────────────── */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {skillCategories.map((category, index) => (
             <motion.div
@@ -59,11 +92,13 @@ const Skills = () => {
               className="card border border-white/15"
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              transition={{ duration: 0.5, delay: 0.3 + index * 0.08 }}
             >
               <div className="flex items-center gap-3 mb-4">
                 {category.icon}
-                <h3 className="text-xl font-bold text-slate-50">{category.title}</h3>
+                <h3 className="text-xl font-bold text-slate-50">
+                  {category.title}
+                </h3>
               </div>
               <div className="flex flex-wrap gap-2">
                 {category.skills.map((skill, skillIndex) => (
@@ -80,7 +115,7 @@ const Skills = () => {
         </div>
       </motion.div>
     </section>
-  )
-}
+  );
+};
 
-export default Skills
+export default Skills;

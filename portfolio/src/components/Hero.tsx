@@ -1,23 +1,36 @@
-import { motion } from 'framer-motion'
-import { FaGithub, FaLinkedin, FaEnvelope } from 'react-icons/fa'
+import { Suspense } from "react";
+import { motion } from "framer-motion";
+import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
+import HeroScene from "../three/scenes/HeroScene";
 
 const Hero = () => {
-  const githubUrl = 'https://github.com/Tez861910'
-  const linkedinUrl = 'https://www.linkedin.com/in/tejas-s-57138816a/'
-  const emailAddress = 'tejassureshofficial@gmail.com'
-  const emailUrl = `mailto:${emailAddress}`
+  const githubUrl = "https://github.com/Tez861910";
+  const linkedinUrl = "https://www.linkedin.com/in/tejas-s-57138816a/";
+  const emailAddress = "tejassureshofficial@gmail.com";
+  const emailUrl = `mailto:${emailAddress}`;
 
   return (
     <section
       id="home"
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-10 left-10 w-80 h-80 bg-amber-400/20 rounded-full blur-3xl animate-float" />
-        <div className="absolute bottom-0 right-10 w-[28rem] h-[28rem] bg-cyan-400/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '1s' }} />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08),_transparent_45%)]" />
-      </div>
+      {/* Three.js background — galaxy particles, wireframe glyphs, bloom */}
+      <Suspense fallback={null}>
+        <HeroScene />
+      </Suspense>
+
+      {/*
+        Radial vignette — darkens the centre where all text lives so it stays
+        legible over any particle / glyph combination behind it.
+        Pure CSS: zero GPU cost.
+      */}
+      <div
+        className="pointer-events-none absolute inset-0 z-[2]"
+        style={{
+          background:
+            "radial-gradient(ellipse 78% 68% at 50% 44%, rgba(2,6,23,0.74) 0%, rgba(2,6,23,0.40) 48%, transparent 74%)",
+        }}
+      />
 
       <div className="relative z-10 section-container text-center">
         <motion.div
@@ -28,18 +41,25 @@ const Hero = () => {
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/15 text-amber-100 text-sm mb-5">
             <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-            Open to full-time roles & freelance collaborations
+            Open to full-time roles &amp; freelance collaborations
           </div>
 
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-4 leading-tight tracking-tight text-slate-50">
+          <h1
+            className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-4 leading-tight tracking-tight text-slate-50"
+            style={{ textShadow: "0 2px 24px rgba(0,0,0,0.95)" }}
+          >
             Tejas S
           </h1>
+
           <p className="text-xl sm:text-2xl lg:text-3xl mb-6 text-amber-100">
-            Full-Stack Developer crafting performant web and 3D desktop experiences
+            Full-Stack Developer crafting performant web and 3D desktop
+            experiences
           </p>
+
           <p className="text-lg sm:text-xl max-w-3xl mx-auto mb-8 text-slate-200/90">
-            React / Node / MySQL on the web; WPF / DirectX on desktop. Delivered 40% faster loads
-            and 35% higher engagement at Printalytix through performance tuning and UX refinements.
+            React / Node / MySQL on the web; WPF / DirectX on desktop. Delivered
+            40% faster loads and 35% higher engagement at Printalytix through
+            performance tuning and UX refinements.
           </p>
 
           <div className="flex flex-wrap justify-center gap-4 mb-10">
@@ -52,13 +72,23 @@ const Hero = () => {
           </div>
 
           <div className="grid sm:grid-cols-3 gap-4 mb-10">
-            {[{
-              label: 'Performance Wins', value: '40% faster', detail: 'Page loads via bundling & caching'
-            }, {
-              label: 'Engagement Lift', value: '35% uptick', detail: 'SEO + UX experiments'
-            }, {
-              label: 'Platforms', value: 'Web & Desktop', detail: 'React/Node + WPF/DirectX'
-            }].map((stat, index) => (
+            {[
+              {
+                label: "Performance Wins",
+                value: "40% faster",
+                detail: "Page loads via bundling & caching",
+              },
+              {
+                label: "Engagement Lift",
+                value: "35% uptick",
+                detail: "SEO + UX experiments",
+              },
+              {
+                label: "Platforms",
+                value: "Web & Desktop",
+                detail: "React/Node + WPF/DirectX",
+              },
+            ].map((stat, index) => (
               <motion.div
                 key={stat.label}
                 className="card text-left"
@@ -66,8 +96,12 @@ const Hero = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.2 + index * 0.1 }}
               >
-                <div className="text-sm uppercase tracking-wide text-amber-200/80 mb-1">{stat.label}</div>
-                <div className="text-2xl font-bold text-amber-100 mb-1">{stat.value}</div>
+                <div className="text-sm uppercase tracking-wide text-amber-200/80 mb-1">
+                  {stat.label}
+                </div>
+                <div className="text-2xl font-bold text-amber-100 mb-1">
+                  {stat.value}
+                </div>
                 <p className="text-sm text-slate-200/80">{stat.detail}</p>
               </motion.div>
             ))}
@@ -100,12 +134,17 @@ const Hero = () => {
               <FaEnvelope />
             </a>
           </div>
+
+          {/* Interactive ship hint */}
+          <p className="mt-8 text-xs tracking-[0.18em] text-slate-400/40 uppercase select-none pointer-events-none">
+            ✦ move cursor &nbsp;·&nbsp; W A S D to boost the ship
+          </p>
         </motion.div>
       </div>
 
       {/* Scroll Indicator */}
       <motion.div
-        className="absolute bottom-10 left-1/2 hidden -translate-x-1/2 md:block"
+        className="absolute bottom-10 left-1/2 hidden -translate-x-1/2 md:block z-10"
         animate={{ y: [0, 10, 0] }}
         transition={{ repeat: Infinity, duration: 1.5 }}
       >
@@ -114,7 +153,7 @@ const Hero = () => {
         </div>
       </motion.div>
     </section>
-  )
-}
+  );
+};
 
-export default Hero
+export default Hero;
