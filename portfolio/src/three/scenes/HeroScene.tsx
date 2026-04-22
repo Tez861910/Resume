@@ -9,122 +9,136 @@ import {
 } from "../utils/geometryHelpers";
 import { PALETTE } from "../utils/colorPalette";
 import CameraParallax from "../hooks/CameraParallax";
+import type { WorldState } from "../world/useWorldState";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Constants
 // ─────────────────────────────────────────────────────────────────────────────
 
-const TRAIL_LENGTH = 32;
+const TRAIL_LENGTH = 28;
 
-type GlyphShape = "icosahedron" | "torus" | "octahedron" | "tetrahedron";
+type LandmarkShape = "icosahedron" | "torus" | "octahedron" | "tetrahedron";
 
-interface GlyphDef {
+type SectionId = "skills" | "experience" | "projects" | "contact" | "about";
+
+interface LandmarkDef {
+  id: string;
+  label: string;
+  section: SectionId;
   position: [number, number, number];
-  shape: GlyphShape;
+  shape: LandmarkShape;
   color: string;
   scale: number;
   speed?: number;
   rotationIntensity?: number;
   floatIntensity?: number;
+  nodeRadius?: number;
 }
 
-/** 8 wireframe glyphs spread across the view frustum */
-const GLYPH_DEFS: GlyphDef[] = [
+const LANDMARK_DEFS: LandmarkDef[] = [
   {
-    position: [-5.0, 1.5, -2.0],
+    id: "skills-core",
+    label: "Skills",
+    section: "skills",
+    position: [-4.8, 1.9, -3.8],
     shape: "icosahedron",
     color: PALETTE.AMBER,
-    scale: 0.7,
-    speed: 1.0,
+    scale: 0.52,
+    speed: 0.7,
+    rotationIntensity: 0.7,
+    floatIntensity: 0.35,
+    nodeRadius: 0.11,
   },
   {
-    position: [5.2, -1.0, -3.0],
+    id: "experience-route",
+    label: "Experience",
+    section: "experience",
+    position: [-2.2, -2.1, -3.2],
+    shape: "octahedron",
+    color: PALETTE.EMERALD,
+    scale: 0.48,
+    speed: 0.6,
+    rotationIntensity: 0.55,
+    floatIntensity: 0.28,
+    nodeRadius: 0.1,
+  },
+  {
+    id: "projects-sector",
+    label: "Projects",
+    section: "projects",
+    position: [4.9, 1.4, -3.9],
     shape: "torus",
     color: PALETTE.CYAN,
-    scale: 0.75,
-    speed: 1.2,
+    scale: 0.62,
+    speed: 0.75,
+    rotationIntensity: 0.8,
+    floatIntensity: 0.34,
+    nodeRadius: 0.11,
   },
   {
-    position: [-4.0, -2.0, -1.5],
-    shape: "octahedron",
+    id: "contact-beacon",
+    label: "Contact",
+    section: "contact",
+    position: [3.8, -2.2, -3.4],
+    shape: "tetrahedron",
     color: PALETTE.AMBER_BRIGHT,
     scale: 0.5,
-    speed: 0.9,
+    speed: 0.55,
+    rotationIntensity: 0.5,
+    floatIntensity: 0.24,
+    nodeRadius: 0.1,
   },
   {
-    position: [4.0, 2.2, -2.5],
-    shape: "tetrahedron",
-    color: PALETTE.CYAN,
-    scale: 0.6,
-    speed: 0.8,
-    rotationIntensity: 2.0,
-  },
-  {
-    position: [1.5, 3.0, -4.0],
-    shape: "icosahedron",
-    color: PALETTE.AMBER_DIM,
-    scale: 0.4,
-    speed: 1.5,
-  },
-  {
-    position: [-2.0, -3.0, -2.0],
+    id: "about-signal",
+    label: "About",
+    section: "about",
+    position: [0.8, 3.0, -4.6],
     shape: "octahedron",
     color: PALETTE.CYAN_DIM,
-    scale: 0.65,
-    speed: 1.1,
-  },
-  {
-    position: [6.5, 0.2, -4.0],
-    shape: "torus",
-    color: PALETTE.AMBER,
-    scale: 0.5,
-    speed: 0.7,
-  },
-  {
-    position: [-6.0, 0.8, -5.0],
-    shape: "tetrahedron",
-    color: PALETTE.CYAN,
-    scale: 0.55,
-    speed: 1.3,
+    scale: 0.42,
+    speed: 0.45,
+    rotationIntensity: 0.45,
+    floatIntensity: 0.2,
+    nodeRadius: 0.09,
   },
 ];
 
-interface StoryNodeDef {
-  pos: [number, number, number];
-  color: string;
-}
+const SHIP_ORIGIN: [number, number, number] = [0, 0, 0.5];
 
-/**
- * Six glowing nodes placed at the far edges of the scene — one per skill domain.
- * They pulse and brighten when the player's ship drifts near them, turning the
- * hero background into a living map of Tejas's tech universe.
- */
-const STORY_NODE_DEFS: StoryNodeDef[] = [
-  { pos: [-5.5, 2.0, -4.5], color: PALETTE.AMBER }, // Languages
-  { pos: [5.5, 1.5, -4.0], color: PALETTE.CYAN }, // Frontend
-  { pos: [-4.5, -1.5, -3.5], color: PALETTE.EMERALD }, // Backend
-  { pos: [4.5, -2.0, -4.0], color: PALETTE.AMBER_BRIGHT }, // Desktop / 3D
-  { pos: [0.5, 3.5, -5.0], color: PALETTE.CYAN_DIM }, // Databases
-  { pos: [1.5, -3.5, -3.5], color: PALETTE.AMBER_DIM }, // Tools
+const ROUTE_CONNECTIONS: Array<[number, number]> = [
+  [-1, 0],
+  [0, 4],
+  [4, 2],
+  [0, 1],
+  [1, 3],
+  [2, 3],
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Particle Field — galaxy-shaped, slowly rotates
 // ─────────────────────────────────────────────────────────────────────────────
 
-function ParticleField({ count }: { count: number }) {
+function ParticleField({
+  count,
+  opacity,
+  rotationSpeed,
+}: {
+  count: number;
+  opacity: number;
+  rotationSpeed: number;
+}) {
   const ref = useRef<THREE.Points>(null!);
 
   const [positions, colors] = useMemo(
     () => [
-      buildGalaxyPositions(count),
-      buildTwoToneColors(count, PALETTE.AMBER, PALETTE.CYAN, 0.65),
+      buildGalaxyPositions(count, 6.2),
+      buildTwoToneColors(count, PALETTE.AMBER, PALETTE.CYAN, 0.58),
     ],
     [count],
   );
 
   useFrame((_, dt) => {
-    if (ref.current) ref.current.rotation.y += dt * 0.04;
+    if (ref.current) ref.current.rotation.y += dt * rotationSpeed;
   });
 
   return (
@@ -134,11 +148,11 @@ function ParticleField({ count }: { count: number }) {
         <bufferAttribute attach="attributes-color" args={[colors, 3]} />
       </bufferGeometry>
       <pointsMaterial
-        size={0.025}
+        size={0.02}
         vertexColors
         sizeAttenuation
         transparent
-        opacity={0.85}
+        opacity={opacity}
         depthWrite={false}
       />
     </points>
@@ -146,40 +160,136 @@ function ParticleField({ count }: { count: number }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Floating wireframe glyphs — "building blocks of technology"
+// Semantic landmarks — section destinations in the launch map
 // ─────────────────────────────────────────────────────────────────────────────
 
-function GlyphMesh({ def }: { def: GlyphDef }) {
+function LandmarkMesh({
+  def,
+  motionScale,
+}: {
+  def: LandmarkDef;
+  motionScale: number;
+}) {
   const {
     position,
     shape,
     color,
     scale,
-    speed = 1.0,
-    rotationIntensity = 1.2,
-    floatIntensity = 0.8,
+    speed = 0.6,
+    rotationIntensity = 0.7,
+    floatIntensity = 0.3,
   } = def;
+
   return (
     <Float
-      speed={speed}
-      rotationIntensity={rotationIntensity}
-      floatIntensity={floatIntensity}
+      speed={speed * motionScale}
+      rotationIntensity={rotationIntensity * motionScale}
+      floatIntensity={floatIntensity * motionScale}
     >
-      <mesh position={position}>
-        {shape === "icosahedron" && <icosahedronGeometry args={[scale, 1]} />}
-        {shape === "torus" && (
-          <torusGeometry args={[scale, scale * 0.28, 8, 20]} />
-        )}
-        {shape === "octahedron" && <octahedronGeometry args={[scale, 0]} />}
-        {shape === "tetrahedron" && <tetrahedronGeometry args={[scale, 0]} />}
-        <meshBasicMaterial color={color} wireframe transparent opacity={0.68} />
-      </mesh>
+      <group position={position}>
+        <mesh>
+          {shape === "icosahedron" && <icosahedronGeometry args={[scale, 1]} />}
+          {shape === "torus" && (
+            <torusGeometry args={[scale, scale * 0.22, 8, 18]} />
+          )}
+          {shape === "octahedron" && <octahedronGeometry args={[scale, 0]} />}
+          {shape === "tetrahedron" && <tetrahedronGeometry args={[scale, 0]} />}
+          <meshBasicMaterial
+            color={color}
+            wireframe
+            transparent
+            opacity={0.5}
+          />
+        </mesh>
+
+        <mesh>
+          <sphereGeometry args={[scale * 0.12, 10, 10]} />
+          <meshBasicMaterial color={color} transparent opacity={0.9} />
+        </mesh>
+      </group>
     </Float>
   );
 }
 
+interface RouteLinesProps {
+  shipPos: React.MutableRefObject<THREE.Vector3>;
+}
+
+function RouteLines({
+  shipPos,
+  staticOpacity,
+  dynamicOpacity,
+}: RouteLinesProps & {
+  staticOpacity: number;
+  dynamicOpacity: number;
+}) {
+  const routeRef = useRef<THREE.BufferAttribute>(null!);
+  const launchRef = useRef<THREE.BufferAttribute>(null!);
+
+  const staticRoutes = useMemo(() => {
+    const pts: number[] = [];
+    ROUTE_CONNECTIONS.forEach(([from, to]) => {
+      const a = from === -1 ? SHIP_ORIGIN : LANDMARK_DEFS[from].position;
+      const b = LANDMARK_DEFS[to].position;
+      pts.push(...a, ...b);
+    });
+    return new Float32Array(pts);
+  }, []);
+
+  const dynamicLaunch = useRef(new Float32Array(LANDMARK_DEFS.length * 6));
+
+  useFrame(() => {
+    const arr = dynamicLaunch.current;
+    LANDMARK_DEFS.forEach((landmark, i) => {
+      const base = i * 6;
+      arr[base] = shipPos.current.x;
+      arr[base + 1] = shipPos.current.y;
+      arr[base + 2] = shipPos.current.z;
+      arr[base + 3] = landmark.position[0];
+      arr[base + 4] = landmark.position[1];
+      arr[base + 5] = landmark.position[2];
+    });
+
+    if (launchRef.current) launchRef.current.needsUpdate = true;
+  });
+
+  return (
+    <group>
+      <lineSegments>
+        <bufferGeometry>
+          <bufferAttribute
+            ref={routeRef}
+            attach="attributes-position"
+            args={[staticRoutes, 3]}
+          />
+        </bufferGeometry>
+        <lineBasicMaterial
+          color={PALETTE.WHITE}
+          transparent
+          opacity={staticOpacity}
+        />
+      </lineSegments>
+
+      <lineSegments>
+        <bufferGeometry>
+          <bufferAttribute
+            ref={launchRef}
+            attach="attributes-position"
+            args={[dynamicLaunch.current, 3]}
+          />
+        </bufferGeometry>
+        <lineBasicMaterial
+          color={PALETTE.CYAN}
+          transparent
+          opacity={dynamicOpacity}
+        />
+      </lineSegments>
+    </group>
+  );
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
-// Story Nodes — six skill-domain beacons
+// Story Nodes — semantic beacons for each destination
 // They pulse continuously and flare when the ship gets within 2.5 units (XY).
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -187,7 +297,10 @@ interface StoryNodesProps {
   shipPos: React.MutableRefObject<THREE.Vector3>;
 }
 
-function StoryNodes({ shipPos }: StoryNodesProps) {
+function StoryNodes({
+  shipPos,
+  pulseScale,
+}: StoryNodesProps & { pulseScale: number }) {
   const groupRef = useRef<THREE.Group>(null!);
 
   useFrame(({ clock }) => {
@@ -195,14 +308,14 @@ function StoryNodes({ shipPos }: StoryNodesProps) {
     const t = clock.elapsedTime;
 
     groupRef.current.children.forEach((node, i) => {
-      const def = STORY_NODE_DEFS[i];
-      const basePulse = 1 + Math.sin(t * 1.5 + i * 1.1) * 0.12;
+      const def = LANDMARK_DEFS[i];
+      const basePulse = 1 + Math.sin(t * 1.2 + i * 0.9) * (0.1 * pulseScale);
 
-      // 2-D (XY) proximity — the ship lives on the z ≈ 0.5 plane
-      const dx = shipPos.current.x - def.pos[0];
-      const dy = shipPos.current.y - def.pos[1];
+      const dx = shipPos.current.x - def.position[0];
+      const dy = shipPos.current.y - def.position[1];
       const dist = Math.sqrt(dx * dx + dy * dy);
-      const proximityBoost = dist < 2.5 ? (1 - dist / 2.5) * 0.6 : 0;
+      const proximityBoost =
+        dist < 2.4 ? (1 - dist / 2.4) * (0.45 * pulseScale) : 0;
 
       node.scale.setScalar(basePulse + proximityBoost);
     });
@@ -210,9 +323,9 @@ function StoryNodes({ shipPos }: StoryNodesProps) {
 
   return (
     <group ref={groupRef}>
-      {STORY_NODE_DEFS.map((def, i) => (
-        <mesh key={i} position={def.pos}>
-          <sphereGeometry args={[0.09, 12, 12]} />
+      {LANDMARK_DEFS.map((def) => (
+        <mesh key={def.id} position={def.position}>
+          <sphereGeometry args={[def.nodeRadius ?? 0.1, 10, 10]} />
           <meshBasicMaterial color={def.color} />
         </mesh>
       ))}
@@ -228,23 +341,28 @@ interface ShipTrailProps {
   shipPos: React.MutableRefObject<THREE.Vector3>;
 }
 
-function ShipTrail({ shipPos }: ShipTrailProps) {
+function ShipTrail({
+  shipPos,
+  opacity,
+  size,
+}: ShipTrailProps & {
+  opacity: number;
+  size: number;
+}) {
   const attrRef = useRef<THREE.BufferAttribute>(null!);
-  const trailArr = useRef(new Float32Array(TRAIL_LENGTH * 3)); // all zeros initially
+  const trailArr = useRef(new Float32Array(TRAIL_LENGTH * 3));
 
   useFrame(() => {
     const arr = trailArr.current;
 
-    // Shift every stored position one slot back
     for (let i = TRAIL_LENGTH - 1; i > 0; i--) {
       arr[i * 3] = arr[(i - 1) * 3];
       arr[i * 3 + 1] = arr[(i - 1) * 3 + 1];
       arr[i * 3 + 2] = arr[(i - 1) * 3 + 2];
     }
 
-    // Insert the current engine position at the front
     arr[0] = shipPos.current.x;
-    arr[1] = shipPos.current.y - 0.18; // engine sits below the fuselage centre
+    arr[1] = shipPos.current.y - 0.18;
     arr[2] = shipPos.current.z;
 
     if (attrRef.current) attrRef.current.needsUpdate = true;
@@ -260,10 +378,10 @@ function ShipTrail({ shipPos }: ShipTrailProps) {
         />
       </bufferGeometry>
       <pointsMaterial
-        size={0.018}
+        size={size}
         color={PALETTE.CYAN}
         transparent
-        opacity={0.7}
+        opacity={opacity}
         sizeAttenuation
         depthWrite={false}
       />
@@ -412,52 +530,125 @@ function MiniShip({ shipPos }: MiniShipProps) {
 // Scene root — composes every element with a shared ship-position ref
 // ─────────────────────────────────────────────────────────────────────────────
 
-function Scene({ particleCount }: { particleCount: number }) {
-  // Shared mutable ref — MiniShip writes, ShipTrail + StoryNodes read
-  const shipPos = useRef(new THREE.Vector3());
+function Scene({
+  particleCount,
+  world,
+}: {
+  particleCount: number;
+  world: WorldState;
+}) {
+  const shipPos = useRef(new THREE.Vector3(...SHIP_ORIGIN));
+
+  const isLow = world.capabilityTier === "low";
+  const isMedium = world.capabilityTier === "medium";
+  const reducedMotion = world.isReducedMotion;
+
+  const starCount = isLow ? 220 : isMedium ? 420 : 700;
+  const starFactor = isLow ? 1.8 : isMedium ? 2.2 : 2.6;
+  const starSpeed = reducedMotion ? 0 : isLow ? 0.08 : isMedium ? 0.18 : 0.3;
+  const particleOpacity = reducedMotion
+    ? 0.22
+    : isLow
+      ? 0.28
+      : isMedium
+        ? 0.38
+        : 0.52;
+  const particleRotationSpeed = reducedMotion
+    ? 0
+    : isLow
+      ? 0.008
+      : isMedium
+        ? 0.016
+        : 0.025;
+  const landmarkMotionScale = reducedMotion
+    ? 0
+    : isLow
+      ? 0.35
+      : isMedium
+        ? 0.65
+        : 1;
+  const routeStaticOpacity = isLow ? 0.04 : isMedium ? 0.06 : 0.08;
+  const routeDynamicOpacity = reducedMotion
+    ? 0
+    : isLow
+      ? 0.025
+      : isMedium
+        ? 0.04
+        : 0.06;
+  const pulseScale = reducedMotion ? 0.2 : isLow ? 0.45 : isMedium ? 0.7 : 1;
+  const trailOpacity = reducedMotion ? 0 : isLow ? 0.18 : isMedium ? 0.32 : 0.5;
+  const trailSize = isLow ? 0.01 : isMedium ? 0.012 : 0.014;
+  const bloomEnabled = !reducedMotion && !isLow;
+  const bloomIntensity = isMedium ? 0.45 : 0.72;
+  const bloomThreshold = isMedium ? 0.32 : 0.28;
+  const parallaxStrength = reducedMotion
+    ? 0.08
+    : isLow
+      ? 0.12
+      : isMedium
+        ? 0.18
+        : 0.24;
+  const parallaxVerticalStrength = reducedMotion
+    ? 0.04
+    : isLow
+      ? 0.06
+      : isMedium
+        ? 0.09
+        : 0.12;
 
   return (
     <>
-      {/* Opaque dark background — avoids alpha/bloom compositing issues */}
       <color attach="background" args={["#020617"]} />
 
-      {/* Deep star field behind everything else */}
-      <Stars radius={80} depth={50} count={1000} factor={3} fade speed={0.4} />
-
-      {/* Galaxy particle cloud */}
-      <ParticleField count={particleCount} />
-
-      {/* Floating wireframe geometry */}
-      {GLYPH_DEFS.map((def, i) => (
-        <GlyphMesh key={i} def={def} />
-      ))}
-
-      {/* Career-domain beacons */}
-      <StoryNodes shipPos={shipPos} />
-
-      {/* Comet trail — renders BEFORE ship so it appears behind */}
-      <ShipTrail shipPos={shipPos} />
-
-      {/* Interactive wireframe rocket */}
-      <MiniShip shipPos={shipPos} />
-
-      {/* Gentle mouse-driven parallax on the camera */}
-      <CameraParallax
-        strength={0.3}
-        verticalStrength={0.15}
-        lerpFactor={0.03}
+      <Stars
+        radius={80}
+        depth={50}
+        count={starCount}
+        factor={starFactor}
+        fade
+        speed={starSpeed}
       />
 
-      {/* Auto-reduce pixel ratio when GPU is under load */}
+      <ParticleField
+        count={particleCount}
+        opacity={particleOpacity}
+        rotationSpeed={particleRotationSpeed}
+      />
+
+      <RouteLines
+        shipPos={shipPos}
+        staticOpacity={routeStaticOpacity}
+        dynamicOpacity={routeDynamicOpacity}
+      />
+
+      {LANDMARK_DEFS.map((def) => (
+        <LandmarkMesh
+          key={def.id}
+          def={def}
+          motionScale={landmarkMotionScale}
+        />
+      ))}
+
+      <StoryNodes shipPos={shipPos} pulseScale={pulseScale} />
+
+      <ShipTrail shipPos={shipPos} opacity={trailOpacity} size={trailSize} />
+
+      <MiniShip shipPos={shipPos} />
+
+      <CameraParallax
+        strength={parallaxStrength}
+        verticalStrength={parallaxVerticalStrength}
+        lerpFactor={0.028}
+      />
+
       <AdaptiveDpr pixelated />
 
-      {/* Bloom — glows particles, glyphs, engine, and story nodes */}
-      <EffectComposer>
+      <EffectComposer enabled={bloomEnabled}>
         <Bloom
-          luminanceThreshold={0.2}
-          luminanceSmoothing={0.9}
-          intensity={1.2}
-          mipmapBlur
+          luminanceThreshold={bloomThreshold}
+          luminanceSmoothing={0.92}
+          intensity={bloomIntensity}
+          mipmapBlur={!isMedium}
         />
       </EffectComposer>
     </>
@@ -468,24 +659,34 @@ function Scene({ particleCount }: { particleCount: number }) {
 // Public export — Canvas wrapper
 // ─────────────────────────────────────────────────────────────────────────────
 
-export default function HeroScene() {
+export default function HeroScene({ world }: { world: WorldState }) {
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-  const particleCount = isMobile ? 500 : 2000;
+  const isLow = world.capabilityTier === "low";
+  const isMedium = world.capabilityTier === "medium";
+  const reducedMotion = world.isReducedMotion;
+
+  const particleCount = reducedMotion
+    ? 120
+    : isLow
+      ? 180
+      : isMobile || isMedium
+        ? 420
+        : 1100;
 
   return (
     <Canvas
       style={{ position: "absolute", inset: 0 }}
       camera={{ position: [0, 0, 5], fov: 60 }}
       frameloop="always"
-      dpr={[1, 2]}
-      performance={{ min: 0.5 }}
+      dpr={isLow ? [1, 1] : isMedium ? [1, 1.25] : [1, 1.6]}
+      performance={{ min: isLow ? 0.75 : 0.6 }}
       gl={{
-        antialias: true,
+        antialias: !isLow,
         alpha: false,
-        powerPreference: "high-performance",
+        powerPreference: isLow ? "default" : "high-performance",
       }}
     >
-      <Scene particleCount={particleCount} />
+      <Scene particleCount={particleCount} world={world} />
     </Canvas>
   );
 }

@@ -1,5 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useGame } from "../three/game/GameContext";
+import { useSharedWorldState } from "../three/world/WorldStateProvider";
+import { useRecruiterMode } from "./world/RecruiterModeProvider";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // PersistentShip
@@ -28,6 +30,39 @@ const ANGLE_LERP = 0.12; // rotation smoothing
 const FADE_START = 0.45; // scroll fraction where fade-in begins
 const FADE_END = 0.72; // scroll fraction where ship is fully visible
 
+const SECTION_SHIP_STYLE = {
+  home: {
+    scale: 0.92,
+    glow: "#fbbf24",
+    opacityBoost: 0,
+  },
+  about: {
+    scale: 0.88,
+    glow: "#22d3ee",
+    opacityBoost: -0.08,
+  },
+  skills: {
+    scale: 1,
+    glow: "#fbbf24",
+    opacityBoost: 0.06,
+  },
+  experience: {
+    scale: 0.94,
+    glow: "#34d399",
+    opacityBoost: 0.02,
+  },
+  projects: {
+    scale: 1.06,
+    glow: "#22d3ee",
+    opacityBoost: 0.08,
+  },
+  contact: {
+    scale: 0.9,
+    glow: "#fde68a",
+    opacityBoost: -0.02,
+  },
+} as const;
+
 function lerpAngle(current: number, target: number, t: number): number {
   let diff = target - current;
   // Wrap to [-π, π]
@@ -38,12 +73,19 @@ function lerpAngle(current: number, target: number, t: number): number {
 
 export default function PersistentShip() {
   const { isActive } = useGame();
+  const world = useSharedWorldState();
+  const { enabled: recruiterModeEnabled } = useRecruiterMode();
 
   // Detect pointer device — ship only makes sense with a real cursor
   const [hasMouse] = useState(
     () =>
       typeof window !== "undefined" &&
       window.matchMedia("(pointer: fine)").matches,
+  );
+
+  const sectionStyle = useMemo(
+    () => SECTION_SHIP_STYLE[world.activeSection],
+    [world.activeSection],
   );
 
   const stateRef = useRef<ShipState>({
@@ -108,10 +150,15 @@ export default function PersistentShip() {
           (scrollVH - FADE_START) / (FADE_END - FADE_START),
         );
       }
+
+      targetOpacity += sectionStyle.opacityBoost;
+      targetOpacity = Math.max(0, Math.min(1, targetOpacity));
+
       // Also hide once cursor has been to -200 (off-screen default)
       if (t.x === -200) targetOpacity = 0;
-      // Hide when game is active or scroll fraction is at very top
-      if (isActive || scrollFrac < 0.005) targetOpacity = 0;
+      // Hide when game is active, recruiter mode is enabled, or scroll fraction is at very top
+      if (isActive || recruiterModeEnabled || scrollFrac < 0.005)
+        targetOpacity = 0;
 
       s.opacity += (targetOpacity - s.opacity) * 0.08;
 
@@ -126,9 +173,9 @@ export default function PersistentShip() {
       window.removeEventListener("mousemove", onMove);
       cancelAnimationFrame(rafRef.current);
     };
-  }, [hasMouse, isActive]);
+  }, [hasMouse, isActive, recruiterModeEnabled, sectionStyle.opacityBoost]);
 
-  if (!hasMouse) return null;
+  if (!hasMouse || recruiterModeEnabled) return null;
 
   const { x, y, angle, opacity } = render;
 
@@ -143,10 +190,11 @@ export default function PersistentShip() {
         zIndex: 9998,
         opacity,
         // Translate to cursor position, then rotate ship to face direction
-        transform: `translate(${x - 16}px, ${y - 20}px) rotate(${angle}rad)`,
+        transform: `translate(${x - 16}px, ${y - 20}px) rotate(${angle}rad) scale(${sectionStyle.scale})`,
         // Hardware-accelerate
         willChange: "transform, opacity",
-        transition: "opacity 0.3s ease",
+        transition: "opacity 0.3s ease, transform 0.3s ease",
+        filter: `drop-shadow(0 0 10px ${sectionStyle.glow}55)`,
       }}
     >
       {/*
@@ -169,14 +217,14 @@ export default function PersistentShip() {
           cx="16"
           cy="34"
           r="5.5"
-          stroke="#22d3ee"
+          stroke={sectionStyle.glow}
           strokeWidth="0.7"
           opacity="0.35"
           filter="url(#engineBlur)"
         />
 
         {/* Engine core */}
-        <circle cx="16" cy="34" r="3" fill="#22d3ee" opacity="0.9">
+        <circle cx="16" cy="34" r="3" fill={sectionStyle.glow} opacity="0.9">
           <animate
             attributeName="r"
             values="2.5;3.5;2.5"

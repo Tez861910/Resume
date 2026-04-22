@@ -1,23 +1,67 @@
 import { Suspense } from "react";
 import { motion } from "framer-motion";
-import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
+import { FaGithub, FaLinkedin, FaEnvelope, FaGamepad } from "react-icons/fa";
 import HeroScene from "../three/scenes/HeroScene";
+import WorldStatusBanner from "./world/WorldStatusBanner";
+import { useSharedWorldState } from "../three/world/WorldStateProvider";
+import { useGame } from "../three/game/GameContext";
+import { useRecruiterMode } from "./world/RecruiterModeProvider";
 
 const Hero = () => {
   const githubUrl = "https://github.com/Tez861910";
   const linkedinUrl = "https://www.linkedin.com/in/tejas-s-57138816a/";
   const emailAddress = "tejassureshofficial@gmail.com";
   const emailUrl = `mailto:${emailAddress}`;
+  const world = useSharedWorldState();
+  const { isLiteMode } = useRecruiterMode();
+  const { launch, session } = useGame();
 
   return (
     <section
       id="home"
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
-      {/* Three.js background — galaxy particles, wireframe glyphs, bloom */}
-      <Suspense fallback={null}>
-        <HeroScene />
-      </Suspense>
+      {/* Background — WebGL in heavy mode, CSS fallback in lite mode */}
+      {isLiteMode ? (
+        <div
+          className="absolute inset-0 z-[1] pointer-events-none"
+          style={{
+            background: `
+              radial-gradient(circle at 50% 22%, rgba(251,191,36,0.14), transparent 28%),
+              radial-gradient(circle at 78% 30%, rgba(34,211,238,0.10), transparent 24%),
+              radial-gradient(circle at 20% 72%, rgba(52,211,153,0.08), transparent 22%),
+              linear-gradient(180deg, rgba(2,6,23,0.98) 0%, rgba(2,6,23,0.94) 48%, rgba(2,6,23,0.98) 100%)
+            `,
+          }}
+        >
+          <div
+            className="absolute inset-0 opacity-[0.08]"
+            style={{
+              backgroundImage: `
+                linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)
+              `,
+              backgroundSize: "120px 120px",
+              maskImage:
+                "radial-gradient(circle at 50% 42%, rgba(0,0,0,0.45), rgba(0,0,0,0.12) 48%, transparent 100%)",
+              WebkitMaskImage:
+                "radial-gradient(circle at 50% 42%, rgba(0,0,0,0.45), rgba(0,0,0,0.12) 48%, transparent 100%)",
+            }}
+          />
+          <div className="absolute inset-0 overflow-hidden">
+            <span className="absolute left-[12%] top-[22%] h-2 w-2 rounded-full bg-amber-300/60" />
+            <span className="absolute left-[24%] top-[68%] h-2 w-2 rounded-full bg-white/30" />
+            <span className="absolute left-[46%] top-[28%] h-2 w-2 rounded-full bg-cyan-300/55" />
+            <span className="absolute left-[58%] top-[62%] h-2 w-2 rounded-full bg-white/25" />
+            <span className="absolute left-[78%] top-[34%] h-2 w-2 rounded-full bg-cyan-300/45" />
+            <span className="absolute left-[86%] top-[74%] h-2 w-2 rounded-full bg-emerald-300/45" />
+          </div>
+        </div>
+      ) : (
+        <Suspense fallback={null}>
+          <HeroScene world={world} />
+        </Suspense>
+      )}
 
       {/*
         Radial vignette — darkens the centre where all text lives so it stays
@@ -28,7 +72,7 @@ const Hero = () => {
         className="pointer-events-none absolute inset-0 z-[2]"
         style={{
           background:
-            "radial-gradient(ellipse 78% 68% at 50% 44%, rgba(2,6,23,0.74) 0%, rgba(2,6,23,0.40) 48%, transparent 74%)",
+            "radial-gradient(ellipse 76% 66% at 50% 42%, rgba(2,6,23,0.82) 0%, rgba(2,6,23,0.52) 46%, transparent 72%)",
         }}
       />
 
@@ -39,7 +83,7 @@ const Hero = () => {
           transition={{ duration: 0.8 }}
           className="max-w-4xl mx-auto"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/15 text-amber-100 text-sm mb-5">
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/8 px-4 py-2 text-sm text-amber-100 mb-5">
             <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
             Open to full-time roles &amp; freelance collaborations
           </div>
@@ -52,14 +96,18 @@ const Hero = () => {
           </h1>
 
           <p className="text-xl sm:text-2xl lg:text-3xl mb-6 text-amber-100">
-            Full-Stack Developer crafting performant web and 3D desktop
-            experiences
+            Full-Stack Developer building performant web platforms and 3D
+            desktop systems
           </p>
 
-          <p className="text-lg sm:text-xl max-w-3xl mx-auto mb-8 text-slate-200/90">
+          <p className="text-lg sm:text-xl max-w-3xl mx-auto mb-3 text-slate-200/90">
+            Navigate a mission map of shipped products, performance wins, and
+            full-stack systems across web and desktop.
+          </p>
+          <p className="text-base sm:text-lg max-w-3xl mx-auto mb-8 text-slate-300/82">
             React / Node / MySQL on the web; WPF / DirectX on desktop. Delivered
-            40% faster loads and 35% higher engagement at Printalytix through
-            performance tuning and UX refinements.
+            faster loads, stronger engagement, and production-focused
+            engineering outcomes through performance tuning and UX refinement.
           </p>
 
           <div className="flex flex-wrap justify-center gap-4 mb-10">
@@ -69,40 +117,54 @@ const Hero = () => {
             <a href="#projects" className="btn-secondary">
               View Projects
             </a>
+            {!isLiteMode && (
+              <button
+                type="button"
+                onClick={() => launch("hero")}
+                className="inline-flex items-center gap-2 rounded-full border border-cyan-300/30 bg-cyan-300/10 px-6 py-3 text-base font-semibold text-cyan-100 transition-all duration-200 hover:bg-cyan-300/18 hover:border-cyan-300/50 hover:text-cyan-50"
+              >
+                <FaGamepad className="text-sm" />
+                <span>
+                  {session.launchCount > 0
+                    ? "Resume Challenge"
+                    : "Start Challenge"}
+                </span>
+              </button>
+            )}
           </div>
 
-          <div className="grid sm:grid-cols-3 gap-4 mb-10">
+          <div className="grid gap-3 sm:grid-cols-3 mb-10">
             {[
               {
-                label: "Performance Wins",
+                label: "Performance",
                 value: "40% faster",
-                detail: "Page loads via bundling & caching",
+                detail: "Bundling + caching",
               },
               {
-                label: "Engagement Lift",
-                value: "35% uptick",
-                detail: "SEO + UX experiments",
+                label: "Engagement",
+                value: "35% uplift",
+                detail: "SEO + UX",
               },
               {
                 label: "Platforms",
-                value: "Web & Desktop",
-                detail: "React/Node + WPF/DirectX",
+                value: "Web + Desktop",
+                detail: "React / WPF",
               },
             ].map((stat, index) => (
               <motion.div
                 key={stat.label}
-                className="card text-left"
+                className="rounded-2xl border border-white/10 bg-slate-950/55 px-5 py-4 text-left shadow-lg shadow-black/15 backdrop-blur-sm"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.2 + index * 0.1 }}
+                transition={{ duration: 0.35, delay: 0.18 + index * 0.08 }}
               >
-                <div className="text-sm uppercase tracking-wide text-amber-200/80 mb-1">
+                <div className="text-[11px] uppercase tracking-[0.18em] text-amber-200/70 mb-1">
                   {stat.label}
                 </div>
-                <div className="text-2xl font-bold text-amber-100 mb-1">
+                <div className="text-xl font-bold text-amber-100 mb-1">
                   {stat.value}
                 </div>
-                <p className="text-sm text-slate-200/80">{stat.detail}</p>
+                <p className="text-xs text-slate-300/75">{stat.detail}</p>
               </motion.div>
             ))}
           </div>
@@ -135,10 +197,29 @@ const Hero = () => {
             </a>
           </div>
 
-          {/* Interactive ship hint */}
-          <p className="mt-8 text-xs tracking-[0.18em] text-slate-400/40 uppercase select-none pointer-events-none">
-            ✦ move cursor &nbsp;·&nbsp; W A S D to boost the ship
-          </p>
+          <div className="hidden md:block">
+            <WorldStatusBanner />
+          </div>
+
+          {!isLiteMode && (
+            <div className="mt-6 flex flex-col items-center gap-3">
+              <p className="text-[11px] tracking-[0.16em] text-slate-400/35 uppercase select-none pointer-events-none">
+                ✦ navigate the mission map &nbsp;·&nbsp; move cursor
+                &nbsp;·&nbsp; W A S D to boost the ship
+              </p>
+
+              <p className="text-xs text-slate-300/70 max-w-2xl mx-auto">
+                Challenge Mode is part of the portfolio flow — collect core tech
+                stack signals, avoid bugs, and return with a stronger systems
+                log.
+                {session.bestScore !== null && (
+                  <span className="ml-2 text-amber-200/90">
+                    Best score: {session.bestScore}
+                  </span>
+                )}
+              </p>
+            </div>
+          )}
         </motion.div>
       </div>
 

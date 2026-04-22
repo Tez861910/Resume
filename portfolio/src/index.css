@@ -66,3 +66,99 @@
         transform: translate(-50%, -50%) scale(1.18);
     }
 }
+
+@keyframes world-hud-pulse {
+    0%,
+    100% {
+        opacity: 0.45;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.95;
+        transform: scale(1.18);
+    }
+}
+
+@keyframes world-scan {
+    0% {
+        transform: translateX(-120%);
+        opacity: 0;
+    }
+    20% {
+        opacity: 0.22;
+    }
+    100% {
+        transform: translateX(120%);
+        opacity: 0;
+    }
+}
+
+@layer components {
+    .world-panel {
+        @apply relative overflow-hidden rounded-2xl border border-white/10 bg-slate-950/55 shadow-2xl shadow-black/25 backdrop-blur-xl;
+    }
+
+    .world-panel::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.06) 0%,
+            rgba(255, 255, 255, 0.015) 38%,
+            rgba(255, 255, 255, 0) 100%
+        );
+    }
+
+    .world-panel::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 42%;
+        pointer-events: none;
+        background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.08) 50%,
+            transparent 100%
+        );
+        animation: world-scan 5.8s linear infinite;
+        opacity: 0.18;
+    }
+
+    .world-chip {
+        @apply rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-300;
+    }
+
+    .world-chip-active {
+        @apply border-white/20 bg-white/10 text-slate-50;
+    }
+
+    .world-data-tile {
+        @apply rounded-xl border border-white/10 bg-white/5 px-3 py-2;
+    }
+
+    .world-data-label {
+        @apply mb-1 uppercase tracking-[0.18em] text-slate-500;
+        font-size: 11px;
+    }
+
+    .world-data-value {
+        @apply font-semibold text-slate-100;
+        font-size: 11px;
+    }
+
+    .world-route-rail {
+        @apply absolute left-[11px] top-2 bottom-2 w-px bg-white/10;
+    }
+
+    .world-route-dot {
+        @apply relative h-2.5 w-2.5 rounded-full;
+    }
+
+    .world-pulse-ring {
+        animation: world-hud-pulse 2.2s ease-in-out infinite;
+    }
+}

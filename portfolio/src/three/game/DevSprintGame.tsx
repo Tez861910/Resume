@@ -1,9 +1,4 @@
-import {
-  useEffect,
-  useRef,
-  useState,
-  useCallback,
-} from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useGame } from "./GameContext";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -159,8 +154,7 @@ function generateStars(W: number, H: number): Star[] {
 }
 
 function spawnKeyword(g: GameData, W: number, H: number): void {
-  const text =
-    TECH_KEYWORDS[Math.floor(Math.random() * TECH_KEYWORDS.length)];
+  const text = TECH_KEYWORDS[Math.floor(Math.random() * TECH_KEYWORDS.length)];
   const w = text.length * 9 + 28;
   g.keywords.push({
     id: g.nextId++,
@@ -213,7 +207,14 @@ function drawBackground(
   });
 
   // Subtle nebula vignette
-  const nb = ctx.createRadialGradient(W * 0.3, H * 0.4, 0, W * 0.3, H * 0.4, W * 0.55);
+  const nb = ctx.createRadialGradient(
+    W * 0.3,
+    H * 0.4,
+    0,
+    W * 0.3,
+    H * 0.4,
+    W * 0.55,
+  );
   nb.addColorStop(0, "rgba(251,191,36,0.03)");
   nb.addColorStop(1, "transparent");
   ctx.fillStyle = nb;
@@ -230,10 +231,7 @@ function drawBackground(
   }
 }
 
-function drawTrail(
-  ctx: CanvasRenderingContext2D,
-  trail: TrailPt[],
-): void {
+function drawTrail(ctx: CanvasRenderingContext2D, trail: TrailPt[]): void {
   trail.forEach((pt, i) => {
     const frac = 1 - i / trail.length;
     const alpha = frac * 0.55;
@@ -283,7 +281,7 @@ function drawShip(
   ctx.beginPath();
   ctx.moveTo(0, -22); // nose
   ctx.lineTo(10, 15); // bottom-right
-  ctx.lineTo(0, 9);   // centre notch
+  ctx.lineTo(0, 9); // centre notch
   ctx.lineTo(-10, 15); // bottom-left
   ctx.closePath();
   ctx.stroke();
@@ -807,7 +805,7 @@ function makeInitialGameData(): GameData {
 }
 
 export default function DevSprintGame() {
-  const { close } = useGame();
+  const { close, complete } = useGame();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
@@ -901,26 +899,35 @@ export default function DevSprintGame() {
   }, [phase]);
 
   // ── End-game helper ───────────────────────────────────────────────────────
-  const endGame = useCallback((survived: boolean) => {
-    const g = gRef.current;
-    const stored = parseInt(
-      localStorage.getItem("devSprintHighScore") ?? "0",
-      10,
-    );
-    const newHigh = Math.max(stored, g.score);
-    localStorage.setItem("devSprintHighScore", String(newHigh));
+  const endGame = useCallback(
+    (survived: boolean) => {
+      const g = gRef.current;
+      const stored = parseInt(
+        localStorage.getItem("devSprintHighScore") ?? "0",
+        10,
+      );
+      const newHigh = Math.max(stored, g.score);
+      localStorage.setItem("devSprintHighScore", String(newHigh));
 
-    setFinalStats({
-      score: g.score,
-      stack: [...g.stack],
-      highScore: newHigh,
-      survived,
-    });
+      complete({
+        score: g.score,
+        stack: [...g.stack],
+        completedAt: Date.now(),
+      });
 
-    phaseRef.current = "gameover";
-    setPhase("gameover");
-    cancelAnimationFrame(rafRef.current);
-  }, []);
+      setFinalStats({
+        score: g.score,
+        stack: [...g.stack],
+        highScore: newHigh,
+        survived,
+      });
+
+      phaseRef.current = "gameover";
+      setPhase("gameover");
+      cancelAnimationFrame(rafRef.current);
+    },
+    [complete],
+  );
 
   // ── Game loop ─────────────────────────────────────────────────────────────
   useEffect(() => {
@@ -1040,9 +1047,7 @@ export default function DevSprintGame() {
         )}
 
         {/* Countdown overlay */}
-        {phase === "countdown" && (
-          <CountdownOverlay count={countdown} />
-        )}
+        {phase === "countdown" && <CountdownOverlay count={countdown} />}
 
         {/* Game-over overlay */}
         {phase === "gameover" && finalStats && (
