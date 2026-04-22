@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { useGame, type ChallengeEntryPoint } from "../three/game/GameContext";
+import CockpitToggle from "./cockpit/CockpitToggle";
 
 interface NavbarProps {
   isScrolled: boolean;
@@ -93,10 +94,14 @@ const Navbar = ({ isScrolled }: NavbarProps) => {
             >
               🚀 <span>Challenge&nbsp;Mode</span>
             </button>
+
+            {/* ── Cockpit mode trigger ──────────────────────────────── */}
+            <CockpitToggle variant="desktop" />
           </div>
 
           {/* Mobile controls row */}
           <div className="md:hidden flex items-center gap-2">
+            <CockpitToggle variant="mobile" />
             {/* Compact challenge mode button on mobile */}
             <button
               onClick={() => launchChallenge("navbar")}

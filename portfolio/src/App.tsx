@@ -16,6 +16,8 @@ import CockpitFrame from "./components/cockpit/CockpitFrame";
 import CockpitHUD from "./components/cockpit/CockpitHUD";
 import WarpStreaks from "./components/cockpit/WarpStreaks";
 import WarpSection from "./components/cockpit/WarpSection";
+import CockpitOverlay from "./components/cockpit/CockpitOverlay";
+import { CockpitModeProvider, useCockpit } from "./three/cockpit/CockpitModeProvider";
 import { GameProvider, useGame } from "./three/game/GameContext";
 import {
   WorldStateProvider,
@@ -68,9 +70,10 @@ function HomePage() {
 function AppShell() {
   const [isScrolled, setIsScrolled] = useState(false);
   const { isActive } = useGame();
+  const { isActive: isCockpitActive } = useCockpit();
   const world = useSharedWorldState();
 
-  const showWorldUi = !isActive;
+  const showWorldUi = !isActive && !isCockpitActive;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -136,6 +139,8 @@ function AppShell() {
       {showWorldUi && <CockpitHUD />}
 
       <PersistentShip />
+
+      <CockpitOverlay />
     </>
   );
 }
@@ -164,7 +169,9 @@ function App() {
   return (
     <BrowserRouter>
       <GameProvider>
-        <WorldAwareApp />
+        <CockpitModeProvider>
+          <WorldAwareApp />
+        </CockpitModeProvider>
       </GameProvider>
     </BrowserRouter>
   );
