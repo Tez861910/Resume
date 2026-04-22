@@ -46,7 +46,7 @@ export default function Challenge() {
             best run stays pinned to the portfolio as a systems log.
           </p>
 
-          <div className="relative h-[min(72vh,640px)] min-h-[420px] rounded-2xl border border-white/10 bg-slate-950/55 overflow-hidden shadow-[0_0_32px_-14px_rgba(34,211,238,0.5)]">
+          <div className="relative h-[min(72vh,600px)] sm:h-[min(72vh,640px)] min-h-[360px] sm:min-h-[420px] rounded-2xl border border-white/10 bg-slate-950/55 overflow-hidden shadow-[0_0_32px_-14px_rgba(34,211,238,0.5)]">
             {isActive ? (
               <DevSprintGame />
             ) : (
@@ -98,44 +98,45 @@ function IdleHangar({
           Ready for launch?
         </h3>
 
-        <p className="text-sm text-slate-300/80">
-          A short arcade run wired into the portfolio. Mouse / touch to steer,
-          <kbd className="mx-1 rounded bg-white/10 px-1.5 py-0.5 text-[10px] text-slate-200">
+        <p className="text-xs sm:text-sm text-slate-300/80 max-w-lg px-2">
+          A short arcade run wired into the portfolio. Tap/mouse to steer,
+          <kbd className="mx-1 rounded bg-white/10 px-1 py-0.5 text-[9px] sm:text-[10px] text-slate-200">
             W A S D
           </kbd>
-          to boost, <kbd className="rounded bg-white/10 px-1.5 py-0.5 text-[10px] text-slate-200">
+          to boost, <kbd className="rounded bg-white/10 px-1 py-0.5 text-[9px] sm:text-[10px] text-slate-200">
             ESC
           </kbd>{" "}
           to return.
         </p>
 
-        <div className="flex flex-wrap items-center justify-center gap-2 text-[11px] uppercase tracking-[0.18em]">
-          <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-slate-300">
+        <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 text-[10px] sm:text-[11px] uppercase tracking-[0.18em] px-2">
+          <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 sm:px-3 py-1 text-slate-300 whitespace-nowrap">
             Best:{" "}
             <span className="text-amber-200 tabular-nums">
               {bestScore ?? "—"}
             </span>
           </span>
-          <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-slate-300">
+          <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 sm:px-3 py-1 text-slate-300 whitespace-nowrap">
             Runs:{" "}
             <span className="text-cyan-200 tabular-nums">{launchCount}</span>
           </span>
         </div>
 
-        <div className="flex flex-wrap items-center justify-center gap-3">
+        <div className="flex flex-wrap items-center justify-center gap-2 px-2">
           <button
             type="button"
             onClick={onLaunch}
-            className="inline-flex items-center gap-2 rounded-full border border-amber-300/40 bg-amber-300/15 px-5 py-2.5 text-sm font-bold text-amber-100 transition-all duration-150 hover:border-amber-300/70 hover:bg-amber-300/25 active:scale-95"
+            className="inline-flex items-center gap-2 rounded-full border border-amber-300/40 bg-amber-300/15 px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-amber-100 transition-all duration-150 hover:border-amber-300/70 hover:bg-amber-300/25 active:scale-95 whitespace-nowrap"
           >
-            <FaGamepad />
-            {launchCount > 0 ? "Launch another run" : "Launch mission"}
+            <FaGamepad className="text-xs sm:text-base" />
+            <span className="hidden xs:inline">{launchCount > 0 ? "Launch another run" : "Launch mission"}</span>
+            <span className="inline xs:hidden">{launchCount > 0 ? "Retry" : "Launch"}</span>
           </button>
           {bestScore !== null && (
             <button
               type="button"
               onClick={onReset}
-              className="text-[11px] uppercase tracking-[0.18em] text-slate-400/70 hover:text-slate-200 transition-colors"
+              className="text-[10px] sm:text-[11px] uppercase tracking-[0.18em] text-slate-400/70 hover:text-slate-200 transition-colors whitespace-nowrap"
             >
               reset log
             </button>

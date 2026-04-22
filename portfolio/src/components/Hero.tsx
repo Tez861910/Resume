@@ -43,11 +43,6 @@ const Hero = () => {
           transition={{ duration: 0.8 }}
           className="max-w-4xl mx-auto"
         >
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/8 px-4 py-2 text-sm text-amber-100 mb-5">
-            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-            Open to full-time roles &amp; freelance collaborations
-          </div>
-
           <h1
             className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-4 leading-tight tracking-tight text-slate-50"
             style={{ textShadow: "0 2px 24px rgba(0,0,0,0.95)" }}

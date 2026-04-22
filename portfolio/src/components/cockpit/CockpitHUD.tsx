@@ -50,15 +50,21 @@ export default function CockpitHUD() {
 
   return (
     <div
-      className="pointer-events-none fixed left-0 right-0 z-[55] flex justify-center px-3"
-      style={{ top: "calc(env(safe-area-inset-top, 0px) + 68px)" }}
+      className="pointer-events-none fixed left-0 right-0 z-[55] flex justify-center px-2 sm:px-3"
+      style={{ top: "calc(env(safe-area-inset-top, 0px) + 64px)" }}
     >
       <div
-        className="pointer-events-auto w-full max-w-5xl rounded-full border border-white/10 bg-slate-950/65 px-3 py-1.5 shadow-lg shadow-black/25 backdrop-blur-md"
+        className="pointer-events-auto w-full max-w-5xl rounded-full border border-white/10 bg-slate-950/65 px-2 sm:px-3 py-1 sm:py-1.5 shadow-lg shadow-black/25 backdrop-blur-md"
         style={{
           boxShadow: `0 0 22px -10px ${active.accents.secondary}55`,
         }}
       >
+        {/* Status Indicator — Hiring/Open (desktop + tablet) */}
+        <div className="absolute -top-9 sm:-top-10 md:-top-12 left-1/2 -translate-x-1/2 hidden sm:flex items-center gap-1 sm:gap-1.5 rounded-full border border-emerald-300/30 bg-emerald-400/12 px-2.5 sm:px-3 py-0.5 sm:py-1 text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.16em] sm:tracking-[0.18em] text-emerald-100 pointer-events-auto whitespace-nowrap">
+          <span className="h-1 sm:h-1.5 w-1 sm:w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)] sm:shadow-[0_0_10px_rgba(52,211,153,0.8)] animate-pulse" />
+          <span className="hidden sm:inline">Open to Opportunities</span>
+          <span className="sm:hidden">Open</span>
+        </div>
         {/* Desktop row */}
         <div className="hidden md:flex items-center gap-3 text-[11px] uppercase tracking-[0.18em] text-slate-300">
           <span
@@ -125,23 +131,23 @@ export default function CockpitHUD() {
           <button
             type="button"
             onClick={() => setExpanded((v) => !v)}
-            className="w-full flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-slate-200"
+            className="w-full flex items-center gap-1.5 text-[9px] sm:text-[10px] uppercase tracking-[0.16em] sm:tracking-[0.18em] text-slate-200"
             aria-expanded={expanded}
           >
             <span
-              className="h-1.5 w-1.5 rounded-full"
+              className="h-1 sm:h-1.5 w-1 sm:w-1.5 rounded-full shrink-0"
               style={{
                 background: active.accents.primary,
-                boxShadow: `0 0 8px ${active.accents.primary}`,
+                boxShadow: `0 0 6px sm:0 0 8px ${active.accents.primary}`,
               }}
             />
             <span
-              className="font-semibold"
+              className="font-semibold truncate"
               style={{ color: active.accents.emphasis }}
             >
               {active.label}
             </span>
-            <div className="ml-1 relative flex-1 h-[2px] rounded-full bg-white/10 overflow-hidden">
+            <div className="ml-auto relative flex-1 min-w-[40px] h-[2px] rounded-full bg-white/10 overflow-hidden">
               <div
                 className="absolute inset-y-0 left-0 rounded-full"
                 style={{
@@ -150,7 +156,7 @@ export default function CockpitHUD() {
                 }}
               />
             </div>
-            <span className="tabular-nums text-cyan-200/80 text-[10px]">
+            <span className="tabular-nums text-cyan-200/80 text-[9px] sm:text-[10px] shrink-0">
               {kms}
             </span>
           </button>
@@ -165,7 +171,7 @@ export default function CockpitHUD() {
                     key={id}
                     type="button"
                     onClick={() => goTo(id)}
-                    className="rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] transition-colors"
+                    className="rounded-full border px-2 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.12em] sm:tracking-[0.14em] transition-colors"
                     style={{
                       borderColor: isActive
                         ? c.accents.primary
