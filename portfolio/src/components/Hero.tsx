@@ -5,7 +5,6 @@ import HeroScene from "../three/scenes/HeroScene";
 import WorldStatusBanner from "./world/WorldStatusBanner";
 import { useSharedWorldState } from "../three/world/WorldStateProvider";
 import { useGame } from "../three/game/GameContext";
-import { useRecruiterMode } from "./world/RecruiterModeProvider";
 
 const Hero = () => {
   const githubUrl = "https://github.com/Tez861910";
@@ -13,7 +12,6 @@ const Hero = () => {
   const emailAddress = "tejassureshofficial@gmail.com";
   const emailUrl = `mailto:${emailAddress}`;
   const world = useSharedWorldState();
-  const { isLiteMode } = useRecruiterMode();
   const { launch, session } = useGame();
 
   return (
@@ -21,47 +19,9 @@ const Hero = () => {
       id="home"
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
-      {/* Background — WebGL in heavy mode, CSS fallback in lite mode */}
-      {isLiteMode ? (
-        <div
-          className="absolute inset-0 z-[1] pointer-events-none"
-          style={{
-            background: `
-              radial-gradient(circle at 50% 22%, rgba(251,191,36,0.14), transparent 28%),
-              radial-gradient(circle at 78% 30%, rgba(34,211,238,0.10), transparent 24%),
-              radial-gradient(circle at 20% 72%, rgba(52,211,153,0.08), transparent 22%),
-              linear-gradient(180deg, rgba(2,6,23,0.98) 0%, rgba(2,6,23,0.94) 48%, rgba(2,6,23,0.98) 100%)
-            `,
-          }}
-        >
-          <div
-            className="absolute inset-0 opacity-[0.08]"
-            style={{
-              backgroundImage: `
-                linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)
-              `,
-              backgroundSize: "120px 120px",
-              maskImage:
-                "radial-gradient(circle at 50% 42%, rgba(0,0,0,0.45), rgba(0,0,0,0.12) 48%, transparent 100%)",
-              WebkitMaskImage:
-                "radial-gradient(circle at 50% 42%, rgba(0,0,0,0.45), rgba(0,0,0,0.12) 48%, transparent 100%)",
-            }}
-          />
-          <div className="absolute inset-0 overflow-hidden">
-            <span className="absolute left-[12%] top-[22%] h-2 w-2 rounded-full bg-amber-300/60" />
-            <span className="absolute left-[24%] top-[68%] h-2 w-2 rounded-full bg-white/30" />
-            <span className="absolute left-[46%] top-[28%] h-2 w-2 rounded-full bg-cyan-300/55" />
-            <span className="absolute left-[58%] top-[62%] h-2 w-2 rounded-full bg-white/25" />
-            <span className="absolute left-[78%] top-[34%] h-2 w-2 rounded-full bg-cyan-300/45" />
-            <span className="absolute left-[86%] top-[74%] h-2 w-2 rounded-full bg-emerald-300/45" />
-          </div>
-        </div>
-      ) : (
-        <Suspense fallback={null}>
-          <HeroScene world={world} />
-        </Suspense>
-      )}
+      <Suspense fallback={null}>
+        <HeroScene world={world} />
+      </Suspense>
 
       {/*
         Radial vignette — darkens the centre where all text lives so it stays
@@ -117,20 +77,27 @@ const Hero = () => {
             <a href="#projects" className="btn-secondary">
               View Projects
             </a>
-            {!isLiteMode && (
-              <button
-                type="button"
-                onClick={() => launch("hero")}
-                className="inline-flex items-center gap-2 rounded-full border border-cyan-300/30 bg-cyan-300/10 px-6 py-3 text-base font-semibold text-cyan-100 transition-all duration-200 hover:bg-cyan-300/18 hover:border-cyan-300/50 hover:text-cyan-50"
-              >
-                <FaGamepad className="text-sm" />
-                <span>
-                  {session.launchCount > 0
-                    ? "Resume Challenge"
-                    : "Start Challenge"}
-                </span>
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={() => {
+                launch("hero");
+                setTimeout(
+                  () =>
+                    document
+                      .getElementById("challenge")
+                      ?.scrollIntoView({ behavior: "smooth" }),
+                  50,
+                );
+              }}
+              className="inline-flex items-center gap-2 rounded-full border border-cyan-300/30 bg-cyan-300/10 px-6 py-3 text-base font-semibold text-cyan-100 transition-all duration-200 hover:bg-cyan-300/18 hover:border-cyan-300/50 hover:text-cyan-50"
+            >
+              <FaGamepad className="text-sm" />
+              <span>
+                {session.launchCount > 0
+                  ? "Resume Challenge"
+                  : "Start Challenge"}
+              </span>
+            </button>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-3 mb-10">
@@ -201,26 +168,23 @@ const Hero = () => {
             <WorldStatusBanner />
           </div>
 
-          {!isLiteMode && (
-            <div className="mt-6 flex flex-col items-center gap-3">
-              <p className="text-[11px] tracking-[0.16em] text-slate-400/35 uppercase select-none pointer-events-none">
-                ✦ navigate the mission map &nbsp;·&nbsp; move cursor
-                &nbsp;·&nbsp; W A S D to boost the ship
-              </p>
+          <div className="mt-6 flex flex-col items-center gap-3">
+            <p className="text-[11px] tracking-[0.16em] text-slate-400/35 uppercase select-none pointer-events-none">
+              ✦ navigate the mission map &nbsp;·&nbsp; move cursor
+              &nbsp;·&nbsp; W A S D to boost the ship
+            </p>
 
-              <p className="text-xs text-slate-300/70 max-w-2xl mx-auto">
-                Challenge Mode is part of the portfolio flow — collect core tech
-                stack signals, avoid bugs, and return with a stronger systems
-                log.
-                {session.bestScore !== null && (
-                  <span className="ml-2 text-amber-200/90">
-                    Best score: {session.bestScore}
-                  </span>
-                )}
-              </p>
-            </div>
-          )}
-        </motion.div>
+            <p className="text-xs text-slate-300/70 max-w-2xl mx-auto">
+              Challenge Mode is part of the portfolio flow — collect core tech
+              stack signals, avoid bugs, and return with a stronger systems
+              log.
+              {session.bestScore !== null && (
+                <span className="ml-2 text-amber-200/90">
+                  Best score: {session.bestScore}
+                </span>
+              )}
+            </p>
+          </div>        </motion.div>
       </div>
 
       {/* Scroll Indicator */}

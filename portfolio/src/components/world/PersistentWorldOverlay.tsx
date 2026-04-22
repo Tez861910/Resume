@@ -1,6 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useMemo } from "react";
-import { useRecruiterMode } from "./RecruiterModeProvider";
 import { useSharedWorldState } from "../../three/world/WorldStateProvider";
 import {
   getSectionWorldConfig,
@@ -373,14 +372,13 @@ function OverlayLegend({
 
 export default function PersistentWorldOverlay() {
   const world = useSharedWorldState();
-  const { enabled: recruiterModeEnabled } = useRecruiterMode();
 
   const activeConfig = useMemo(
     () => getSectionWorldConfig(world.activeSection),
     [world.activeSection],
   );
 
-  if (world.isChallengeModeActive || recruiterModeEnabled) return null;
+  if (world.isChallengeModeActive) return null;
 
   const isHero = world.activeSection === "home";
 

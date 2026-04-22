@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useGame } from "../three/game/GameContext";
 import { useSharedWorldState } from "../three/world/WorldStateProvider";
-import { useRecruiterMode } from "./world/RecruiterModeProvider";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // PersistentShip
@@ -74,7 +73,6 @@ function lerpAngle(current: number, target: number, t: number): number {
 export default function PersistentShip() {
   const { isActive } = useGame();
   const world = useSharedWorldState();
-  const { enabled: recruiterModeEnabled } = useRecruiterMode();
 
   // Detect pointer device — ship only makes sense with a real cursor
   const [hasMouse] = useState(
@@ -156,9 +154,8 @@ export default function PersistentShip() {
 
       // Also hide once cursor has been to -200 (off-screen default)
       if (t.x === -200) targetOpacity = 0;
-      // Hide when game is active, recruiter mode is enabled, or scroll fraction is at very top
-      if (isActive || recruiterModeEnabled || scrollFrac < 0.005)
-        targetOpacity = 0;
+      // Hide when game is active or scroll fraction is at very top
+      if (isActive || scrollFrac < 0.005) targetOpacity = 0;
 
       s.opacity += (targetOpacity - s.opacity) * 0.08;
 
@@ -173,9 +170,9 @@ export default function PersistentShip() {
       window.removeEventListener("mousemove", onMove);
       cancelAnimationFrame(rafRef.current);
     };
-  }, [hasMouse, isActive, recruiterModeEnabled, sectionStyle.opacityBoost]);
+  }, [hasMouse, isActive, sectionStyle.opacityBoost]);
 
-  if (!hasMouse || recruiterModeEnabled) return null;
+  if (!hasMouse) return null;
 
   const { x, y, angle, opacity } = render;
 

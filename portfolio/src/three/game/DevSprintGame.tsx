@@ -808,6 +808,7 @@ export default function DevSprintGame() {
   const { close, complete } = useGame();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number>(0);
   const gRef = useRef<GameData>(makeInitialGameData());
   const phaseRef = useRef<GamePhase>("countdown");
@@ -825,47 +826,58 @@ export default function DevSprintGame() {
   const [hudStack, setHudStack] = useState<string[]>([]);
   const [hudCombo, setHudCombo] = useState(1);
 
-  // ── Canvas resize ─────────────────────────────────────────────────────────
+  // ── Canvas resize (container-based via ResizeObserver) ───────────────────
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
 
     const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      gRef.current.stars = generateStars(canvas.width, canvas.height);
-      // Place ship at left-centre on init/resize
+      const rect = container.getBoundingClientRect();
+      const w = Math.max(1, Math.floor(rect.width));
+      const h = Math.max(1, Math.floor(rect.height));
+      canvas.width = w;
+      canvas.height = h;
+      gRef.current.stars = generateStars(w, h);
       if (gRef.current.ship.x === 0) {
-        gRef.current.ship.x = canvas.width * 0.18;
-        gRef.current.ship.y = canvas.height * 0.5;
-        mouseRef.current = {
-          x: canvas.width * 0.18,
-          y: canvas.height * 0.5,
-        };
+        gRef.current.ship.x = w * 0.18;
+        gRef.current.ship.y = h * 0.5;
+        mouseRef.current = { x: w * 0.18, y: h * 0.5 };
       }
     };
 
     resize();
-    window.addEventListener("resize", resize);
-    return () => window.removeEventListener("resize", resize);
+    const ro = new ResizeObserver(resize);
+    ro.observe(container);
+    return () => ro.disconnect();
   }, []);
 
-  // ── Input: mouse ──────────────────────────────────────────────────────────
+  // ── Input: mouse / touch (canvas-relative coords) ────────────────────────
   useEffect(() => {
-    const onMove = (e: MouseEvent) => {
-      mouseRef.current.x = e.clientX;
-      mouseRef.current.y = e.clientY;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const toLocal = (clientX: number, clientY: number) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseRef.current.x =
+        ((clientX - rect.left) / rect.width) * canvas.width;
+      mouseRef.current.y =
+        ((clientY - rect.top) / rect.height) * canvas.height;
     };
+
+    const onMove = (e: MouseEvent) => toLocal(e.clientX, e.clientY);
     const onTouch = (e: TouchEvent) => {
-      e.preventDefault();
-      mouseRef.current.x = e.touches[0].clientX;
-      mouseRef.current.y = e.touches[0].clientY;
+      if (e.touches[0]) {
+        e.preventDefault();
+        toLocal(e.touches[0].clientX, e.touches[0].clientY);
+      }
     };
-    window.addEventListener("mousemove", onMove, { passive: true });
-    window.addEventListener("touchmove", onTouch, { passive: false });
+
+    canvas.addEventListener("mousemove", onMove, { passive: true });
+    canvas.addEventListener("touchmove", onTouch, { passive: false });
     return () => {
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("touchmove", onTouch);
+      canvas.removeEventListener("mousemove", onMove);
+      canvas.removeEventListener("touchmove", onTouch);
     };
   }, []);
 
@@ -1027,7 +1039,10 @@ export default function DevSprintGame() {
         }
       `}</style>
 
-      <div className="fixed inset-0 z-[100]">
+      <div
+        ref={containerRef}
+        className="relative w-full h-full overflow-hidden rounded-2xl border border-white/10 bg-slate-950/75"
+      >
         {/* 2-D canvas — the actual game rendering */}
         <canvas
           ref={canvasRef}

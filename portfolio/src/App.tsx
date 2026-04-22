@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
@@ -6,18 +6,17 @@ import About from "./components/About";
 import Skills from "./components/Skills";
 import Experience from "./components/Experience";
 import Projects from "./components/Projects";
+import Challenge from "./components/Challenge";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import ProjectDetail from "./pages/ProjectDetail";
 import PersistentShip from "./components/PersistentShip";
-import WorldHUD from "./components/world/WorldHUD";
-import SectionProgress from "./components/world/SectionProgress";
 import PersistentWorldOverlay from "./components/world/PersistentWorldOverlay";
-import RecruiterModeProvider, {
-  useRecruiterMode,
-} from "./components/world/RecruiterModeProvider";
+import CockpitFrame from "./components/cockpit/CockpitFrame";
+import CockpitHUD from "./components/cockpit/CockpitHUD";
+import WarpStreaks from "./components/cockpit/WarpStreaks";
+import WarpSection from "./components/cockpit/WarpSection";
 import { GameProvider, useGame } from "./three/game/GameContext";
-import DevSprintGame from "./three/game/DevSprintGame";
 import {
   WorldStateProvider,
   useSharedWorldState,
@@ -44,11 +43,24 @@ function HomePage() {
   return (
     <>
       <Hero />
-      <About />
-      <Skills />
-      <Experience />
-      <Projects />
-      <Contact />
+      <WarpSection>
+        <About />
+      </WarpSection>
+      <WarpSection>
+        <Skills />
+      </WarpSection>
+      <WarpSection>
+        <Experience />
+      </WarpSection>
+      <WarpSection>
+        <Projects />
+      </WarpSection>
+      <WarpSection>
+        <Challenge />
+      </WarpSection>
+      <WarpSection>
+        <Contact />
+      </WarpSection>
     </>
   );
 }
@@ -56,11 +68,9 @@ function HomePage() {
 function AppShell() {
   const [isScrolled, setIsScrolled] = useState(false);
   const { isActive } = useGame();
-  const { enabled: recruiterModeEnabled, isLiteMode } = useRecruiterMode();
   const world = useSharedWorldState();
 
-  const showWorldUi = !isActive && !recruiterModeEnabled && !isLiteMode;
-  const showImmersiveBackground = !recruiterModeEnabled && !isLiteMode;
+  const showWorldUi = !isActive;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -76,50 +86,42 @@ function AppShell() {
       <ScrollToHash />
       {showWorldUi && <PersistentWorldOverlay />}
 
-      {showImmersiveBackground && (
+      <WarpStreaks />
+
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-0 z-[1] overflow-hidden"
+      >
         <div
-          aria-hidden="true"
-          className="pointer-events-none fixed inset-0 z-[1] overflow-hidden"
-        >
-          <div
-            className="absolute inset-0 transition-opacity duration-500"
-            style={{
-              opacity: world.activeSection === "home" ? 0.12 : 0.05,
-              background:
-                "radial-gradient(circle at 50% 18%, rgba(251,191,36,0.1), transparent 42%)",
-            }}
-          />
-          <div
-            className="absolute inset-0 transition-opacity duration-500"
-            style={{
-              opacity:
-                world.activeSection === "projects"
-                  ? 0.12
-                  : world.activeSection === "skills"
-                    ? 0.08
-                    : 0.04,
-              background:
-                "radial-gradient(circle at 82% 28%, rgba(34,211,238,0.1), transparent 36%)",
-            }}
-          />
-          <div
-            className="absolute inset-0 transition-opacity duration-500"
-            style={{
-              opacity: world.activeSection === "experience" ? 0.1 : 0.04,
-              background:
-                "radial-gradient(circle at 18% 72%, rgba(52,211,153,0.08), transparent 34%)",
-            }}
-          />
-          <div
-            className="absolute inset-x-0 top-0 h-px transition-opacity duration-500"
-            style={{
-              opacity: showWorldUi ? 0.18 : 0,
-              background:
-                "linear-gradient(90deg, transparent, rgba(255,255,255,0.16), transparent)",
-            }}
-          />
-        </div>
-      )}
+          className="absolute inset-0 transition-opacity duration-500"
+          style={{
+            opacity: world.activeSection === "home" ? 0.12 : 0.05,
+            background:
+              "radial-gradient(circle at 50% 18%, rgba(251,191,36,0.1), transparent 42%)",
+          }}
+        />
+        <div
+          className="absolute inset-0 transition-opacity duration-500"
+          style={{
+            opacity:
+              world.activeSection === "projects"
+                ? 0.12
+                : world.activeSection === "skills"
+                  ? 0.08
+                  : 0.04,
+            background:
+              "radial-gradient(circle at 82% 28%, rgba(34,211,238,0.1), transparent 36%)",
+          }}
+        />
+        <div
+          className="absolute inset-0 transition-opacity duration-500"
+          style={{
+            opacity: world.activeSection === "experience" ? 0.1 : 0.04,
+            background:
+              "radial-gradient(circle at 18% 72%, rgba(52,211,153,0.08), transparent 34%)",
+          }}
+        />
+      </div>
 
       <div className="relative z-[2] min-h-screen">
         <Navbar isScrolled={isScrolled} />
@@ -130,12 +132,10 @@ function AppShell() {
         <Footer />
       </div>
 
-      {showWorldUi && <WorldHUD />}
-      {showWorldUi && <SectionProgress />}
+      <CockpitFrame />
+      {showWorldUi && <CockpitHUD />}
 
-      {!recruiterModeEnabled && !isLiteMode && <PersistentShip />}
-
-      {isActive && !isLiteMode && <DevSprintGame />}
+      <PersistentShip />
     </>
   );
 }
@@ -144,21 +144,19 @@ function WorldAwareApp() {
   const { isActive } = useGame();
 
   return (
-    <RecruiterModeProvider>
-      <WorldStateProvider
-        challengeModeActive={isActive}
-        sectionIds={[
-          "home",
-          "about",
-          "skills",
-          "experience",
-          "projects",
-          "contact",
-        ]}
-      >
-        <AppShell />
-      </WorldStateProvider>
-    </RecruiterModeProvider>
+    <WorldStateProvider
+      challengeModeActive={isActive}
+      sectionIds={[
+        "home",
+        "about",
+        "skills",
+        "experience",
+        "projects",
+        "contact",
+      ]}
+    >
+      <AppShell />
+    </WorldStateProvider>
   );
 }
 

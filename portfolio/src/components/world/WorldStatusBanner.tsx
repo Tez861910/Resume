@@ -1,11 +1,6 @@
 import { motion } from "framer-motion";
-import { useRecruiterMode } from "./RecruiterModeProvider";
 
 export default function WorldStatusBanner() {
-  const { enabled } = useRecruiterMode();
-
-  if (enabled) return null;
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 14 }}

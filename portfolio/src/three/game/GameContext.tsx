@@ -18,6 +18,7 @@ export type ChallengeEntryPoint =
   | "projects"
   | "contact"
   | "hud"
+  | "challenge-section"
   | "unknown";
 
 export interface ChallengeSessionMeta {

@@ -186,7 +186,16 @@ const Projects = () => {
               </div>
 
               <button
-                onClick={() => launch("projects")}
+                onClick={() => {
+                  launch("projects");
+                  setTimeout(
+                    () =>
+                      document
+                        .getElementById("challenge")
+                        ?.scrollIntoView({ behavior: "smooth" }),
+                    50,
+                  );
+                }}
                 className="inline-flex items-center justify-center gap-2 rounded-full border border-amber-300/30 bg-amber-300/12 px-4 py-2 text-sm font-semibold text-amber-100 transition-all duration-150 hover:bg-amber-300/20 hover:border-amber-300/45"
               >
                 🚀 Enter Challenge Mode
