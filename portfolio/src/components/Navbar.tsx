@@ -117,7 +117,7 @@ const Navbar = ({ isScrolled }: NavbarProps) => {
 
             {/* ── Challenge mode trigger ─────────────────────────────── */}
             <button
-              onClick={launch}
+              onClick={() => launch("navbar")}
               title="Launch Challenge Mode — collect your tech stack!"
               className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1.5 text-xs font-bold text-amber-200
                          transition-all duration-150 hover:border-amber-400/65 hover:bg-amber-400/22 hover:text-amber-100
@@ -148,7 +148,7 @@ const Navbar = ({ isScrolled }: NavbarProps) => {
 
             {/* Compact challenge mode button on mobile */}
             <button
-              onClick={launch}
+              onClick={() => launch("navbar")}
               title="Launch Challenge Mode"
               className="inline-flex items-center justify-center w-8 h-8 rounded-full
                          bg-amber-400/10 border border-amber-400/30 text-amber-200
