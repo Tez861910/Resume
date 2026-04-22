@@ -92,7 +92,7 @@ const Contact = () => {
                   </span>
                 </div>
 
-                <div className="space-y-4 text-base sm:text-lg text-slate-200/90 leading-relaxed">
+                <div className="space-y-4 text-sm sm:text-lg text-slate-200/90 leading-relaxed">
                   <p>
                     I’m always open to discussing new product builds, full-stack
                     engineering roles, desktop tooling, and performance-focused
@@ -113,10 +113,10 @@ const Contact = () => {
                   <p className="text-[10px] uppercase tracking-[0.24em] text-slate-500 mb-2">
                     Preferred Transmission
                   </p>
-                  <div className="flex flex-wrap items-center gap-3">
+                  <div className="flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                     <a
                       href={emailUrl}
-                      className="inline-flex items-center gap-2 rounded-full border border-amber-300/25 bg-amber-300/10 px-4 py-2 text-sm font-semibold text-amber-100 hover:bg-amber-300/20 transition-colors"
+                      className="inline-flex w-full sm:w-auto justify-center items-center gap-2 rounded-full border border-amber-300/25 bg-amber-300/10 px-4 py-2 text-sm font-semibold text-amber-100 hover:bg-amber-300/20 transition-colors"
                     >
                       <FaEnvelope className="text-sm" />
                       Email First
@@ -144,7 +144,7 @@ const Contact = () => {
                         animate={inView ? { opacity: 1, x: 0 } : {}}
                         transition={{ duration: 0.4, delay: index * 0.08 }}
                       >
-                        <div className="flex items-start gap-4">
+                        <div className="flex items-start gap-3 sm:gap-4">
                           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] text-amber-200">
                             {info.icon}
                           </div>
@@ -179,7 +179,7 @@ const Contact = () => {
                   </p>
                   <h3 className="text-2xl font-bold mb-4">Connect With Me</h3>
 
-                  <div className="flex justify-center sm:justify-start gap-5 mb-6">
+                  <div className="mb-6 flex justify-center sm:justify-start gap-4 sm:gap-5">
                     {socialLinks.map((social, index) => (
                       <a
                         key={index}
@@ -196,7 +196,7 @@ const Contact = () => {
 
                   <a
                     href={emailUrl}
-                    className="inline-flex items-center justify-center px-8 py-3 bg-slate-900 text-amber-100 font-semibold rounded-xl hover:bg-slate-800 transition-colors"
+                    className="inline-flex w-full sm:w-auto items-center justify-center px-6 sm:px-8 py-3 bg-slate-900 text-amber-100 font-semibold rounded-xl hover:bg-slate-800 transition-colors"
                   >
                     Open Email Channel
                   </a>

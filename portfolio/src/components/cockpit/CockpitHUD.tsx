@@ -51,10 +51,10 @@ export default function CockpitHUD() {
   return (
     <div
       className="pointer-events-none fixed left-0 right-0 z-[55] flex justify-center px-2 sm:px-3"
-      style={{ top: "calc(env(safe-area-inset-top, 0px) + 64px)" }}
+      style={{ top: "calc(env(safe-area-inset-top, 0px) + 62px)" }}
     >
       <div
-        className="pointer-events-auto w-full max-w-5xl rounded-full border border-white/10 bg-slate-950/65 px-2 sm:px-3 py-1 sm:py-1.5 shadow-lg shadow-black/25 backdrop-blur-md"
+        className="pointer-events-auto w-full max-w-5xl rounded-2xl md:rounded-full border border-white/10 bg-slate-950/72 px-2 sm:px-3 py-1 sm:py-1.5 shadow-lg shadow-black/25 backdrop-blur-md"
         style={{
           boxShadow: `0 0 22px -10px ${active.accents.secondary}55`,
         }}
@@ -127,26 +127,22 @@ export default function CockpitHUD() {
         </div>
 
         {/* Mobile row */}
-        <div className="md:hidden space-y-1.5">
-          {/* Status on mobile */}
-          <div className="flex items-center justify-between gap-2">
-            <span className="inline-flex items-center gap-1 rounded-full border border-emerald-300/30 bg-emerald-400/12 px-2 py-0.5 text-[8px] font-semibold uppercase tracking-[0.14em] text-emerald-100 whitespace-nowrap shrink-0">
-              <span className="h-1 w-1 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-pulse" />
-              <span className="hidden xs:inline">Open</span>
-            </span>
-          </div>
-
+        <div className="md:hidden">
           <button
             type="button"
             onClick={() => setExpanded((v) => !v)}
-            className="w-full flex items-center gap-1.5 text-[9px] sm:text-[10px] uppercase tracking-[0.16em] sm:tracking-[0.18em] text-slate-200"
+            className="w-full flex items-center gap-1.5 text-[9px] uppercase tracking-[0.14em] text-slate-200"
             aria-expanded={expanded}
           >
+            <span className="inline-flex items-center gap-1 rounded-full border border-emerald-300/30 bg-emerald-400/12 px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-[0.12em] text-emerald-100 whitespace-nowrap shrink-0">
+              <span className="h-1 w-1 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-pulse" />
+              Open
+            </span>
             <span
-              className="h-1 sm:h-1.5 w-1 sm:w-1.5 rounded-full shrink-0"
+              className="h-1 w-1 rounded-full shrink-0"
               style={{
                 background: active.accents.primary,
-                boxShadow: `0 0 6px sm:0 0 8px ${active.accents.primary}`,
+                boxShadow: `0 0 8px ${active.accents.primary}`,
               }}
             />
             <span
@@ -164,13 +160,18 @@ export default function CockpitHUD() {
                 }}
               />
             </div>
-            <span className="tabular-nums text-cyan-200/80 text-[9px] sm:text-[10px] shrink-0">
+            <span className="hidden min-[380px]:inline tabular-nums text-cyan-200/80 text-[9px] shrink-0">
               {kms}
             </span>
           </button>
 
           {expanded && (
-            <div className="mt-2 flex flex-wrap gap-1.5 border-t border-white/10 pt-2">
+            <div className="mt-2 space-y-2 border-t border-white/10 pt-2">
+              <div className="flex items-center justify-between gap-2 text-[9px] uppercase tracking-[0.14em] text-slate-400">
+                <span>Scroll progress</span>
+                <span className="text-emerald-200">Open to opportunities</span>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
               {WORLD_SECTION_ORDER.map((id) => {
                 const c = SECTION_WORLD_MAP[id];
                 const isActive = id === world.activeSection;
@@ -194,6 +195,7 @@ export default function CockpitHUD() {
                   </button>
                 );
               })}
+              </div>
             </div>
           )}
         </div>

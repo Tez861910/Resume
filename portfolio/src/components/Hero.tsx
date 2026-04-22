@@ -17,7 +17,7 @@ const Hero = () => {
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 sm:pt-24 md:pt-28"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-28 sm:pt-32 md:pt-28"
     >
       <Suspense fallback={null}>
         <HeroScene world={world} />
@@ -36,7 +36,7 @@ const Hero = () => {
         }}
       />
 
-      <div className="relative z-10 section-container text-center">
+      <div className="relative z-10 section-container py-12 sm:py-20 text-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -44,32 +44,32 @@ const Hero = () => {
           className="max-w-4xl mx-auto"
         >
           <h1
-            className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-4 leading-tight tracking-tight text-slate-50"
+            className="text-4xl sm:text-6xl lg:text-7xl font-bold mb-4 leading-tight tracking-tight text-slate-50"
             style={{ textShadow: "0 2px 24px rgba(0,0,0,0.95)" }}
           >
             Tejas S
           </h1>
 
-          <p className="text-xl sm:text-2xl lg:text-3xl mb-6 text-amber-100">
+          <p className="text-lg sm:text-2xl lg:text-3xl mb-5 sm:mb-6 text-amber-100">
             Full-Stack Developer building performant web platforms and 3D
             desktop systems
           </p>
 
-          <p className="text-lg sm:text-xl max-w-3xl mx-auto mb-3 text-slate-200/90">
+          <p className="text-base sm:text-xl max-w-3xl mx-auto mb-3 text-slate-200/90">
             Navigate a mission map of shipped products, performance wins, and
             full-stack systems across web and desktop.
           </p>
-          <p className="text-base sm:text-lg max-w-3xl mx-auto mb-8 text-slate-300/82">
+          <p className="text-sm sm:text-lg max-w-3xl mx-auto mb-7 sm:mb-8 text-slate-300/82">
             React / Node / MySQL on the web; WPF / DirectX on desktop. Delivered
             faster loads, stronger engagement, and production-focused
             engineering outcomes through performance tuning and UX refinement.
           </p>
 
-          <div className="flex flex-wrap justify-center gap-4 mb-10">
-            <a href="#contact" className="btn-primary">
+          <div className="mb-8 sm:mb-10 flex flex-col sm:flex-row sm:flex-wrap justify-center gap-3 sm:gap-4">
+            <a href="#contact" className="btn-primary w-full sm:w-auto justify-center">
               Get In Touch
             </a>
-            <a href="#projects" className="btn-secondary">
+            <a href="#projects" className="btn-secondary w-full sm:w-auto justify-center">
               View Projects
             </a>
             <button
@@ -84,7 +84,7 @@ const Hero = () => {
                   50,
                 );
               }}
-              className="inline-flex items-center gap-2 rounded-full border border-cyan-300/30 bg-cyan-300/10 px-6 py-3 text-base font-semibold text-cyan-100 transition-all duration-200 hover:bg-cyan-300/18 hover:border-cyan-300/50 hover:text-cyan-50"
+              className="inline-flex w-full sm:w-auto justify-center items-center gap-2 rounded-full border border-cyan-300/30 bg-cyan-300/10 px-6 py-3 text-base font-semibold text-cyan-100 transition-all duration-200 hover:bg-cyan-300/18 hover:border-cyan-300/50 hover:text-cyan-50"
             >
               <FaGamepad className="text-sm" />
               <span>
@@ -95,7 +95,7 @@ const Hero = () => {
             </button>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-3 mb-10">
+          <div className="grid gap-3 sm:grid-cols-3 mb-8 sm:mb-10">
             {[
               {
                 label: "Performance",
@@ -115,7 +115,7 @@ const Hero = () => {
             ].map((stat, index) => (
               <motion.div
                 key={stat.label}
-                className="rounded-2xl border border-white/10 bg-slate-950/55 px-5 py-4 text-left shadow-lg shadow-black/15 backdrop-blur-sm"
+                className="rounded-2xl border border-white/10 bg-slate-950/55 px-4 sm:px-5 py-4 text-left shadow-lg shadow-black/15 backdrop-blur-sm"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35, delay: 0.18 + index * 0.08 }}
@@ -123,15 +123,15 @@ const Hero = () => {
                 <div className="text-[11px] uppercase tracking-[0.18em] text-amber-200/70 mb-1">
                   {stat.label}
                 </div>
-                <div className="text-xl font-bold text-amber-100 mb-1">
-                  {stat.value}
-                </div>
+                 <div className="text-lg sm:text-xl font-bold text-amber-100 mb-1">
+                   {stat.value}
+                 </div>
                 <p className="text-xs text-slate-300/75">{stat.detail}</p>
               </motion.div>
             ))}
           </div>
 
-          <div className="flex justify-center gap-6 text-3xl text-amber-100">
+          <div className="flex justify-center gap-5 sm:gap-6 text-[1.65rem] sm:text-3xl text-amber-100">
             <a
               href={githubUrl}
               target="_blank"
@@ -163,13 +163,13 @@ const Hero = () => {
             <WorldStatusBanner />
           </div>
 
-          <div className="mt-6 flex flex-col items-center gap-3">
-            <p className="text-[11px] tracking-[0.16em] text-slate-400/35 uppercase select-none pointer-events-none">
+          <div className="mt-5 sm:mt-6 flex flex-col items-center gap-2 sm:gap-3">
+            <p className="hidden sm:block text-[11px] tracking-[0.16em] text-slate-400/35 uppercase select-none pointer-events-none">
               ✦ navigate the mission map &nbsp;·&nbsp; move cursor
               &nbsp;·&nbsp; W A S D to boost the ship
             </p>
 
-            <p className="text-xs text-slate-300/70 max-w-2xl mx-auto">
+            <p className="text-[11px] sm:text-xs text-slate-300/70 max-w-2xl mx-auto">
               Challenge Mode is part of the portfolio flow — collect core tech
               stack signals, avoid bugs, and return with a stronger systems
               log.
@@ -179,7 +179,8 @@ const Hero = () => {
                 </span>
               )}
             </p>
-          </div>        </motion.div>
+          </div>
+        </motion.div>
       </div>
 
       {/* Scroll Indicator */}

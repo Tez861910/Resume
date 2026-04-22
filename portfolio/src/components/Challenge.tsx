@@ -29,7 +29,7 @@ export default function Challenge() {
           transition={{ duration: 0.6 }}
           className="max-w-5xl mx-auto"
         >
-          <div className="flex items-center gap-3 mb-6">
+          <div className="mb-6 flex flex-wrap items-center gap-2 sm:gap-3">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-300/30 bg-amber-300/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-amber-200">
               <FaRocket className="text-[10px]" /> Challenge Bay
             </span>
@@ -123,15 +123,15 @@ function IdleHangar({
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-2 px-2">
-          <button
-            type="button"
-            onClick={onLaunch}
-            className="inline-flex items-center gap-2 rounded-full border border-amber-300/40 bg-amber-300/15 px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-amber-100 transition-all duration-150 hover:border-amber-300/70 hover:bg-amber-300/25 active:scale-95 whitespace-nowrap"
-          >
-            <FaGamepad className="text-xs sm:text-base" />
-            <span className="hidden xs:inline">{launchCount > 0 ? "Launch another run" : "Launch mission"}</span>
-            <span className="inline xs:hidden">{launchCount > 0 ? "Retry" : "Launch"}</span>
-          </button>
+            <button
+              type="button"
+              onClick={onLaunch}
+              className="inline-flex items-center gap-2 rounded-full border border-amber-300/40 bg-amber-300/15 px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-amber-100 transition-all duration-150 hover:border-amber-300/70 hover:bg-amber-300/25 active:scale-95 whitespace-nowrap"
+            >
+              <FaGamepad className="text-xs sm:text-base" />
+              <span className="hidden sm:inline">{launchCount > 0 ? "Launch another run" : "Launch mission"}</span>
+              <span className="sm:hidden">{launchCount > 0 ? "Retry" : "Launch"}</span>
+            </button>
           {bestScore !== null && (
             <button
               type="button"
