@@ -4,6 +4,8 @@ import * as THREE from "three";
 import type { MutableRefObject } from "react";
 import type { MissionId } from "./missions";
 import type { LasersHandle } from "./Lasers";
+import type { PlayerState } from "./usePlayerState";
+import { useGameAsset } from "./AssetPipeline";
 
 interface EnemyBot {
   alive: boolean;
@@ -14,6 +16,7 @@ interface EnemyBot {
   orbitAxis: THREE.Vector3;
   pos: THREE.Vector3;
   hp: number;
+  cooldown: number;
 }
 
 export interface EnemyBotsHandle {
@@ -28,6 +31,8 @@ interface Props {
     enemyCount: number;
   }[];
   lasers: MutableRefObject<LasersHandle | null>;
+  enemyLasers: MutableRefObject<LasersHandle | null>;
+  player: MutableRefObject<PlayerState>;
   /** output: counts map is updated in-place for external consumers */
   counterRef: MutableRefObject<Record<MissionId, number>>;
   enabled: boolean;
@@ -36,25 +41,15 @@ interface Props {
 export default function EnemyBots({
   stations,
   lasers,
+  enemyLasers,
+  player,
   counterRef,
   enabled,
 }: Props) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
   const botsRef = useRef<EnemyBot[]>([]);
   const dummy = useMemo(() => new THREE.Object3D(), []);
-  const geo = useMemo(() => new THREE.OctahedronGeometry(1.2, 0), []);
-  const mat = useMemo(
-    () =>
-      new THREE.MeshStandardMaterial({
-        color: "#ef4444",
-        emissive: "#7f1d1d",
-        emissiveIntensity: 0.6,
-        roughness: 0.3,
-        metalness: 0.6,
-        flatShading: true,
-      }),
-    [],
-  );
+  const asset = useGameAsset("enemy");
 
   useEffect(() => {
     const arr: EnemyBot[] = [];
@@ -73,6 +68,7 @@ export default function EnemyBots({
           ).normalize(),
           pos: s.position.clone(),
           hp: 1,
+          cooldown: Math.random() * 2,
         });
       }
     }
@@ -103,11 +99,11 @@ export default function EnemyBots({
       // Orbit around the station on a tilted plane
       const angle = b.orbitPhase + t * 0.8;
       // orbit plane: perpendicular to orbitAxis
-      const right = new THREE.Vector3(1, 0, 0)
-        .cross(b.orbitAxis)
-        .normalize();
+      const right = new THREE.Vector3(1, 0, 0).cross(b.orbitAxis).normalize();
       if (right.lengthSq() < 0.01) right.set(0, 0, 1);
-      const up = new THREE.Vector3().crossVectors(b.orbitAxis, right).normalize();
+      const up = new THREE.Vector3()
+        .crossVectors(b.orbitAxis, right)
+        .normalize();
       b.pos
         .copy(b.basePos)
         .addScaledVector(right, Math.cos(angle) * b.orbitRadius)
@@ -116,6 +112,31 @@ export default function EnemyBots({
       if (enabled && lasers.current?.consumeHit(b.pos, 1.8)) {
         b.alive = false;
         continue;
+      }
+
+      if (enabled) {
+        b.cooldown -= dt;
+        if (b.cooldown <= 0) {
+          const distSq = b.pos.distanceToSquared(player.current.position);
+          if (distSq < 1600) {
+            // ~40 units range
+            b.cooldown = 1.5 + Math.random() * 2.0; // 1.5 to 3.5 seconds
+            const dir = new THREE.Vector3()
+              .subVectors(player.current.position, b.pos)
+              .normalize();
+            // Add a little inaccuracy
+            dir.x += (Math.random() - 0.5) * 0.08;
+            dir.y += (Math.random() - 0.5) * 0.08;
+            dir.z += (Math.random() - 0.5) * 0.08;
+            dir.normalize();
+            enemyLasers.current?.spawn(
+              b.pos.clone().addScaledVector(dir, 1.5),
+              dir,
+            );
+          } else {
+            b.cooldown = 0.5; // check again soon
+          }
+        }
       }
 
       counts[b.missionId] = (counts[b.missionId] ?? 0) + 1;
@@ -138,7 +159,10 @@ export default function EnemyBots({
   return (
     <instancedMesh
       ref={meshRef}
-      args={[geo, mat, Math.max(1, capacity)]}
+      // @ts-expect-error - React-Three-Fiber args type is too strict
+      args={[null, null, Math.max(1, capacity)]}
+      geometry={asset.geometry}
+      material={asset.material}
       count={0}
     />
   );

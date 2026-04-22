@@ -19,7 +19,7 @@ interface Props {
 
 export default function CockpitScene({ enabled }: Props) {
   const runtime = useCockpitRuntime();
-  const { collected, collectDrive } = useCockpit();
+  const { collected, collectDrive, cameraView } = useCockpit();
 
   const stations = useMemo(
     () =>
@@ -37,11 +37,18 @@ export default function CockpitScene({ enabled }: Props) {
   );
 
   const currentMissionId =
-    MISSIONS.find((m) => !collected.has(m.id))?.id ?? MISSIONS[MISSIONS.length - 1].id;
+    MISSIONS.find((m) => !collected.has(m.id))?.id ??
+    MISSIONS[MISSIONS.length - 1].id;
 
   return (
     <Canvas
-      dpr={[1, Math.min(typeof window !== "undefined" ? window.devicePixelRatio : 1, 2)]}
+      dpr={[
+        1,
+        Math.min(
+          typeof window !== "undefined" ? window.devicePixelRatio : 1,
+          2,
+        ),
+      ]}
       gl={{ antialias: true, powerPreference: "high-performance" }}
       camera={{ position: [0, 0, 0], fov: 75, near: 0.1, far: 2000 }}
       onCreated={({ gl, scene }) => {
@@ -51,7 +58,11 @@ export default function CockpitScene({ enabled }: Props) {
     >
       <ambientLight intensity={0.35} />
       <directionalLight position={[50, 80, 30]} intensity={0.8} />
-      <directionalLight position={[-40, -30, -50]} intensity={0.35} color={"#6ea9ff"} />
+      <directionalLight
+        position={[-40, -30, -50]}
+        intensity={0.35}
+        color={"#6ea9ff"}
+      />
 
       <Starfield count={2500} />
 
@@ -60,6 +71,8 @@ export default function CockpitScene({ enabled }: Props) {
       <EnemyBots
         stations={stations}
         lasers={runtime.lasers}
+        enemyLasers={runtime.enemyLasers}
+        player={runtime.player}
         counterRef={runtime.enemyCounts}
         enabled={enabled}
       />
@@ -82,11 +95,17 @@ export default function CockpitScene({ enabled }: Props) {
       />
 
       <Lasers ref={runtime.lasers as React.RefObject<LasersHandle>} />
+      <Lasers
+        ref={runtime.enemyLasers as React.RefObject<LasersHandle>}
+        color="#ef4444"
+      />
 
       <PlayerController
         input={runtime.input}
         player={runtime.player}
+        enemyLasers={runtime.enemyLasers}
         enabled={enabled}
+        cameraView={cameraView}
         onFire={(origin, direction) => {
           runtime.lasers.current?.spawn(origin, direction);
         }}

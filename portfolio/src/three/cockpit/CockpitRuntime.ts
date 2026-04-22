@@ -9,6 +9,7 @@ export interface CockpitRuntime {
   input: CockpitInputApi;
   player: MutableRefObject<PlayerState>;
   lasers: MutableRefObject<LasersHandle | null>;
+  enemyLasers: MutableRefObject<LasersHandle | null>;
   enemyCounts: MutableRefObject<Record<MissionId, number>>;
 }
 

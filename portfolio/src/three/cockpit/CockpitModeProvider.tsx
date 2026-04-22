@@ -26,6 +26,10 @@ interface CockpitCtx {
   openDriveId: MissionId | null;
   openDrive: (id: MissionId) => void;
   closeDrive: () => void;
+  cameraView: "first" | "third";
+  toggleCameraView: () => void;
+  gamePhase: "base" | "space" | "dialogue";
+  setGamePhase: (phase: "base" | "space" | "dialogue") => void;
 }
 
 const CockpitContext = createContext<CockpitCtx | null>(null);
@@ -57,6 +61,10 @@ export function CockpitModeProvider({ children }: { children: ReactNode }) {
     loadCollected(),
   );
   const [openDriveId, setOpenDriveId] = useState<MissionId | null>(null);
+  const [cameraView, setCameraView] = useState<"first" | "third">("first");
+  const [gamePhase, setGamePhase] = useState<"base" | "space" | "dialogue">(
+    "base",
+  );
 
   const persistedRef = useRef(collected);
   persistedRef.current = collected;
@@ -71,6 +79,9 @@ export function CockpitModeProvider({ children }: { children: ReactNode }) {
     setOpenDriveId(null);
   }, []);
   const toggle = useCallback(() => setIsActive((v) => !v), []);
+  const toggleCameraView = useCallback(() => {
+    setCameraView((v) => (v === "first" ? "third" : "first"));
+  }, []);
 
   useEffect(() => {
     if (!isActive) return;
@@ -90,6 +101,8 @@ export function CockpitModeProvider({ children }: { children: ReactNode }) {
         } else {
           setIsActive(false);
         }
+      } else if (e.key.toLowerCase() === "v") {
+        setCameraView((v) => (v === "first" ? "third" : "first"));
       }
     };
     window.addEventListener("keydown", onKey);
@@ -144,6 +157,10 @@ export function CockpitModeProvider({ children }: { children: ReactNode }) {
       openDriveId,
       openDrive,
       closeDrive,
+      cameraView,
+      toggleCameraView,
+      gamePhase,
+      setGamePhase,
     }),
     [
       isActive,
@@ -159,6 +176,9 @@ export function CockpitModeProvider({ children }: { children: ReactNode }) {
       openDriveId,
       openDrive,
       closeDrive,
+      cameraView,
+      toggleCameraView,
+      gamePhase,
     ],
   );
 

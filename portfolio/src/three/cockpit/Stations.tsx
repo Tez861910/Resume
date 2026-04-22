@@ -2,6 +2,7 @@ import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import type { Mission } from "./missions";
+import { useGameAsset } from "./AssetPipeline";
 
 /** One station marker per mission: a glowing ring + beacon pillar. */
 export default function Stations({
@@ -12,6 +13,7 @@ export default function Stations({
   currentMissionId: string;
 }) {
   const groupRef = useRef<THREE.Group>(null);
+  const asset = useGameAsset("station");
 
   const entries = useMemo(() => {
     return missions.map((m) => ({
@@ -27,7 +29,9 @@ export default function Stations({
     // pulse scale of current mission station
     for (const child of g.children) {
       const isCurrent = child.userData.missionId === currentMissionId;
-      const target = isCurrent ? 1.0 + 0.1 * Math.sin(performance.now() * 0.004) : 0.9;
+      const target = isCurrent
+        ? 1.0 + 0.1 * Math.sin(performance.now() * 0.004)
+        : 0.9;
       child.scale.lerp(new THREE.Vector3(target, target, target), delta * 4);
     }
   });
@@ -52,18 +56,7 @@ export default function Stations({
             />
           </mesh>
           {/* Inner beacon */}
-          <mesh>
-            <icosahedronGeometry args={[1.6, 1]} />
-            <meshStandardMaterial
-              color={e.color}
-              emissive={e.color}
-              emissiveIntensity={1.2}
-              roughness={0.3}
-              metalness={0.4}
-              transparent
-              opacity={0.9}
-            />
-          </mesh>
+          <mesh geometry={asset.geometry} material={asset.material} />
           {/* Vertical light pillar */}
           <mesh position={[0, 30, 0]}>
             <cylinderGeometry args={[0.2, 0.2, 60, 6]} />

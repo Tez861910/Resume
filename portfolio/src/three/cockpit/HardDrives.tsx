@@ -4,6 +4,7 @@ import * as THREE from "three";
 import type { MutableRefObject } from "react";
 import type { Mission, MissionId } from "./missions";
 import type { PlayerState } from "./usePlayerState";
+import { useGameAsset } from "./AssetPipeline";
 
 interface Props {
   missions: Mission[];
@@ -25,6 +26,7 @@ export default function HardDrives({
   enabled,
 }: Props) {
   const groupRef = useRef<THREE.Group>(null);
+  const asset = useGameAsset("harddrive");
 
   const entries = useMemo(
     () =>
@@ -81,16 +83,7 @@ export default function HardDrives({
             phase: Math.random() * Math.PI * 2,
           }}
         >
-          <mesh>
-            <boxGeometry args={[2.4, 1.3, 1.7]} />
-            <meshStandardMaterial
-              color={e.color}
-              emissive={e.color}
-              emissiveIntensity={0.8}
-              roughness={0.3}
-              metalness={0.7}
-            />
-          </mesh>
+          <mesh geometry={asset.geometry} material={asset.material} />
           {/* LED strip */}
           <mesh position={[0, 0.7, 0]}>
             <boxGeometry args={[2.0, 0.08, 0.3]} />

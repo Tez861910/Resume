@@ -4,28 +4,36 @@ import * as THREE from "three";
 import type { MutableRefObject } from "react";
 import type { CockpitInputApi } from "./useCockpitInput";
 import type { PlayerState } from "./usePlayerState";
+import type { LasersHandle } from "./Lasers";
+import { useGameAsset } from "./AssetPipeline";
 
 interface PlayerControllerProps {
   input: CockpitInputApi;
   player: MutableRefObject<PlayerState>;
+  enemyLasers?: MutableRefObject<LasersHandle | null>;
   /** Called when fireTrigger increments — pass ship pos/dir for spawning a laser */
   onFire: (origin: THREE.Vector3, direction: THREE.Vector3) => void;
   /** Whether input is allowed (blocked by e.g. drive modal open) */
   enabled: boolean;
+  /** View mode for the camera */
+  cameraView?: "first" | "third";
 }
 
 /**
- * First-person flight. No visible ship mesh — the camera is the pilot's eyes
- * and the cockpit chrome is DOM. Ship orientation tracked via quaternion.
+ * Flight controller supporting First-person and Third-person views.
  */
 export default function PlayerController({
   input,
   player,
+  enemyLasers,
   onFire,
   enabled,
+  cameraView = "first",
 }: PlayerControllerProps) {
   const { camera } = useThree();
   const lastFireTrigger = useRef(0);
+  const shipMeshRef = useRef<THREE.Mesh>(null);
+  const asset = useGameAsset("player");
 
   useEffect(() => {
     camera.position.set(0, 0, 0);
@@ -47,12 +55,31 @@ export default function PlayerController({
     const m = input.mouse.current;
     const p = player.current;
 
+    // Camera positioning function
+    const updateCamera = () => {
+      if (cameraView === "third") {
+        // Position behind and slightly above the ship
+        const offset = new THREE.Vector3(0, 3, 10).applyQuaternion(
+          p.quaternion,
+        );
+        camera.position.copy(p.position).add(offset);
+
+        // Look ahead of the ship
+        const lookAhead = p.position
+          .clone()
+          .add(new THREE.Vector3(0, 0, -50).applyQuaternion(p.quaternion));
+        camera.lookAt(lookAhead);
+      } else {
+        camera.position.copy(p.position);
+        camera.quaternion.copy(p.quaternion);
+      }
+    };
+
     if (!enabled) {
       // damp everything to a stop
       p.velocity.multiplyScalar(0.92);
       p.position.add(p.velocity.clone().multiplyScalar(dt));
-      camera.position.copy(p.position);
-      camera.quaternion.copy(p.quaternion);
+      updateCamera();
       return;
     }
 
@@ -110,15 +137,44 @@ export default function PlayerController({
     p.velocity.lerp(targetVelocity, Math.min(1, dt * 2.5));
     p.position.add(p.velocity.clone().multiplyScalar(dt));
 
+    // Enemy laser collision
+    if (enabled && enemyLasers?.current?.consumeHit(p.position, 2.5)) {
+      // Flash or screen shake could be triggered here via an event or state
+      p.shield = Math.max(0, p.shield - 0.2);
+      if (p.shield <= 0) {
+        p.hull = Math.max(0, p.hull - 0.15);
+      }
+    }
+
     // Hull regen (slow) + shield regen (faster)
     p.shield = Math.min(1, p.shield + dt * 0.12);
     if (p.shield >= 0.999) {
       p.hull = Math.min(1, p.hull + dt * 0.03);
     }
 
-    camera.position.copy(p.position);
-    camera.quaternion.copy(p.quaternion);
+    // Death / Respawn logic
+    if (p.hull <= 0) {
+      p.hull = 1;
+      p.shield = 1;
+      p.speed = 0;
+      p.velocity.set(0, 0, 0);
+      // Push them back a bit or reset to 0,0,0
+      p.position.set(0, 0, 0);
+    }
+
+    if (shipMeshRef.current && cameraView === "third") {
+      shipMeshRef.current.position.copy(p.position);
+      shipMeshRef.current.quaternion.copy(p.quaternion);
+    }
+
+    updateCamera();
   });
 
-  return null;
+  return cameraView === "third" ? (
+    <mesh ref={shipMeshRef}>
+      <group rotation={[Math.PI / 2, 0, Math.PI]}>
+        <mesh geometry={asset.geometry} material={asset.material} />
+      </group>
+    </mesh>
+  ) : null;
 }
