@@ -6,6 +6,7 @@ import type { CockpitInputApi } from "./useCockpitInput";
 import type { PlayerState } from "./usePlayerState";
 import type { LasersHandle } from "./Lasers";
 import { useGameAsset } from "./AssetPipeline";
+import { useCockpit } from "./CockpitModeProvider";
 
 interface PlayerControllerProps {
   input: CockpitInputApi;
@@ -34,6 +35,8 @@ export default function PlayerController({
   const lastFireTrigger = useRef(0);
   const shipMeshRef = useRef<THREE.Mesh>(null);
   const asset = useGameAsset("player");
+  const { audio } = useCockpit();
+  const shakeRef = useRef(0); // Shake intensity
 
   useEffect(() => {
     camera.position.set(0, 0, 0);
@@ -88,6 +91,7 @@ export default function PlayerController({
       lastFireTrigger.current = i.fireTrigger;
       const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(p.quaternion);
       onFire(p.position.clone(), forward);
+      audio.playLaser(false);
     }
 
     // Mouse pitch/yaw (accumulated) — convert to per-frame angular deltas
@@ -140,11 +144,20 @@ export default function PlayerController({
     // Enemy laser collision
     if (enabled && enemyLasers?.current?.consumeHit(p.position, 2.5)) {
       // Flash or screen shake could be triggered here via an event or state
+      audio.playImpact();
+      shakeRef.current = Math.min(1, shakeRef.current + 0.5); // Add shake
       p.shield = Math.max(0, p.shield - 0.2);
       if (p.shield <= 0) {
         p.hull = Math.max(0, p.hull - 0.15);
       }
     }
+
+    // Update shake decay
+    shakeRef.current *= 0.9;
+    if (shakeRef.current < 0.01) shakeRef.current = 0;
+
+    // Update synthesized engine sound
+    audio.updateEngine(p.speed, p.boost);
 
     // Hull regen (slow) + shield regen (faster)
     p.shield = Math.min(1, p.shield + dt * 0.12);
@@ -167,9 +180,14 @@ export default function PlayerController({
       shipMeshRef.current.quaternion.copy(p.quaternion);
     }
 
+    // Update camera with shake
     updateCamera();
-  });
 
+    if (shakeRef.current > 0) {
+      camera.position.x += (Math.random() - 0.5) * shakeRef.current * 1.5;
+      camera.position.y += (Math.random() - 0.5) * shakeRef.current * 1.5;
+    }
+  });
   return cameraView === "third" ? (
     <mesh ref={shipMeshRef}>
       <group rotation={[Math.PI / 2, 0, Math.PI]}>

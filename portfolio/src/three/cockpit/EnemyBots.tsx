@@ -4,8 +4,10 @@ import * as THREE from "three";
 import type { MutableRefObject } from "react";
 import type { MissionId } from "./missions";
 import type { LasersHandle } from "./Lasers";
+import type { ExplosionsHandle } from "./Explosions";
 import type { PlayerState } from "./usePlayerState";
 import { useGameAsset } from "./AssetPipeline";
+import { useCockpit } from "./CockpitModeProvider";
 
 interface EnemyBot {
   alive: boolean;
@@ -32,6 +34,8 @@ interface Props {
   }[];
   lasers: MutableRefObject<LasersHandle | null>;
   enemyLasers: MutableRefObject<LasersHandle | null>;
+  explosions: MutableRefObject<ExplosionsHandle | null>;
+  enemies: MutableRefObject<THREE.Vector3[]>;
   player: MutableRefObject<PlayerState>;
   /** output: counts map is updated in-place for external consumers */
   counterRef: MutableRefObject<Record<MissionId, number>>;
@@ -42,6 +46,8 @@ export default function EnemyBots({
   stations,
   lasers,
   enemyLasers,
+  explosions,
+  enemies,
   player,
   counterRef,
   enabled,
@@ -50,6 +56,7 @@ export default function EnemyBots({
   const botsRef = useRef<EnemyBot[]>([]);
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const asset = useGameAsset("enemy");
+  const { audio } = useCockpit();
 
   useEffect(() => {
     const arr: EnemyBot[] = [];
@@ -92,6 +99,7 @@ export default function EnemyBots({
     if (!mesh) return;
 
     const counts: Partial<Record<MissionId, number>> = {};
+    const activePositions: THREE.Vector3[] = [];
 
     let idx = 0;
     for (const b of bots) {
@@ -111,6 +119,7 @@ export default function EnemyBots({
 
       if (enabled && lasers.current?.consumeHit(b.pos, 1.8)) {
         b.alive = false;
+        explosions.current?.spawn(b.pos, 15);
         continue;
       }
 
@@ -133,12 +142,14 @@ export default function EnemyBots({
               b.pos.clone().addScaledVector(dir, 1.5),
               dir,
             );
+            audio.playLaser(true);
           } else {
             b.cooldown = 0.5; // check again soon
           }
         }
       }
 
+      activePositions.push(b.pos.clone());
       counts[b.missionId] = (counts[b.missionId] ?? 0) + 1;
       dummy.position.copy(b.pos);
       dummy.rotation.set(t * 0.4, t * 0.6 + b.orbitPhase, 0);
@@ -148,6 +159,7 @@ export default function EnemyBots({
     }
     mesh.count = idx;
     mesh.instanceMatrix.needsUpdate = true;
+    enemies.current = activePositions;
     counterRef.current = counts as Record<MissionId, number>;
   });
 
@@ -164,6 +176,7 @@ export default function EnemyBots({
       geometry={asset.geometry}
       material={asset.material}
       count={0}
+      frustumCulled={false}
     />
   );
 }

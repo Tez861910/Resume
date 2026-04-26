@@ -37,9 +37,10 @@ The user (visitor/recruiter) is positioned as an operator or explorer navigating
 - **Active Section Tracking:** The background scene emphasizes elements based on the current viewport (e.g., skill nodes brighten when in the Skills section).
 - **HUD & Progress Dock:** A compact status bar and bottom progress dock to indicate the current sector and route progression.
 
-### 4.3. Challenge Mode (Mini-Game)
-- **Concept:** An optional 2D canvas overlay framed as "systems calibration" or "skill collection run" rather than a disconnected arcade game.
-- **Integration:** Collectibles mirror actual portfolio skills; rewards tie back to the portfolio content.
+### 4.3. Cockpit Module System
+- **Concept:** A narrative-driven 3D space flight simulator framing the portfolio discovery.
+- **Phases:** Base (Briefing) -> Space Sandbox (Combat/Collection) -> Base (Review Data).
+- **Integration:** The 6 "Resume Hard Drives" are scattered across sectors. Combat and exploration are required to "decrypt" the resume.
 
 ### 4.4. Capability Modes
 - **Heavy Mode:** Full immersive WebGL experience (bloom, rich particles, 3D scenes).
@@ -66,7 +67,6 @@ The user (visitor/recruiter) is positioned as an operator or explorer navigating
    - *Mechanics:* Clear, distraction-free CTAs.
 
 ## 6. Ideas & Improvements
-- **Unlockable Easter Eggs:** Completing the Challenge Mode could unlock an alternate terminal color scheme or a hidden "prototype" project.
 - **Sound Design:** Add a toggle for subtle, low-volume UI audio (e.g., soft blips on hover, ambient hum).
 - **Progress Map Overview:** A miniaturized map in the HUD that shows the full site layout and current position.
 - **Analytics Integration:** Track which "missions" (projects) get the most inspect time to refine portfolio presentation.
@@ -100,12 +100,15 @@ The user (visitor/recruiter) is positioned as an operator or explorer navigating
 - [ ] Audit Projects section for scroll-jank (reduce DOM layout thrashing).
 - [ ] Ensure 100% stable 60fps in Lite Mode on mobile.
 
-### Game Integration
-- [x] Implement First-Person and Third-Person Camera toggle system for the Cockpit game.
+### Game Integration (Cockpit Module)
+- [x] Implement First-Person and Third-Person Camera toggle system.
 - [x] Implement comprehensive Health & Shield System, enabling enemy AI firing and structural collisions.
-- [x] Build an Asset Pipeline to asynchronously load GLTF models (player, enemy, station, asteroid) with primitive fallbacks.
-- [ ] Build Narrative Sandbox: Create a Base / Command Center UI to frame gameplay before launching into space.
-- [ ] Implement Scene Dialogues: Negotiation UI with enemy factions before combat initiates.
-- [ ] Integrate "Challenge Mode" directly into portfolio flow (e.g., launchable from specific terminals).
-- [ ] Tie Challenge Mode collectibles directly to highlighted skills.
+- [x] Build an Asset Pipeline to asynchronously load GLTF models (player, enemy, station, asteroid).
+- [x] Build Narrative Sandbox: Create a Base / Command Center UI to frame gameplay.
+- [x] Implement Scene Dialogues: Negotiation UI with enemy factions before combat initiates.
+- [x] Implement Audio System: Integrated synthesized engine hum, laser fire, radio static, and impact sounds.
+- [x] Implement Visual Effects: Added Warp-in streaks and high-performance particle explosion system.
+- [x] Implement HUD Minimap/Radar: Real-time top-down tracking of off-screen enemies and pips for targets.
+- [ ] Implement multi-stage mission objectives (Escort, Destroy, Scan).
+- [ ] Implement Boss Battles: Larger cruisers guarding the final drives.
 - [ ] Add post-game summary that routes user to the Projects section.

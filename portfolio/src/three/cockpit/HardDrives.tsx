@@ -5,6 +5,7 @@ import type { MutableRefObject } from "react";
 import type { Mission, MissionId } from "./missions";
 import type { PlayerState } from "./usePlayerState";
 import { useGameAsset } from "./AssetPipeline";
+import { useCockpit } from "./CockpitModeProvider";
 
 interface Props {
   missions: Mission[];
@@ -27,6 +28,7 @@ export default function HardDrives({
 }: Props) {
   const groupRef = useRef<THREE.Group>(null);
   const asset = useGameAsset("harddrive");
+  const { negotiated, setCurrentDialogue, setGamePhase } = useCockpit();
 
   const entries = useMemo(
     () =>
@@ -46,27 +48,40 @@ export default function HardDrives({
       const id = child.userData.missionId as MissionId;
       const alreadyCollected = collected.has(id);
       const remaining = enemyCounts.current[id] ?? 0;
+
+      const isNegotiated = negotiated.has(id);
+      const hasNegotiation = missions.find((m) => m.id === id)?.negotiation;
+
       const ready = !alreadyCollected && remaining <= 0;
       child.visible = ready;
-      if (!ready) continue;
 
-      // Hover animation
       const basePos = child.userData.basePos as THREE.Vector3;
-      child.position.set(
-        basePos.x,
-        basePos.y + Math.sin(t + child.userData.phase) * 1.2,
-        basePos.z,
-      );
-      child.rotation.y += delta * 1.2;
 
       if (enabled) {
         const dx = player.current.position.x - basePos.x;
         const dy = player.current.position.y - basePos.y;
         const dz = player.current.position.z - basePos.z;
         const d2 = dx * dx + dy * dy + dz * dz;
-        if (d2 < 5 * 5) {
+
+        // Trigger negotiation if close and not done yet
+        if (hasNegotiation && !isNegotiated && d2 < 35 * 35) {
+          setCurrentDialogue(id);
+          setGamePhase("dialogue");
+        }
+
+        if (ready && d2 < 5 * 5) {
           onCollect(id);
         }
+      }
+
+      if (ready) {
+        // Hover animation
+        child.position.set(
+          basePos.x,
+          basePos.y + Math.sin(t + child.userData.phase) * 1.2,
+          basePos.z,
+        );
+        child.rotation.y += delta * 1.2;
       }
     }
   });

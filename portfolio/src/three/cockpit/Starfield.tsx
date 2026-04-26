@@ -47,5 +47,12 @@ export default function Starfield({ count = 2500 }: { count?: number }) {
     }
   });
 
-  return <points ref={pointsRef} geometry={geometry} material={material} />;
+  return (
+    <points
+      ref={pointsRef}
+      geometry={geometry}
+      material={material}
+      frustumCulled={false}
+    />
+  );
 }

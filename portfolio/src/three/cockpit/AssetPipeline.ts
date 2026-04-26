@@ -3,7 +3,13 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 // Pre-create fallbacks
-const FALLBACKS = {
+const FALLBACKS: Record<
+  string,
+  {
+    geometry: THREE.BufferGeometry;
+    material: THREE.Material | THREE.Material[];
+  }
+> = {
   player: {
     geometry: new THREE.ConeGeometry(1, 4, 4),
     material: new THREE.MeshStandardMaterial({
@@ -84,21 +90,22 @@ export function useGameAsset(type: AssetType): {
         });
 
         if (geom && mat) {
+          const g = geom as THREE.BufferGeometry;
           // Normalize geometry sizing to match our expected scales
-          geom.computeBoundingBox();
-          if (geom.boundingBox) {
+          g.computeBoundingBox();
+          if (g.boundingBox) {
             const size = new THREE.Vector3();
-            geom.boundingBox.getSize(size);
+            g.boundingBox.getSize(size);
             const maxDim = Math.max(size.x, size.y, size.z);
             // Scale models to roughly fit a unit size so game logic isn't broken
             const fallbackSize =
               type === "station" ? 4 : type === "asteroid" ? 2 : 2.4;
             const scale = fallbackSize / maxDim;
-            geom.scale(scale, scale, scale);
-            geom.computeBoundingSphere();
+            g.scale(scale, scale, scale);
+            g.computeBoundingSphere();
           }
 
-          setAsset({ geometry: geom, material: mat });
+          setAsset({ geometry: g, material: mat });
         }
       },
       undefined,

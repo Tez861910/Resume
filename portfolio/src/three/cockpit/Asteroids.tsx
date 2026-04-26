@@ -143,6 +143,7 @@ export default function Asteroids({
       count={0}
       castShadow={false}
       receiveShadow={false}
+      frustumCulled={false}
     />
   );
 }
