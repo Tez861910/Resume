@@ -13,39 +13,40 @@ const Skills = () => {
     {
       title: "Languages",
       icon: <FaCode className="text-4xl text-primary-600" />,
-      skills: ["JavaScript", "TypeScript", "C#", "Java", "PHP"],
+      skills: ["JavaScript", "TypeScript", "C#", "Java", "Rust"],
     },
     {
       title: "Frontend",
       icon: <FaReact className="text-4xl text-primary-600" />,
       skills: [
         "React",
+        "Next.js",
         "Vite",
         "Material UI",
         "Tailwind",
         "Framer Motion",
-        "PWA",
+        "Flutter",
       ],
     },
     {
       title: "Backend",
       icon: <FaNode className="text-4xl text-primary-600" />,
-      skills: ["Node.js", "Express.js", "REST APIs", "Sequelize ORM"],
+      skills: ["Node.js", "Express.js", "REST APIs", "Prisma", "Sequelize"],
     },
     {
-      title: "Desktop",
+      title: "Desktop & Mobile",
       icon: <SiDotnet className="text-4xl text-primary-600" />,
-      skills: ["WPF/.NET 8", "DirectX/HelixToolkit", "MVVM", "DI"],
+      skills: [".NET 8", "WinUI / Win2D", "Flutter", "MVVM", "FFI"],
     },
     {
-      title: "Databases",
+      title: "Data & Storage",
       icon: <FaDatabase className="text-4xl text-primary-600" />,
-      skills: ["MySQL", "SQLite", "Query Optimization"],
+      skills: ["PostgreSQL", "MySQL", "SQLite", "Encrypted File Storage"],
     },
     {
       title: "Tools",
       icon: <SiTypescript className="text-4xl text-primary-600" />,
-      skills: ["Git", "VS Code", "GoDaddy", "App Insights"],
+      skills: ["Git", "GitHub Actions", "VS Code", "Release Automation", "Vite"],
     },
   ];
 
@@ -61,8 +62,8 @@ const Skills = () => {
           <p className="section-eyebrow">Capabilities</p>
           <h2 className="section-title">Technical skills</h2>
           <p className="section-copy">
-            The stack I use to build responsive products, APIs, and desktop
-            tools without overengineering the experience.
+            The stack I use across product sites, operational systems, desktop
+            tooling, and local-first app work.
           </p>
         </div>
 

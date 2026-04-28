@@ -34,18 +34,20 @@ export default function Hero() {
         >
           <div className="text-center lg:text-left">
             <span className="app-chip-accent mb-5">
-              Open to full-stack roles and product work
+              Open to full-stack and product engineering roles
             </span>
 
             <h1 className="mb-5 text-4xl font-bold leading-tight tracking-tight text-app-primary sm:text-5xl lg:text-6xl xl:text-7xl">
-              I build web products and desktop tools that feel fast, clear, and
-              ready for real use.
+              I build product software across web, desktop, and mobile that
+              feels clear, fast, and ready for real workflows.
             </h1>
 
             <p className="mb-4 max-w-3xl text-base leading-relaxed text-app-secondary sm:text-lg">
-              My work sits across React, Node, MySQL, and .NET. I care about
-              practical UX, solid engineering, and measurable improvements that
-              actually matter once a product is live.
+              Recent work spans private React and Next.js products, a .NET
+              Windows app for 3D manufacturing workflows, and a Flutter + Rust
+              local-first utility platform. I care about practical UX, clean
+              architecture, and software that holds up once people actually use
+              it.
             </p>
 
             <p className="mb-8 max-w-2xl text-sm leading-relaxed text-app-muted sm:text-base">
@@ -80,19 +82,19 @@ export default function Hero() {
             <div className="mb-8 grid gap-3 sm:grid-cols-3">
               {[
                 {
-                  label: "Load speed",
-                  value: "40% faster",
-                  detail: "Performance, caching, bundling",
+                  label: "Current work",
+                  value: "Private products",
+                  detail: "Operational tools, client sites, and local-first apps",
                 },
                 {
-                  label: "Engagement",
-                  value: "35% higher",
-                  detail: "UX and SEO improvements",
+                  label: "Platforms",
+                  value: "Web + Desktop + Mobile",
+                  detail: "React, Next.js, .NET, Flutter, Rust",
                 },
                 {
-                  label: "Surface area",
-                  value: "Web + Desktop",
-                  detail: "React, Node, WPF, DirectX",
+                  label: "Approach",
+                  value: "Clarity first",
+                  detail: "Useful flows, maintainable code, strong handoff",
                 },
               ].map((stat, index) => (
                 <motion.div
@@ -135,27 +137,27 @@ export default function Hero() {
             </div>
           </div>
 
-          <motion.aside
+            <motion.aside
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
             className="app-panel p-6 sm:p-7"
           >
-            <div className="mb-5 flex flex-wrap items-center gap-2">
-              <span className="app-chip-cyan">Full-stack product work</span>
-              <span className="app-chip">Responsive by default</span>
-            </div>
+              <div className="mb-5 flex flex-wrap items-center gap-2">
+                <span className="app-chip-cyan">Product systems</span>
+                <span className="app-chip">Web + desktop + mobile</span>
+              </div>
 
             <div className="space-y-4">
-              <div className="app-card-soft">
-                <p className="mb-1 text-[10px] uppercase tracking-[0.22em] text-slate-500">
-                  What I build
-                </p>
-                <p className="text-sm leading-relaxed text-slate-100">
-                  Frontends, APIs, and desktop workflows where performance,
-                  clarity, and maintainability all matter.
-                </p>
-              </div>
+                <div className="app-card-soft">
+                  <p className="mb-1 text-[10px] uppercase tracking-[0.22em] text-slate-500">
+                    What I build
+                  </p>
+                  <p className="text-sm leading-relaxed text-slate-100">
+                    Operational dashboards, company platforms, local-first
+                    utilities, and desktop workflows where clarity matters.
+                  </p>
+                </div>
 
               <div className="grid gap-3 sm:grid-cols-2">
                 <div className="app-card-soft">

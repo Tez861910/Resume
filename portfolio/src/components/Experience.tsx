@@ -23,7 +23,7 @@ interface ExperienceEntry {
 
 const experiences: ExperienceEntry[] = [
   {
-    title: "Software Engineer — Web & Desktop",
+    title: "Software Engineer — Product, Web & Desktop",
     company: "Printalytix",
     location: "Bengaluru, India",
     period: "Dec 2024 – Dec 2025",
@@ -32,10 +32,10 @@ const experiences: ExperienceEntry[] = [
     routeLabel: "Lead role",
     systemLabel: "Production delivery",
     achievements: [
-      "Boosted engagement 35% and cut load times ~40% via UI/SEO improvements, bundling, and caching.",
-      "Architected MIND — a WPF/.NET 8 desktop app with DirectX/HelixToolkit 3D visualisation, Entra ID auth, MVVM/DI, mesh checks, and GST-ready quotation generation.",
-      "Shipped the Printalytix web platform with React/MUI/Redux/PWA frontend flows and a Node/Express + Sequelize/MySQL backend for uploads, routing, and structured logging.",
-      "Automated internal workflows with React/Node applications and RESTful APIs, improving API responsiveness by roughly 30%.",
+      "Worked across customer-facing and internal product surfaces, from upload-heavy web flows to operations-focused tooling.",
+      "Built and evolved MIND as a .NET 8 Windows desktop app for 3D model inspection, manufacturing guidance, and report generation.",
+      "Delivered React and Node-based systems with protected workflows, validation, uploads, and maintainable product structure.",
+      "Contributed across frontend, backend, and workflow design instead of staying in a single layer of the stack.",
     ],
   },
   {
@@ -131,7 +131,7 @@ export default function Experience() {
             transition={{ duration: 0.4, delay: 0.06 }}
           >
             The teams, products, and responsibilities that shaped my work across
-            full-stack engineering, desktop tooling, and production delivery.
+            product engineering, desktop tooling, and production delivery.
           </motion.p>
         </div>
 

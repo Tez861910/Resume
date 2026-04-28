@@ -10,23 +10,23 @@ const About = () => {
   const profilePanels = [
     {
       label: "Day-to-day",
-      value: "Full-Stack Systems",
-      detail: "React, Node.js, APIs, performance, and production UX",
+      value: "Product systems",
+      detail: "Dashboards, company platforms, APIs, and workflow-oriented UI",
     },
     {
       label: "Desktop work",
-      value: "WPF / DirectX",
-      detail: "3D tooling, MVVM architecture, and workflow automation",
+      value: "Windows 3D tooling",
+      detail: "Rendering, model analysis, reporting, and manufacturing workflows",
     },
     {
       label: "How I work",
-      value: "Practical and measured",
-      detail: "Ship clearly, improve what matters, and keep the code maintainable",
+      value: "Practical and thorough",
+      detail: "Understand the domain, keep the UX readable, and ship maintainable code",
     },
     {
       label: "Right now",
-      value: "Better product quality",
-      detail: "Faster, cleaner software across web and desktop",
+      value: "Private builds in motion",
+      detail: "Solar ops, biotech platforms, local-first tools, and manufacturing apps",
     },
   ];
 
@@ -65,26 +65,24 @@ const About = () => {
 
               <div className="space-y-4 text-base sm:text-lg text-slate-200/90 leading-relaxed">
                 <p>
-                  I’m a full-stack developer focused on building
-                  high-performance web applications and desktop tools that feel
-                  fast, clear, and useful in real production workflows.
+                  I’m a full-stack developer focused on building software that
+                  feels useful in real workflows, not just polished in a demo.
                 </p>
                 <p>
-                  At Printalytix, I delivered measurable impact by increasing
-                  engagement by 35% and reducing page load times by 40% through
-                  UI refinement, SEO improvements, and performance-focused
-                  engineering decisions.
+                  My recent work spans private product systems: operational web
+                  platforms, multi-page company sites with real content depth, a
+                  Windows manufacturing app, and a local-first Flutter + Rust
+                  utility product.
                 </p>
                 <p>
-                  My work spans modern web systems with React, Node.js, and
-                  MySQL, as well as desktop development with WPF/.NET 8 and
-                  DirectX-based 3D tooling, which lets me design solutions
-                  across multiple product surfaces.
+                  That mix keeps me comfortable across React, Next.js, Node,
+                  SQL-backed systems, .NET desktop work, and newer
+                  cross-platform tooling when the product calls for it.
                 </p>
                 <p>
-                  I’m especially interested in performance optimization, API
-                  design, developer-friendly architecture, and user experiences
-                  that translate directly into business value.
+                  I’m especially interested in product clarity, workflow design,
+                  maintainable architecture, and the parts of engineering that
+                  make software easier to live with over time.
                 </p>
               </div>
             </div>
@@ -96,10 +94,10 @@ const About = () => {
                 </p>
                 <div className="grid grid-cols-2 gap-3">
                   {[
-                    { number: "40%", label: "Faster Load Times" },
-                    { number: "35%", label: "Higher Engagement" },
-                    { number: "30%", label: "API Performance" },
-                    { number: "500+", label: "Users Served" },
+                    { number: "30+", label: "Pettige Tools" },
+                    { number: "4", label: "Resolute Verticals" },
+                    { number: "7", label: "Solar Workstreams" },
+                    { number: "3", label: "Web/Desktop/Mobile" },
                   ].map((stat, index) => (
                     <motion.div
                       key={index}

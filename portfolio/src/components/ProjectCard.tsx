@@ -42,6 +42,8 @@ function inferMissionType(project: Project) {
 
   if (
     combined.includes("wpf") ||
+    combined.includes("winui") ||
+    combined.includes("win2d") ||
     combined.includes("directx") ||
     combined.includes("desktop")
   ) {
@@ -49,9 +51,19 @@ function inferMissionType(project: Project) {
   }
 
   if (
+    combined.includes("flutter") ||
+    combined.includes("dart") ||
+    combined.includes("mobile")
+  ) {
+    return "Mobile app";
+  }
+
+  if (
     combined.includes("node") ||
     combined.includes("express") ||
     combined.includes("mysql") ||
+    combined.includes("postgres") ||
+    combined.includes("prisma") ||
     combined.includes("api")
   ) {
     return "Full-stack app";
@@ -70,12 +82,21 @@ function inferMissionType(project: Project) {
 
 function inferImpactLabel(project: Project) {
   const text = `${project.tagline} ${project.description} ${project.highlights.join(" ")}`;
+  const lowerText = text.toLowerCase();
 
+  if (text.includes("30+")) return "30+ tools";
+  if (
+    lowerText.includes("four business verticals") ||
+    lowerText.includes("four verticals")
+  ) {
+    return "Multi-vertical build";
+  }
   if (text.includes("35%")) return "35% engagement lift";
   if (text.includes("40%")) return "40% faster loads";
   if (text.includes("500+")) return "500+ users served";
   if (text.includes("50%")) return "50% less manual work";
   if (text.includes("45%")) return "45% faster responses";
+  if (lowerText.includes("local-first")) return "Local-first build";
 
   return "Production-focused build";
 }

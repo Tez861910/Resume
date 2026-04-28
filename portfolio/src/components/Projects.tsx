@@ -15,17 +15,17 @@ export default function Projects() {
     {
       label: "Projects",
       value: `${projects.length}`,
-      detail: "Shipped builds, live work, and ongoing product ideas",
+      detail: "Private products, live sites, and selected shipped work",
     },
     {
       label: "Platforms",
-      value: "Web + Desktop",
-      detail: "Browser products and desktop tools",
+      value: "Web + Desktop + Mobile",
+      detail: "React/Next sites, Windows tooling, and Flutter apps",
     },
     {
       label: "Focus",
-      value: "UX + Delivery",
-      detail: "Performance, usability, and maintainable implementation",
+      value: "Clarity + Delivery",
+      detail: "Useful workflows, readable UI, and maintainable implementation",
     },
   ];
 
@@ -41,8 +41,9 @@ export default function Projects() {
           <p className="section-eyebrow">Selected work</p>
           <h2 className="section-title">Featured projects</h2>
           <p className="section-copy">
-            A straightforward look at the products, platforms, and tools I have
-            built or contributed to across web and desktop.
+            A straightforward look at the private products, company platforms,
+            and tools I have built or worked on across web, desktop, and
+            mobile.
           </p>
         </div>
 
@@ -63,8 +64,7 @@ export default function Projects() {
 
                 <p className="text-sm leading-relaxed text-slate-300/80 sm:text-base">
                   Each card is easy to scan quickly, with a deeper project page
-                  for anyone who wants more context, stack details, and
-                  outcomes.
+                  for the fuller context, stack, and implementation decisions.
                 </p>
               </div>
 
