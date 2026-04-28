@@ -1,38 +1,25 @@
-import { Suspense } from "react";
 import { motion } from "framer-motion";
 import { FaGithub, FaLinkedin, FaEnvelope, FaGamepad } from "react-icons/fa";
-import HeroScene from "../three/scenes/HeroScene";
-import WorldStatusBanner from "./world/WorldStatusBanner";
-import { useSharedWorldState } from "../three/world/useSharedWorldState";
-import { useGame } from "../three/game/useGame";
+import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
+  const navigate = useNavigate();
   const githubUrl = "https://github.com/Tez861910";
   const linkedinUrl = "https://www.linkedin.com/in/tejas-s-57138816a/";
   const emailAddress = "tejassureshofficial@gmail.com";
   const emailUrl = `mailto:${emailAddress}`;
-  const world = useSharedWorldState();
-  const { launch, session } = useGame();
 
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-28 sm:pt-32 md:pt-28"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-28 sm:pt-32 md:pt-28 bg-gradient-to-b from-slate-900 to-slate-950"
     >
-      <Suspense fallback={null}>
-        <HeroScene world={world} />
-      </Suspense>
-
-      {/*
-        Radial vignette — darkens the centre where all text lives so it stays
-        legible over any particle / glyph combination behind it.
-        Pure CSS: zero GPU cost.
-      */}
+      {/* Subtle gradient background */}
       <div
-        className="pointer-events-none absolute inset-0 z-[2]"
+        className="pointer-events-none absolute inset-0 z-[1]"
         style={{
           background:
-            "radial-gradient(ellipse 76% 66% at 50% 42%, rgba(2,6,23,0.82) 0%, rgba(2,6,23,0.52) 46%, transparent 72%)",
+            "radial-gradient(ellipse 76% 66% at 50% 42%, rgba(2,6,23,0.95) 0%, rgba(2,6,23,0.75) 46%, transparent 72%)",
         }}
       />
 
@@ -74,24 +61,11 @@ const Hero = () => {
             </a>
             <button
               type="button"
-              onClick={() => {
-                launch("hero");
-                setTimeout(
-                  () =>
-                    document
-                      .getElementById("challenge")
-                      ?.scrollIntoView({ behavior: "smooth" }),
-                  50,
-                );
-              }}
+              onClick={() => navigate("/cockpit")}
               className="inline-flex w-full sm:w-auto justify-center items-center gap-2 rounded-full border border-cyan-300/30 bg-cyan-300/10 px-6 py-3 text-base font-semibold text-cyan-100 transition-all duration-200 hover:bg-cyan-300/18 hover:border-cyan-300/50 hover:text-cyan-50"
             >
               <FaGamepad className="text-sm" />
-              <span>
-                {session.launchCount > 0
-                  ? "Resume Challenge"
-                  : "Start Challenge"}
-              </span>
+              <span>Play 3D Game</span>
             </button>
           </div>
 
@@ -159,25 +133,9 @@ const Hero = () => {
             </a>
           </div>
 
-          <div className="hidden md:block">
-            <WorldStatusBanner />
-          </div>
-
-          <div className="mt-5 sm:mt-6 flex flex-col items-center gap-2 sm:gap-3">
-            <p className="hidden sm:block text-[11px] tracking-[0.16em] text-slate-400/35 uppercase select-none pointer-events-none">
-              ✦ navigate the mission map &nbsp;·&nbsp; move cursor
-              &nbsp;·&nbsp; W A S D to boost the ship
-            </p>
-
-            <p className="text-[11px] sm:text-xs text-slate-300/70 max-w-2xl mx-auto">
-              Challenge Mode is part of the portfolio flow — collect core tech
-              stack signals, avoid bugs, and return with a stronger systems
-              log.
-              {session.bestScore !== null && (
-                <span className="ml-2 text-amber-200/90">
-                  Best score: {session.bestScore}
-                </span>
-              )}
+          <div className="hidden md:block mt-8">
+            <p className="text-sm text-slate-400 max-w-3xl mx-auto">
+              Explore my full-stack portfolio, then launch the interactive 3D mission for an immersive experience.
             </p>
           </div>
         </motion.div>

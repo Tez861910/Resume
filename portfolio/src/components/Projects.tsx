@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import projects from "../data/projects";
 import ProjectCard from "./ProjectCard";
-import { useGame } from "../three/game/useGame";
 
 const Projects = () => {
   const [ref, inView] = useInView({
@@ -10,7 +9,6 @@ const Projects = () => {
     threshold: 0.08,
     rootMargin: "0px 0px -8% 0px",
   });
-  const { launch, session } = useGame();
 
   const missionStats = [
     {
@@ -38,11 +36,6 @@ const Projects = () => {
     "Missions",
     "Transmit",
   ];
-
-  const challengeSummary =
-    session.lastScore !== null
-      ? `Last run: ${session.lastScore} pts`
-      : "No challenge run logged yet";
 
   return (
     <section id="projects" className="section-container">
@@ -180,26 +173,17 @@ const Projects = () => {
                   collect your stack and carry momentum through the portfolio
                   flow.
                 </p>
-                <p className="mt-1 text-xs text-slate-300/75">
-                  {challengeSummary}
+               <p className="mt-1 text-xs text-slate-300/75">
+                  Click cards to explore full technical details and implementation decisions.
                 </p>
               </div>
 
-              <button
-                onClick={() => {
-                  launch("projects");
-                  setTimeout(
-                    () =>
-                      document
-                        .getElementById("challenge")
-                        ?.scrollIntoView({ behavior: "smooth" }),
-                    50,
-                  );
-                }}
-                className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-amber-300/30 bg-amber-300/12 px-4 py-2 text-sm font-semibold text-amber-100 transition-all duration-150 hover:bg-amber-300/20 hover:border-amber-300/45"
+              <a
+                href="#projects"
+                className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-cyan-300/30 bg-cyan-300/12 px-4 py-2 text-sm font-semibold text-cyan-100 transition-all duration-150 hover:bg-cyan-300/20 hover:border-cyan-300/45"
               >
-                🚀 Enter Challenge Mode
-              </button>
+                View All Projects
+              </a>
             </motion.div>
 
             <div className="grid gap-6 md:grid-cols-2">

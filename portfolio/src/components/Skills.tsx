@@ -1,9 +1,7 @@
-import { Suspense } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { FaReact, FaNode, FaDatabase, FaCode } from "react-icons/fa";
 import { SiTypescript, SiDotnet } from "react-icons/si";
-import SkillConstellation from "../three/scenes/SkillConstellation";
 
 const Skills = () => {
   const [ref, inView] = useInView({
@@ -61,32 +59,7 @@ const Skills = () => {
       >
         <h2 className="section-title">Technical Skills</h2>
 
-        {/* ── Skills visual layer: 3D in heavy mode, static mission panel in lite mode ── */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.97 }}
-          animate={inView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ duration: 0.7, delay: 0.15 }}
-          className="relative w-full rounded-2xl overflow-hidden border border-white/10 mb-4"
-        >
-          <div className="relative h-[480px]">
-            <Suspense
-              fallback={
-                <div className="w-full h-full flex items-center justify-center text-amber-400/50 text-sm tracking-widest uppercase">
-                  Loading constellation…
-                </div>
-              }
-            >
-              <SkillConstellation />
-            </Suspense>
-          </div>
-        </motion.div>
-
-        {/* Subtle interaction hint */}
-        <p className="text-center text-xs tracking-[0.18em] text-slate-400/40 uppercase select-none mb-10 pointer-events-none">
-          ✦ drag to explore · hover to inspect
-        </p>
-
-        {/* ── Accessible tag grid (SEO + screen-readers) ───────────────── */}
+        {/* ── Skills grid: Simple, lightweight card layout ── */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {skillCategories.map((category, index) => (
             <motion.div
