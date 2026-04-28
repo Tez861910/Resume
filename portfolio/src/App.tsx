@@ -18,11 +18,10 @@ import WarpStreaks from "./components/cockpit/WarpStreaks";
 import WarpSection from "./components/cockpit/WarpSection";
 import CockpitOverlay from "./components/cockpit/CockpitOverlay";
 import { CockpitModeProvider, useCockpit } from "./three/cockpit/CockpitModeProvider";
-import { GameProvider, useGame } from "./three/game/GameContext";
-import {
-  WorldStateProvider,
-  useSharedWorldState,
-} from "./three/world/WorldStateProvider";
+import { GameProvider } from "./three/game/GameContext";
+import { useGame } from "./three/game/useGame";
+import { WorldStateProvider } from "./three/world/WorldStateProvider";
+import { useSharedWorldState } from "./three/world/useSharedWorldState";
 
 function ScrollToHash() {
   const { hash } = useLocation();

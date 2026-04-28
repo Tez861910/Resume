@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useMemo } from "react";
-import { useSharedWorldState } from "../../three/world/WorldStateProvider";
+import { useSharedWorldState } from "../../three/world/useSharedWorldState";
 import {
   getSectionWorldConfig,
   WORLD_SECTION_ORDER,

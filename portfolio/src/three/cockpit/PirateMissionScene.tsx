@@ -7,7 +7,7 @@ import Asteroids from "./Asteroids";
 import EnemyBots from "./EnemyBots";
 import Lasers, { type LasersHandle } from "./Lasers";
 import Missiles, { type MissilesHandle } from "./Missiles";
-import Explosions, { type ExplosionsHandle } from "./Explosions";
+import Explosions from "./Explosions";
 import PlayerController from "./PlayerController";
 import HardDrives from "./HardDrives";
 import { MISSIONS } from "./missions";
@@ -360,7 +360,7 @@ export default function PirateMissionScene({ enabled }: { enabled: boolean }) {
         color="#f59e0b"
       />
       <Explosions
-        ref={runtime.explosions as React.RefObject<ExplosionsHandle>}
+        ref={runtime.explosions}
       />
       <PlayerController
         input={runtime.input}

@@ -20,9 +20,8 @@ export function useAudio() {
 
   const initContext = useCallback(() => {
     if (!audioContextRef.current) {
-      audioContextRef.current = new (
-        window.AudioContext || (window as any).webkitAudioContext
-      )();
+      const AudioContextClass = (window.AudioContext || ((window as unknown) as Record<string, unknown>).webkitAudioContext) as typeof AudioContext;
+      audioContextRef.current = new AudioContextClass();
     }
     if (audioContextRef.current.state === "suspended") {
       audioContextRef.current.resume();
@@ -89,7 +88,9 @@ export function useAudio() {
       try {
         engineOscRef.current.stop();
         engineOscRef.current.disconnect();
-      } catch (e) {}
+      } catch {
+        // Ignore errors when stopping engine
+      }
       engineOscRef.current = null;
     }
     if (engineGainRef.current) {
@@ -164,7 +165,9 @@ export function useAudio() {
       try {
         staticSourceRef.current.stop();
         staticSourceRef.current.disconnect();
-      } catch (e) {}
+      } catch {
+        // Ignore errors when stopping static
+      }
       staticSourceRef.current = null;
     }
     if (staticGainRef.current) {

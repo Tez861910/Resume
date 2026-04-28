@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
-import { useGame, type ChallengeEntryPoint } from "../three/game/GameContext";
+import { useGame } from "../three/game/useGame";
+import type { ChallengeEntryPoint } from "../three/game/GameContext";
 import CockpitToggle from "./cockpit/CockpitToggle";
 
 interface NavbarProps {

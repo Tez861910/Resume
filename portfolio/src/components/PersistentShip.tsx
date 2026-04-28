@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useGame } from "../three/game/GameContext";
-import { useSharedWorldState } from "../three/world/WorldStateProvider";
+import { useGame } from "../three/game/useGame";
+import { useSharedWorldState } from "../three/world/useSharedWorldState";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // PersistentShip

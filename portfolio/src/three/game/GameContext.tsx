@@ -1,11 +1,11 @@
 import {
-  createContext,
-  useContext,
   useState,
   useCallback,
   useMemo,
   type ReactNode,
 } from "react";
+import { DEFAULT_SESSION } from "./gameConstants";
+import { GameContext } from "./GameContextDefinition";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
@@ -37,7 +37,7 @@ interface CompleteChallengePayload {
   completedAt?: number;
 }
 
-interface GameCtx {
+export interface GameCtx {
   /** Whether the challenge mode overlay is currently open */
   isActive: boolean;
   /** Metadata used to integrate challenge mode into the wider site flow */
@@ -53,35 +53,6 @@ interface GameCtx {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Context
-// ─────────────────────────────────────────────────────────────────────────────
-
-const GameContext = createContext<GameCtx>({
-  isActive: false,
-  session: {
-    entryPoint: "unknown",
-    launchedAt: null,
-    launchCount: 0,
-    lastCompletedAt: null,
-    lastScore: null,
-    bestScore: null,
-    lastCollectedStack: [],
-  },
-  launch: () => {},
-  close: () => {},
-  complete: () => {},
-  resetProgress: () => {},
-});
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Hook
-// ─────────────────────────────────────────────────────────────────────────────
-
-export function useGame(): GameCtx {
-  return useContext(GameContext);
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
 // Provider
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -91,15 +62,7 @@ interface GameProviderProps {
 
 export function GameProvider({ children }: GameProviderProps) {
   const [isActive, setIsActive] = useState(false);
-  const [session, setSession] = useState<ChallengeSessionMeta>({
-    entryPoint: "unknown",
-    launchedAt: null,
-    launchCount: 0,
-    lastCompletedAt: null,
-    lastScore: null,
-    bestScore: null,
-    lastCollectedStack: [],
-  });
+  const [session, setSession] = useState<ChallengeSessionMeta>(DEFAULT_SESSION);
 
   const launch = useCallback((entryPoint: ChallengeEntryPoint = "unknown") => {
     const launchedAt = Date.now();

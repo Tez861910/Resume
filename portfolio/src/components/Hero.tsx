@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 import { FaGithub, FaLinkedin, FaEnvelope, FaGamepad } from "react-icons/fa";
 import HeroScene from "../three/scenes/HeroScene";
 import WorldStatusBanner from "./world/WorldStatusBanner";
-import { useSharedWorldState } from "../three/world/WorldStateProvider";
-import { useGame } from "../three/game/GameContext";
+import { useSharedWorldState } from "../three/world/useSharedWorldState";
+import { useGame } from "../three/game/useGame";
 
 const Hero = () => {
   const githubUrl = "https://github.com/Tez861910";

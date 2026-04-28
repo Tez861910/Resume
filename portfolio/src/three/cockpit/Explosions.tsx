@@ -21,10 +21,14 @@ export interface ExplosionsHandle {
   spawn: (pos: THREE.Vector3, count?: number, color?: string) => void;
 }
 
+interface ExplosionsProps {
+  /* No props currently used */
+}
+
 const MAX_PARTICLES = 512;
 const Damping = 0.95;
 
-const Explosions = forwardRef<ExplosionsHandle, {}>(
+const Explosions = forwardRef<ExplosionsHandle, ExplosionsProps>(
   function Explosions(_, ref) {
     const meshRef = useRef<THREE.InstancedMesh>(null);
     const particlesRef = useRef<ExplosionParticle[]>([]);

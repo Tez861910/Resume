@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { FaGamepad, FaRocket } from "react-icons/fa";
-import { useGame } from "../three/game/GameContext";
+import { useGame } from "../three/game/useGame";
 import DevSprintGame from "../three/game/DevSprintGame";
 
 /**
