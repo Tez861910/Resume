@@ -10,8 +10,9 @@ This project uses **pnpm** as the package manager and is configured for cross-pl
 ### Install pnpm (if not already installed)
 
 ```bash
-# Using npm (if you have it)
-npm install -g pnpm
+# Recommended on modern Node installs
+corepack enable
+corepack prepare pnpm@10.33.2 --activate
 
 # Or using your system package manager:
 # Ubuntu/Kubuntu:
@@ -47,11 +48,11 @@ pnpm install
 ```
 
 This will:
-- Read from `pnpm-lock.yaml` (for consistency where available)
+- Read from the committed `pnpm-lock.yaml`
 - Generate platform-specific bindings for your OS
 - Install all dependencies
 
-**Important**: On a fresh machine, `pnpm install` may take a minute to generate the lock file. This is normal and only happens once.
+**Important**: On a fresh machine, `pnpm install` may take a minute the first time. That is normal.
 
 ### 3. Development Workflow
 
@@ -82,12 +83,11 @@ No manual configuration needed - git handles it automatically.
 
 ### Package Lock Files
 
-**Important**: Do NOT commit `pnpm-lock.yaml` or `package-lock.json`
+This repo uses **one committed lockfile**: `pnpm-lock.yaml`
 
-- Each OS generates its own lockfile with platform-specific bindings
-- `.gitignore` excludes these automatically
-- Keep your local lockfile (don't delete it)
-- Fresh clones will generate a new one via `pnpm install`
+- Commit `pnpm-lock.yaml`
+- Do **not** commit `package-lock.json` or `yarn.lock`
+- CI and all contributors should install through pnpm so dependency resolution stays consistent
 
 ### Developing on Both Windows and Linux
 
@@ -101,19 +101,19 @@ Since files are shared (dual-boot setup):
    ```
    This regenerates platform-specific bindings.
 
-2. **Do NOT delete** `pnpm-lock.yaml` - it's ignored by git but keeps your versions consistent.
+2. **Do NOT delete** `pnpm-lock.yaml` - it is the shared lockfile for the project.
 
 3. **Commit policy**:
-   - ✅ Commit: Source code, config files, `.gitignore`, `.gitattributes`
-   - ❌ Do NOT commit: `pnpm-lock.yaml`, `node_modules`, `.env.local`, OS-specific artifacts
+   - ✅ Commit: Source code, config files, `.gitignore`, `.gitattributes`, `pnpm-lock.yaml`
+   - ❌ Do NOT commit: `package-lock.json`, `node_modules`, `.env.local`, OS-specific artifacts
 
 ## Troubleshooting
 
 ### "Cannot find module" errors after pulling
 
 ```bash
-# Clear cache and reinstall
-rm -rf node_modules pnpm-lock.yaml
+# Clear install artifacts and reinstall
+rm -rf node_modules
 pnpm install
 ```
 
@@ -147,7 +147,7 @@ portfolio/
 ├── public/                # Static assets
 ├── dist/                  # Build output (generated)
 ├── package.json           # Dependencies
-├── pnpm-lock.yaml         # Lock file (not committed, local only)
+├── pnpm-lock.yaml         # Shared pnpm lock file
 ├── tsconfig.json          # TypeScript config
 ├── vite.config.ts         # Vite config
 └── tailwind.config.js     # Tailwind CSS config

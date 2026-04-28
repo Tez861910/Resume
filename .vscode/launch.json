@@ -13,7 +13,7 @@
       "name": "Portfolio: Run Dev Server (Terminal)",
       "type": "node-terminal",
       "request": "launch",
-      "command": "npm run dev",
+      "command": "pnpm run dev",
       "cwd": "${workspaceFolder}/portfolio"
     }
   ]

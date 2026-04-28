@@ -13,7 +13,7 @@ A modern, responsive portfolio website built with React, TypeScript, Vite, and T
 
 ## Tech Stack
 
-- **Framework**: React 18 with TypeScript
+- **Framework**: React 19 with TypeScript
 - **Build Tool**: Vite
 - **Styling**: Tailwind CSS
 - **Animations**: Framer Motion
@@ -25,7 +25,7 @@ A modern, responsive portfolio website built with React, TypeScript, Vite, and T
 ### Prerequisites
 
 - Node.js (v18 or higher)
-- npm or yarn
+- pnpm (v10.33.2 or higher)
 
 ### Installation
 
@@ -37,12 +37,12 @@ cd portfolio
 
 2. Install dependencies:
 ```bash
-npm install
+pnpm install
 ```
 
 3. Start the development server:
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 4. Open [http://localhost:5173](http://localhost:5173) in your browser.
@@ -50,7 +50,7 @@ npm run dev
 ## Build for Production
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 The production-ready files will be in the `dist` folder.
@@ -58,26 +58,26 @@ The production-ready files will be in the `dist` folder.
 ## Preview Production Build
 
 ```bash
-npm run preview
+pnpm run preview
 ```
 
 ## Deployment
 
 ### Deploy to GoDaddy
 
-1. Build the project: `npm run build`
+1. Build the project: `pnpm run build`
 2. Upload the contents of the `dist` folder to your GoDaddy hosting via FTP or File Manager
 3. Configure your domain to point to the hosting
 
 ### Deploy to Vercel
 
-1. Install Vercel CLI: `npm i -g vercel`
+1. Install Vercel CLI: `pnpm add -g vercel`
 2. Run: `vercel`
 3. Follow the prompts
 
 ### Deploy to Netlify
 
-1. Build the project: `npm run build`
+1. Build the project: `pnpm run build`
 2. Drag and drop the `dist` folder to [Netlify Drop](https://app.netlify.com/drop)
 
 ## Customization
