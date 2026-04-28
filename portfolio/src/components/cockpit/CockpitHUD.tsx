@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSharedWorldState } from "../../three/world/WorldStateProvider";
+import { useSharedWorldState } from "../../three/world/useSharedWorldState";
 import {
   SECTION_WORLD_MAP,
   WORLD_SECTION_ORDER,

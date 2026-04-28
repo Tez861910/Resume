@@ -3,7 +3,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { Html, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import { PALETTE } from "../utils/colorPalette";
-import { useSharedWorldState } from "../world/WorldStateProvider";
+import { useSharedWorldState } from "../world/useSharedWorldState";
 
 interface SkillEntry {
   name: string;

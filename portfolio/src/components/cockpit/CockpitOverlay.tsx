@@ -1,10 +1,14 @@
 import { useMemo, useRef } from "react";
 import type { RefObject } from "react";
+import * as THREE from "three";
 import { createPortal } from "react-dom";
+import { AnimatePresence } from "framer-motion";
 import { useCockpit } from "../../three/cockpit/CockpitModeProvider";
 import { useCockpitInput } from "../../three/cockpit/useCockpitInput";
 import { usePlayerState } from "../../three/cockpit/usePlayerState";
 import type { LasersHandle } from "../../three/cockpit/Lasers";
+import type { MissilesHandle } from "../../three/cockpit/Missiles";
+import type { ExplosionsHandle } from "../../three/cockpit/Explosions";
 import type { MissionId } from "../../three/cockpit/missions";
 import {
   CockpitRuntimeContext,
@@ -12,13 +16,20 @@ import {
 } from "../../three/cockpit/CockpitRuntime";
 import CockpitScene from "../../three/cockpit/CockpitScene";
 import CockpitChrome from "./CockpitChrome";
+import CommandCenter from "./CommandCenter";
+import DriveReadoutModal from "./DriveReadoutModal";
+import DialogueOverlay from "./DialogueOverlay";
 
 /** Top-level toggleable cockpit overlay. Renders only when active. */
 export default function CockpitOverlay() {
-  const { isActive, openDriveId } = useCockpit();
+  const { isActive, openDriveId, gamePhase, currentDialogue } = useCockpit();
   const input = useCockpitInput(isActive);
   const player = usePlayerState();
   const lasersRef = useRef<LasersHandle | null>(null);
+  const enemyLasersRef = useRef<LasersHandle | null>(null);
+  const missilesRef = useRef<MissilesHandle | null>(null);
+  const explosionsRef = useRef<ExplosionsHandle | null>(null);
+  const enemiesRef = useRef<THREE.Vector3[]>([]);
   const enemyCountsRef = useRef<Record<MissionId, number>>(
     {} as Record<MissionId, number>,
   );
@@ -28,6 +39,10 @@ export default function CockpitOverlay() {
       input,
       player,
       lasers: lasersRef as RefObject<LasersHandle | null>,
+      enemyLasers: enemyLasersRef as RefObject<LasersHandle | null>,
+      missiles: missilesRef as RefObject<MissilesHandle | null>,
+      explosions: explosionsRef as RefObject<ExplosionsHandle | null>,
+      enemies: enemiesRef,
       enemyCounts: enemyCountsRef,
     }),
     [input, player],
@@ -35,7 +50,7 @@ export default function CockpitOverlay() {
 
   if (!isActive) return null;
   // Gameplay is paused while a drive modal is open
-  const enabled = !openDriveId;
+  const enabled = !openDriveId && gamePhase === "space";
 
   const overlay = (
     <CockpitRuntimeContext.Provider value={runtime}>
@@ -43,14 +58,26 @@ export default function CockpitOverlay() {
         className="fixed inset-0 z-[200] bg-[#02030a]"
         style={{ touchAction: "none" }}
       >
-        <div className="absolute inset-0">
-          <CockpitScene enabled={enabled} />
-        </div>
-        <CockpitChrome
-          input={input}
-          player={player}
-          enemyCounts={enemyCountsRef}
-        />
+        {gamePhase === "space" || gamePhase === "dialogue" ? (
+          <>
+            <div className="absolute inset-0">
+              <CockpitScene enabled={enabled} />
+            </div>
+            <CockpitChrome
+              input={input}
+              player={player}
+              enemyCounts={enemyCountsRef}
+            />
+            {gamePhase === "dialogue" && currentDialogue && <DialogueOverlay />}
+          </>
+        ) : (
+          <>
+            <CommandCenter />
+            <AnimatePresence>
+              {openDriveId && <DriveReadoutModal missionId={openDriveId} />}
+            </AnimatePresence>
+          </>
+        )}
       </div>
     </CockpitRuntimeContext.Provider>
   );

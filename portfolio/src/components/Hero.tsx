@@ -1,200 +1,202 @@
-import { Suspense } from "react";
 import { motion } from "framer-motion";
-import { FaGithub, FaLinkedin, FaEnvelope, FaGamepad } from "react-icons/fa";
-import HeroScene from "../three/scenes/HeroScene";
-import WorldStatusBanner from "./world/WorldStatusBanner";
-import { useSharedWorldState } from "../three/world/WorldStateProvider";
-import { useGame } from "../three/game/GameContext";
+import {
+  FaArrowRight,
+  FaDownload,
+  FaGamepad,
+  FaGithub,
+  FaLinkedin,
+} from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { siteConfig } from "../config/site";
 
-const Hero = () => {
-  const githubUrl = "https://github.com/Tez861910";
-  const linkedinUrl = "https://www.linkedin.com/in/tejas-s-57138816a/";
-  const emailAddress = "tejassureshofficial@gmail.com";
-  const emailUrl = `mailto:${emailAddress}`;
-  const world = useSharedWorldState();
-  const { launch, session } = useGame();
+export default function Hero() {
+  const navigate = useNavigate();
 
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-28 sm:pt-32 md:pt-28"
+      className="relative flex min-h-[100svh] items-center overflow-hidden pt-28 sm:pt-32"
     >
-      <Suspense fallback={null}>
-        <HeroScene world={world} />
-      </Suspense>
-
-      {/*
-        Radial vignette — darkens the centre where all text lives so it stays
-        legible over any particle / glyph combination behind it.
-        Pure CSS: zero GPU cost.
-      */}
       <div
-        className="pointer-events-none absolute inset-0 z-[2]"
+        className="pointer-events-none absolute inset-0 z-[1]"
         style={{
           background:
-            "radial-gradient(ellipse 76% 66% at 50% 42%, rgba(2,6,23,0.82) 0%, rgba(2,6,23,0.52) 46%, transparent 72%)",
+            "radial-gradient(circle at 18% 22%, rgba(14,165,233,0.14), transparent 24%), radial-gradient(circle at 78% 24%, rgba(251,191,36,0.14), transparent 28%), radial-gradient(circle at 50% 78%, rgba(99,102,241,0.12), transparent 22%)",
         }}
       />
 
-      <div className="relative z-10 section-container py-12 sm:py-20 text-center">
+      <div className="relative z-10 section-container py-12 sm:py-16">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="max-w-4xl mx-auto"
+          className="grid items-center gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:gap-10"
         >
-          <h1
-            className="text-4xl sm:text-6xl lg:text-7xl font-bold mb-4 leading-tight tracking-tight text-slate-50"
-            style={{ textShadow: "0 2px 24px rgba(0,0,0,0.95)" }}
-          >
-            Tejas S
-          </h1>
+          <div className="text-center lg:text-left">
+            <span className="app-chip-accent mb-5">
+              Open to full-stack roles and product work
+            </span>
 
-          <p className="text-lg sm:text-2xl lg:text-3xl mb-5 sm:mb-6 text-amber-100">
-            Full-Stack Developer building performant web platforms and 3D
-            desktop systems
-          </p>
+            <h1 className="mb-5 text-4xl font-bold leading-tight tracking-tight text-app-primary sm:text-5xl lg:text-6xl xl:text-7xl">
+              I build web products and desktop tools that feel fast, clear, and
+              ready for real use.
+            </h1>
 
-          <p className="text-base sm:text-xl max-w-3xl mx-auto mb-3 text-slate-200/90">
-            Navigate a mission map of shipped products, performance wins, and
-            full-stack systems across web and desktop.
-          </p>
-          <p className="text-sm sm:text-lg max-w-3xl mx-auto mb-7 sm:mb-8 text-slate-300/82">
-            React / Node / MySQL on the web; WPF / DirectX on desktop. Delivered
-            faster loads, stronger engagement, and production-focused
-            engineering outcomes through performance tuning and UX refinement.
-          </p>
+            <p className="mb-4 max-w-3xl text-base leading-relaxed text-app-secondary sm:text-lg">
+              My work sits across React, Node, MySQL, and .NET. I care about
+              practical UX, solid engineering, and measurable improvements that
+              actually matter once a product is live.
+            </p>
 
-          <div className="mb-8 sm:mb-10 flex flex-col sm:flex-row sm:flex-wrap justify-center gap-3 sm:gap-4">
-            <a href="#contact" className="btn-primary w-full sm:w-auto justify-center">
-              Get In Touch
-            </a>
-            <a href="#projects" className="btn-secondary w-full sm:w-auto justify-center">
-              View Projects
-            </a>
-            <button
-              type="button"
-              onClick={() => {
-                launch("hero");
-                setTimeout(
-                  () =>
-                    document
-                      .getElementById("challenge")
-                      ?.scrollIntoView({ behavior: "smooth" }),
-                  50,
-                );
-              }}
-              className="inline-flex w-full sm:w-auto justify-center items-center gap-2 rounded-full border border-cyan-300/30 bg-cyan-300/10 px-6 py-3 text-base font-semibold text-cyan-100 transition-all duration-200 hover:bg-cyan-300/18 hover:border-cyan-300/50 hover:text-cyan-50"
-            >
-              <FaGamepad className="text-sm" />
-              <span>
-                {session.launchCount > 0
-                  ? "Resume Challenge"
-                  : "Start Challenge"}
-              </span>
-            </button>
-          </div>
+            <p className="mb-8 max-w-2xl text-sm leading-relaxed text-app-muted sm:text-base">
+              This main site is the quick, lightweight version for hiring teams
+              and busy reviewers. The cockpit is there if you want the
+              heavier interactive version.
+            </p>
 
-          <div className="grid gap-3 sm:grid-cols-3 mb-8 sm:mb-10">
-            {[
-              {
-                label: "Performance",
-                value: "40% faster",
-                detail: "Bundling + caching",
-              },
-              {
-                label: "Engagement",
-                value: "35% uplift",
-                detail: "SEO + UX",
-              },
-              {
-                label: "Platforms",
-                value: "Web + Desktop",
-                detail: "React / WPF",
-              },
-            ].map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                className="rounded-2xl border border-white/10 bg-slate-950/55 px-4 sm:px-5 py-4 text-left shadow-lg shadow-black/15 backdrop-blur-sm"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: 0.18 + index * 0.08 }}
+            <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap lg:justify-start">
+              <a href="#projects" className="btn-primary w-full sm:w-auto">
+                <span>View projects</span>
+                <FaArrowRight className="text-xs" />
+              </a>
+              <a
+                href={siteConfig.resumeDownloadPath}
+                download
+                className="btn-secondary w-full sm:w-auto"
               >
-                <div className="text-[11px] uppercase tracking-[0.18em] text-amber-200/70 mb-1">
-                  {stat.label}
+                <FaDownload className="text-xs" />
+                <span>Download resume</span>
+              </a>
+              <button
+                type="button"
+                onClick={() => navigate(siteConfig.cockpit.route)}
+                className="btn-ghost w-full sm:w-auto"
+              >
+                <FaGamepad className="text-sm" />
+                <span>Open cockpit</span>
+              </button>
+            </div>
+
+            <div className="mb-8 grid gap-3 sm:grid-cols-3">
+              {[
+                {
+                  label: "Load speed",
+                  value: "40% faster",
+                  detail: "Performance, caching, bundling",
+                },
+                {
+                  label: "Engagement",
+                  value: "35% higher",
+                  detail: "UX and SEO improvements",
+                },
+                {
+                  label: "Surface area",
+                  value: "Web + Desktop",
+                  detail: "React, Node, WPF, DirectX",
+                },
+              ].map((stat, index) => (
+                <motion.div
+                  key={stat.label}
+                  className="app-card px-4 py-4 text-left"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.35, delay: 0.18 + index * 0.08 }}
+                >
+                  <div className="mb-1 text-[11px] uppercase tracking-[0.18em] text-amber-200/80">
+                    {stat.label}
+                  </div>
+                  <div className="mb-1 text-lg font-bold text-amber-100 sm:text-xl">
+                    {stat.value}
+                  </div>
+                  <p className="text-xs text-slate-300/75">{stat.detail}</p>
+                </motion.div>
+              ))}
+            </div>
+
+            <div className="flex justify-center gap-3 lg:justify-start">
+              <a
+                href={siteConfig.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="icon-link"
+                aria-label="GitHub"
+              >
+                <FaGithub />
+              </a>
+              <a
+                href={siteConfig.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="icon-link"
+                aria-label="LinkedIn"
+              >
+                <FaLinkedin />
+              </a>
+            </div>
+          </div>
+
+          <motion.aside
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="app-panel p-6 sm:p-7"
+          >
+            <div className="mb-5 flex flex-wrap items-center gap-2">
+              <span className="app-chip-cyan">Full-stack product work</span>
+              <span className="app-chip">Responsive by default</span>
+            </div>
+
+            <div className="space-y-4">
+              <div className="app-card-soft">
+                <p className="mb-1 text-[10px] uppercase tracking-[0.22em] text-slate-500">
+                  What I build
+                </p>
+                <p className="text-sm leading-relaxed text-slate-100">
+                  Frontends, APIs, and desktop workflows where performance,
+                  clarity, and maintainability all matter.
+                </p>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="app-card-soft">
+                  <p className="mb-1 text-[10px] uppercase tracking-[0.22em] text-slate-500">
+                    Preferred work
+                  </p>
+                  <p className="text-sm font-semibold text-slate-100">
+                    Product engineering
+                  </p>
                 </div>
-                 <div className="text-lg sm:text-xl font-bold text-amber-100 mb-1">
-                   {stat.value}
-                 </div>
-                <p className="text-xs text-slate-300/75">{stat.detail}</p>
-              </motion.div>
-            ))}
-          </div>
+                <div className="app-card-soft">
+                  <p className="mb-1 text-[10px] uppercase tracking-[0.22em] text-slate-500">
+                    Location
+                  </p>
+                  <p className="text-sm font-semibold text-slate-100">
+                    {siteConfig.location}
+                  </p>
+                </div>
+              </div>
 
-          <div className="flex justify-center gap-5 sm:gap-6 text-[1.65rem] sm:text-3xl text-amber-100">
-            <a
-              href={githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-amber-300 transition-colors"
-              aria-label="GitHub"
-            >
-              <FaGithub />
-            </a>
-            <a
-              href={linkedinUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-amber-300 transition-colors"
-              aria-label="LinkedIn"
-            >
-              <FaLinkedin />
-            </a>
-            <a
-              href={emailUrl}
-              className="hover:text-amber-300 transition-colors"
-              aria-label="Email"
-            >
-              <FaEnvelope />
-            </a>
-          </div>
-
-          <div className="hidden md:block">
-            <WorldStatusBanner />
-          </div>
-
-          <div className="mt-5 sm:mt-6 flex flex-col items-center gap-2 sm:gap-3">
-            <p className="hidden sm:block text-[11px] tracking-[0.16em] text-slate-400/35 uppercase select-none pointer-events-none">
-              ✦ navigate the mission map &nbsp;·&nbsp; move cursor
-              &nbsp;·&nbsp; W A S D to boost the ship
-            </p>
-
-            <p className="text-[11px] sm:text-xs text-slate-300/70 max-w-2xl mx-auto">
-              Challenge Mode is part of the portfolio flow — collect core tech
-              stack signals, avoid bugs, and return with a stronger systems
-              log.
-              {session.bestScore !== null && (
-                <span className="ml-2 text-amber-200/90">
-                  Best score: {session.bestScore}
-                </span>
-              )}
-            </p>
-          </div>
+              <div className="rounded-3xl border border-cyan-300/20 bg-cyan-300/8 p-5">
+                <p className="mb-2 text-[10px] uppercase tracking-[0.22em] text-cyan-200/80">
+                  Cockpit mode
+                </p>
+                <p className="text-sm leading-relaxed text-slate-100">
+                  The cockpit is optional. If you just want the fast version,
+                  stay on the main portfolio and use the resume download above.
+                </p>
+                <ul className="mt-4 space-y-2 text-xs leading-relaxed text-slate-300/80">
+                  {siteConfig.cockpit.requirements.map((item) => (
+                    <li key={item} className="flex gap-2">
+                      <span className="text-cyan-200">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </motion.aside>
         </motion.div>
       </div>
-
-      {/* Scroll Indicator */}
-      <motion.div
-        className="absolute bottom-10 left-1/2 hidden -translate-x-1/2 md:block z-10"
-        animate={{ y: [0, 10, 0] }}
-        transition={{ repeat: Infinity, duration: 1.5 }}
-      >
-        <div className="w-8 h-14 border-2 border-amber-200 rounded-full flex justify-center items-start p-2">
-          <div className="w-1 h-3 bg-amber-200 rounded-full" />
-        </div>
-      </motion.div>
     </section>
   );
-};
-
-export default Hero;
+}

@@ -4,6 +4,7 @@ import * as THREE from "three";
 import type { MutableRefObject } from "react";
 import type { PlayerState } from "./usePlayerState";
 import type { LasersHandle } from "./Lasers";
+import { useGameAsset } from "./AssetPipeline";
 
 interface AsteroidsProps {
   /** World-space centers to spawn asteroid clusters around */
@@ -36,17 +37,7 @@ export default function Asteroids({
   const meshRef = useRef<THREE.InstancedMesh>(null);
   const dataRef = useRef<AsteroidData[]>([]);
   const dummy = useMemo(() => new THREE.Object3D(), []);
-  const geo = useMemo(() => new THREE.IcosahedronGeometry(1, 0), []);
-  const mat = useMemo(
-    () =>
-      new THREE.MeshStandardMaterial({
-        color: "#6b7280",
-        roughness: 0.9,
-        metalness: 0.1,
-        flatShading: true,
-      }),
-    [],
-  );
+  const asset = useGameAsset("asteroid");
 
   // Build asteroid list whenever centers change
   useEffect(() => {
@@ -145,10 +136,14 @@ export default function Asteroids({
   return (
     <instancedMesh
       ref={meshRef}
-      args={[geo, mat, Math.max(1, capacity)]}
+      // @ts-expect-error - React-Three-Fiber args type is too strict
+      args={[null, null, Math.max(1, capacity)]}
+      geometry={asset.geometry}
+      material={asset.material}
       count={0}
       castShadow={false}
       receiveShadow={false}
+      frustumCulled={false}
     />
   );
 }

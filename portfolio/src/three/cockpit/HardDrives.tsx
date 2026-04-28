@@ -4,12 +4,15 @@ import * as THREE from "three";
 import type { MutableRefObject } from "react";
 import type { Mission, MissionId } from "./missions";
 import type { PlayerState } from "./usePlayerState";
+import { useGameAsset } from "./AssetPipeline";
+import { useCockpit } from "./CockpitModeProvider";
 
 interface Props {
   missions: Mission[];
   collected: Set<MissionId>;
   /** Map mission id → count of alive enemies (0 means cleared) */
   enemyCounts: MutableRefObject<Record<MissionId, number>>;
+  unlockStates?: Partial<Record<MissionId, boolean>>;
   player: MutableRefObject<PlayerState>;
   onCollect: (id: MissionId) => void;
   enabled: boolean;
@@ -20,11 +23,14 @@ export default function HardDrives({
   missions,
   collected,
   enemyCounts,
+  unlockStates,
   player,
   onCollect,
   enabled,
 }: Props) {
   const groupRef = useRef<THREE.Group>(null);
+  const asset = useGameAsset("harddrive");
+  const { negotiated } = useCockpit();
 
   const entries = useMemo(
     () =>
@@ -44,27 +50,33 @@ export default function HardDrives({
       const id = child.userData.missionId as MissionId;
       const alreadyCollected = collected.has(id);
       const remaining = enemyCounts.current[id] ?? 0;
-      const ready = !alreadyCollected && remaining <= 0;
-      child.visible = ready;
-      if (!ready) continue;
 
-      // Hover animation
+      const isNegotiated = negotiated.has(id);
+      const objectiveUnlocked = unlockStates?.[id] ?? true;
+      const ready = !alreadyCollected && isNegotiated && remaining <= 0 && objectiveUnlocked;
+      child.visible = ready;
+
       const basePos = child.userData.basePos as THREE.Vector3;
-      child.position.set(
-        basePos.x,
-        basePos.y + Math.sin(t + child.userData.phase) * 1.2,
-        basePos.z,
-      );
-      child.rotation.y += delta * 1.2;
 
       if (enabled) {
         const dx = player.current.position.x - basePos.x;
         const dy = player.current.position.y - basePos.y;
         const dz = player.current.position.z - basePos.z;
         const d2 = dx * dx + dy * dy + dz * dz;
-        if (d2 < 5 * 5) {
+
+        if (ready && d2 < 5 * 5) {
           onCollect(id);
         }
+      }
+
+      if (ready) {
+        // Hover animation
+        child.position.set(
+          basePos.x,
+          basePos.y + Math.sin(t + child.userData.phase) * 1.2,
+          basePos.z,
+        );
+        child.rotation.y += delta * 1.2;
       }
     }
   });
@@ -81,16 +93,7 @@ export default function HardDrives({
             phase: Math.random() * Math.PI * 2,
           }}
         >
-          <mesh>
-            <boxGeometry args={[2.4, 1.3, 1.7]} />
-            <meshStandardMaterial
-              color={e.color}
-              emissive={e.color}
-              emissiveIntensity={0.8}
-              roughness={0.3}
-              metalness={0.7}
-            />
-          </mesh>
+          <mesh geometry={asset.geometry} material={asset.material} />
           {/* LED strip */}
           <mesh position={[0, 0.7, 0]}>
             <boxGeometry args={[2.0, 0.08, 0.3]} />

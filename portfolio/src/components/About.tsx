@@ -9,24 +9,24 @@ const About = () => {
 
   const profilePanels = [
     {
-      label: "Primary Focus",
+      label: "Day-to-day",
       value: "Full-Stack Systems",
       detail: "React, Node.js, APIs, performance, and production UX",
     },
     {
-      label: "Desktop Track",
+      label: "Desktop work",
       value: "WPF / DirectX",
       detail: "3D tooling, MVVM architecture, and workflow automation",
     },
     {
-      label: "Operating Style",
-      value: "Impact-Driven",
-      detail: "Measure, optimize, ship, and refine based on outcomes",
+      label: "How I work",
+      value: "Practical and measured",
+      detail: "Ship clearly, improve what matters, and keep the code maintainable",
     },
     {
-      label: "Current Mission",
-      value: "Build Better Products",
-      detail: "Create fast, intuitive software across web and desktop",
+      label: "Right now",
+      value: "Better product quality",
+      detail: "Faster, cleaner software across web and desktop",
     },
   ];
 
@@ -39,17 +39,15 @@ const About = () => {
         transition={{ duration: 0.6 }}
       >
         <div className="mb-10 text-center">
-          <p className="text-xs uppercase tracking-[0.24em] text-cyan-300/70 mb-3">
-            Pilot Profile
-          </p>
-          <h2 className="section-title mb-4">About Me</h2>
-          <p className="max-w-3xl mx-auto text-sm sm:text-base text-slate-300/80 leading-relaxed">
-            A profile panel for how I build, optimize, and ship software systems
-            across web and desktop environments.
+          <p className="section-eyebrow">Profile</p>
+          <h2 className="section-title">About me</h2>
+          <p className="section-copy">
+            A quick overview of how I work, what I focus on, and the kind of
+            software I like building.
           </p>
         </div>
 
-        <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-slate-950/45 shadow-2xl shadow-black/25 backdrop-blur-xl">
+        <div className="app-panel relative">
           <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(180deg,rgba(255,255,255,0.06)_0%,rgba(255,255,255,0.015)_38%,rgba(255,255,255,0)_100%)]" />
           <div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-cyan-300 via-amber-300 to-emerald-300" />
 
@@ -58,7 +56,7 @@ const About = () => {
               <div className="flex flex-wrap items-center gap-3 mb-6">
                 <span className="inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-200">
                   <span className="h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.8)]" />
-                  Identity Signal
+                  What I do
                 </span>
                 <span className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-300">
                   Web + Desktop

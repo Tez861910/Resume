@@ -1,27 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FaBars, FaTimes } from "react-icons/fa";
-import { useGame, type ChallengeEntryPoint } from "../three/game/GameContext";
-import CockpitToggle from "./cockpit/CockpitToggle";
+import { FaBars, FaDownload, FaGamepad, FaTimes } from "react-icons/fa";
+import { siteConfig } from "../config/site";
+import ThemeToggle from "./ThemeToggle";
 
 interface NavbarProps {
   isScrolled: boolean;
 }
 
-const Navbar = ({ isScrolled }: NavbarProps) => {
+export default function Navbar({ isScrolled }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const isHome = location.pathname === "/";
-  const { launch } = useGame();
-
-  const launchChallenge = (entry: ChallengeEntryPoint) => {
-    launch(entry);
-    setTimeout(() => {
-      document
-        .getElementById("challenge")
-        ?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 50);
-  };
 
   const navItems = [
     { name: "Home", href: "/#home" },
@@ -32,130 +22,172 @@ const Navbar = ({ isScrolled }: NavbarProps) => {
     { name: "Contact", href: "/#contact" },
   ];
 
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
   const handleNavClick = (href: string) => {
     setIsOpen(false);
+
     if (isHome) {
       const hash = href.replace("/", "");
-      const el = document.querySelector(hash);
-      if (el) el.scrollIntoView({ behavior: "smooth" });
+      const element = document.querySelector(hash);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
     }
   };
 
-  const linkClass = `font-medium transition-colors hover:text-amber-200 ${
-    isScrolled ? "text-slate-100" : "text-amber-50"
-  }`;
-
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? "bg-slate-900/90 backdrop-blur-lg border-b border-white/10 shadow-lg shadow-black/20"
-          : "bg-transparent"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16 sm:h-20">
-          {/* Logo */}
-          <Link
-            to="/"
-            className={`text-2xl font-bold tracking-tight transition-colors ${
-              isScrolled ? "text-amber-200" : "text-amber-300"
-            }`}
-          >
-            TS
-          </Link>
-
-          {/* Desktop nav links */}
-          <div className="hidden md:flex items-center space-x-4">
-            {navItems.map((item) =>
-              isHome ? (
-                <a
-                  key={item.name}
-                  href={item.href.replace("/", "")}
-                  onClick={() => handleNavClick(item.href)}
-                  className={linkClass}
-                >
-                  {item.name}
-                </a>
-              ) : (
-                <Link key={item.name} to={item.href} className={linkClass}>
-                  {item.name}
-                </Link>
-              ),
-            )}
-
-            {/* ── Challenge mode trigger ─────────────────────────────── */}
-            <button
-              onClick={() => launchChallenge("navbar")}
-              title="Launch Challenge Mode — collect your tech stack!"
-              className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1.5 text-xs font-bold text-amber-200
-                         transition-all duration-150 hover:border-amber-400/65 hover:bg-amber-400/22 hover:text-amber-100
-                         active:scale-95"
+    <>
+      <nav
+        className="fixed left-0 right-0 top-0 z-50 transition-all duration-300"
+        style={{
+          background:
+            isScrolled || isOpen ? "var(--surface-soft)" : "transparent",
+          borderBottom:
+            isScrolled || isOpen ? `1px solid var(--panel-border)` : "none",
+          boxShadow: isScrolled ? "var(--shadow-soft)" : "none",
+          backdropFilter: isScrolled || isOpen ? "blur(18px)" : "none",
+        }}
+      >
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between sm:h-20">
+            <Link
+              to="/"
+              className="text-xl font-bold tracking-[0.18em] sm:text-2xl"
+              style={{ color: "var(--text-primary)" }}
             >
-              🚀 <span>Challenge&nbsp;Mode</span>
-            </button>
+              TS
+            </Link>
 
-            {/* ── Cockpit mode trigger ──────────────────────────────── */}
-            <CockpitToggle variant="desktop" />
-          </div>
+            <div className="hidden items-center gap-5 md:flex">
+              {navItems.map((item) =>
+                isHome ? (
+                  <a
+                    key={item.name}
+                    href={item.href.replace("/", "")}
+                    onClick={() => handleNavClick(item.href)}
+                    className="text-sm font-medium transition-colors hover:text-amber-300"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    {item.name}
+                  </a>
+                ) : (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className="text-sm font-medium transition-colors hover:text-amber-300"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    {item.name}
+                  </Link>
+                ),
+              )}
 
-          {/* Mobile controls row */}
-          <div className="md:hidden flex items-center gap-2">
-            <CockpitToggle variant="mobile" />
-            {/* Compact challenge mode button on mobile */}
-            <button
-              onClick={() => launchChallenge("navbar")}
-              title="Launch Challenge Mode"
-              className="inline-flex items-center justify-center w-8 h-8 rounded-full
-                         bg-amber-400/10 border border-amber-400/30 text-amber-200
-                         hover:bg-amber-400/22 active:scale-95 transition-all duration-150 text-base"
-              aria-label="Launch Challenge Mode"
-            >
-              🚀
-            </button>
+              <ThemeToggle />
+              <a
+                href={siteConfig.resumeDownloadPath}
+                download
+                className="btn-secondary"
+              >
+                <FaDownload className="text-xs" />
+                Resume
+              </a>
+              <Link to={siteConfig.cockpit.route} className="btn-ghost">
+                <FaGamepad className="text-sm" />
+                Cockpit
+              </Link>
+            </div>
 
-            {/* Hamburger */}
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className={`text-2xl ${isScrolled ? "text-amber-100" : "text-amber-50"}`}
-              aria-label="Toggle menu"
-            >
-              {isOpen ? <FaTimes /> : <FaBars />}
-            </button>
+            <div className="flex items-center gap-2 md:hidden">
+              <ThemeToggle />
+              <button
+                type="button"
+                onClick={() => setIsOpen((current) => !current)}
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full border text-xl"
+                style={{
+                  background: "var(--surface-soft)",
+                  borderColor: "var(--panel-border)",
+                  color: "var(--text-primary)",
+                  boxShadow: "var(--shadow-soft)",
+                }}
+                aria-label="Toggle menu"
+              >
+                {isOpen ? <FaTimes /> : <FaBars />}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </nav>
 
-      {/* Mobile dropdown */}
       {isOpen && (
-        <div className="md:hidden bg-slate-900/95 backdrop-blur-lg border-b border-white/10 shadow-xl">
-          <div className="px-4 pt-2 pb-4 space-y-1">
-            {navItems.map((item) =>
-              isHome ? (
-                <a
-                  key={item.name}
-                  href={item.href.replace("/", "")}
-                  onClick={() => handleNavClick(item.href)}
-                  className="block py-2.5 px-3 rounded-lg text-amber-50 hover:text-amber-200 hover:bg-white/5 transition-colors"
-                >
-                  {item.name}
-                </a>
-              ) : (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  onClick={() => setIsOpen(false)}
-                  className="block py-2.5 px-3 rounded-lg text-amber-50 hover:text-amber-200 hover:bg-white/5 transition-colors"
-                >
-                  {item.name}
-                </Link>
-              ),
-            )}
-          </div>
-        </div>
-      )}
-    </nav>
-  );
-};
+        <>
+          <button
+            type="button"
+            aria-label="Close menu"
+            className="fixed inset-0 z-40 bg-slate-950/40 md:hidden"
+            onClick={() => setIsOpen(false)}
+          />
+          <div
+            className="fixed left-4 right-4 top-20 z-50 rounded-[28px] border p-4 backdrop-blur-xl md:hidden"
+            style={{
+              background: "var(--surface-strong)",
+              borderColor: "var(--panel-border)",
+              boxShadow: "var(--panel-shadow)",
+            }}
+          >
+            <div className="space-y-1">
+              {navItems.map((item) =>
+                isHome ? (
+                  <a
+                    key={item.name}
+                    href={item.href.replace("/", "")}
+                    onClick={() => handleNavClick(item.href)}
+                    className="block rounded-2xl px-4 py-3 text-sm font-medium"
+                    style={{ color: "var(--text-primary)" }}
+                  >
+                    {item.name}
+                  </a>
+                ) : (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    onClick={() => setIsOpen(false)}
+                    className="block rounded-2xl px-4 py-3 text-sm font-medium"
+                    style={{ color: "var(--text-primary)" }}
+                  >
+                    {item.name}
+                  </Link>
+                ),
+              )}
 
-export default Navbar;
+              <div className="mt-4 grid gap-3">
+                <a
+                  href={siteConfig.resumeDownloadPath}
+                  download
+                  className="btn-secondary"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <FaDownload className="text-xs" />
+                  Download resume
+                </a>
+                <Link
+                  to={siteConfig.cockpit.route}
+                  className="btn-ghost"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <FaGamepad className="text-sm" />
+                  Open cockpit
+                </Link>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+    </>
+  );
+}

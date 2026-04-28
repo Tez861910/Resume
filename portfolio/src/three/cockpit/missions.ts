@@ -38,6 +38,12 @@ export interface Mission {
   driveTitle: string;
   /** Short description on the drive tile */
   driveTagline: string;
+  /** Narrative negotiation before combat */
+  negotiation?: {
+    speaker: string;
+    lines: string[];
+    failResponse: string;
+  };
 }
 
 export const MISSIONS: Mission[] = [
@@ -80,6 +86,15 @@ export const MISSIONS: Mission[] = [
     debriefing: ["[CTRL] Archive secured. Your profile is now on record."],
     driveTitle: "Profile Drive",
     driveTagline: "About — who you are, how you build",
+    negotiation: {
+      speaker: "Sector Pirate",
+      lines: [
+        "L7-Pirate: This sector is under our jurisdiction, pilot.",
+        "Pilot: I'm just here for the archive drive. Hand it over.",
+        "L7-Pirate: Everything in this debris is ours. Including your ship.",
+      ],
+      failResponse: "L7-Pirate: Engaging thrusters. Prepare to be salvaged!",
+    },
   },
   {
     id: "constellation",
@@ -98,6 +113,15 @@ export const MISSIONS: Mission[] = [
     debriefing: ["[CTRL] Skill constellation drive retrieved."],
     driveTitle: "Skills Drive",
     driveTagline: "Tech stack + capabilities",
+    negotiation: {
+      speaker: "AI Sentry",
+      lines: [
+        "AI-SENTRY: Unauthorized access detected in the Skill Constellation.",
+        "Pilot: Requesting decryption key for the Skills Drive.",
+        "AI-SENTRY: Verification failed. Protocol 9-B initiated.",
+      ],
+      failResponse: "AI-SENTRY: Lethal force authorized.",
+    },
   },
   {
     id: "career",
@@ -116,6 +140,15 @@ export const MISSIONS: Mission[] = [
     debriefing: ["[CTRL] Career log acquired. Trajectory recorded."],
     driveTitle: "Career Drive",
     driveTagline: "Experience log + achievements",
+    negotiation: {
+      speaker: "Trade Corp Enforcer",
+      lines: [
+        "ENFORCER: You're trespassing on corporate logistics lanes.",
+        "Pilot: I'm tracking a career log from the candidate's wreck.",
+        "ENFORCER: That data is proprietary trade-secret material now.",
+      ],
+      failResponse: "ENFORCER: Deploying interceptors to seize your vessel.",
+    },
   },
   {
     id: "mission-ops",
@@ -134,6 +167,15 @@ export const MISSIONS: Mission[] = [
     debriefing: ["[CTRL] Ops dossier secured. Portfolio record updated."],
     driveTitle: "Projects Drive",
     driveTagline: "Shipped projects dossier",
+    negotiation: {
+      speaker: "Mercenary Captain",
+      lines: [
+        "CAPTAIN: We've already scavenged the projects dossier.",
+        "Pilot: Name your price, Captain.",
+        "CAPTAIN: Your ship's scrap value is higher than any price you can offer.",
+      ],
+      failResponse: "CAPTAIN: All hands to battle stations!",
+    },
   },
   {
     id: "transmission",
@@ -155,6 +197,15 @@ export const MISSIONS: Mission[] = [
     ],
     driveTitle: "Comms Drive",
     driveTagline: "Contact channels",
+    negotiation: {
+      speaker: "Defense Array AI",
+      lines: [
+        "ARRAY-AI: Final transmission security lock engaged.",
+        "Pilot: Disengage the array. The mission is almost over.",
+        "ARRAY-AI: My primary directive is to prevent any data export.",
+      ],
+      failResponse: "ARRAY-AI: Terminal counter-measures active.",
+    },
   },
 ];
 
@@ -245,9 +296,12 @@ export const DRIVE_READOUTS: Record<MissionId, DriveReadout> = {
       "LinkedIn: linkedin.com/in/tejas-s-57138816a",
     ],
     links: [
-      { label: "Email", href: "mailto:tejassureshofficial@gmail.com" },
+      { label: "Portfolio", href: "/" },
       { label: "GitHub", href: "https://github.com/Tez861910" },
-      { label: "LinkedIn", href: "https://www.linkedin.com/in/tejas-s-57138816a/" },
+      {
+        label: "LinkedIn",
+        href: "https://www.linkedin.com/in/tejas-s-57138816a/",
+      },
     ],
   },
 };

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import useScrollVelocity from "./useScrollVelocity";
-import { useSharedWorldState } from "../../three/world/WorldStateProvider";
+import { useSharedWorldState } from "../../three/world/useSharedWorldState";
 
 /**
  * WarpStreaks — Advanced space tunnel effect

@@ -2,7 +2,7 @@ import { useCockpit } from "../../three/cockpit/CockpitModeProvider";
 import { MISSIONS } from "../../three/cockpit/missions";
 
 export default function InventoryRail() {
-  const { collected, openDrive } = useCockpit();
+  const { collected, openDrive, readoutsUnlocked } = useCockpit();
 
   return (
     <div className="flex flex-col gap-1.5 sm:gap-2 items-end">
@@ -12,30 +12,39 @@ export default function InventoryRail() {
       <div className="grid grid-cols-3 gap-1.5 max-w-[170px]">
         {MISSIONS.map((m) => {
           const owned = collected.has(m.id);
+          const canOpen = owned && readoutsUnlocked;
           return (
             <button
               key={m.id}
-              onClick={() => owned && openDrive(m.id)}
+              onClick={() => canOpen && openDrive(m.id)}
               className={`group relative w-12 h-8 sm:w-14 sm:h-9 rounded-md border transition flex items-center justify-center ${
-                owned
+                canOpen
                   ? "border-white/20 bg-slate-900/75 hover:scale-105 cursor-pointer"
-                  : "border-white/10 bg-slate-950/50 cursor-not-allowed"
+                  : owned
+                    ? "border-amber-500/20 bg-slate-950/70 cursor-not-allowed"
+                    : "border-white/10 bg-slate-950/50 cursor-not-allowed"
               }`}
               style={
-                owned
+                canOpen
                   ? {
                       boxShadow: `0 0 14px ${m.accent}55, inset 0 0 10px ${m.accent}22`,
                       borderColor: `${m.accent}99`,
                     }
                   : undefined
               }
-              title={owned ? `${m.driveTitle} — ${m.driveTagline}` : "Locked"}
-              aria-label={owned ? `Open ${m.driveTitle}` : "Locked drive slot"}
-              disabled={!owned}
+              title={
+                canOpen
+                  ? `${m.driveTitle} — ${m.driveTagline}`
+                  : owned
+                    ? "Encrypted until all drives are recovered and returned to base"
+                    : "Locked"
+              }
+              aria-label={canOpen ? `Open ${m.driveTitle}` : "Locked drive slot"}
+              disabled={!canOpen}
             >
               <span
                 className="text-[8px] font-bold uppercase tracking-wider"
-                style={{ color: owned ? m.accent : "#475569" }}
+                style={{ color: canOpen ? m.accent : owned ? "#fbbf24" : "#475569" }}
               >
                 {m.codename.split("-")[0].slice(0, 4)}
               </span>

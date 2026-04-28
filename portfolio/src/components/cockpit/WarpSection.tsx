@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useSharedWorldState } from "../../three/world/WorldStateProvider";
+import { useSharedWorldState } from "../../three/world/useSharedWorldState";
 
 interface WarpSectionProps {
   children: React.ReactNode;
