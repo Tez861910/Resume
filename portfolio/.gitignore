@@ -13,8 +13,7 @@ dist
 dist-ssr
 *.local
 
-# Package manager lock files (OS-specific, each machine generates its own)
-pnpm-lock.yaml
+# Package manager lock files
 package-lock.json
 yarn.lock
 .pnpm-store/
