@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: "Tejas S",
-  role: "Full-Stack Developer",
+  role: "Full-Stack Product Developer",
   email: "tejassureshofficial@gmail.com",
   phone: "+91-8618904742",
   location: "Bengaluru, India",
