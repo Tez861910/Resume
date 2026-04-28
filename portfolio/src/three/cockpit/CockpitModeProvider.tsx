@@ -19,6 +19,8 @@ interface CockpitCtx {
   close: () => void;
   toggle: () => void;
   currentMission: Mission;
+  activeMissionId: MissionId;
+  setActiveMissionId: (id: MissionId) => void;
   collected: Set<MissionId>;
   collectDrive: (id: MissionId) => void;
   resetProgress: () => void;
@@ -37,6 +39,10 @@ interface CockpitCtx {
   completeNegotiation: (id: MissionId) => void;
   currentDialogue: MissionId | null;
   setCurrentDialogue: (id: MissionId | null) => void;
+  defeatedCommanders: Set<MissionId>;
+  markCommanderDefeated: (id: MissionId) => void;
+  clearMissionProgress: (id: MissionId) => void;
+  readoutsUnlocked: boolean;
   audio: ReturnType<typeof useAudio>;
 }
 
@@ -74,18 +80,56 @@ export function CockpitModeProvider({ children }: { children: ReactNode }) {
     "base",
   );
   const [activeStage, setActiveStage] = useState<number>(0);
+  const [activeMissionId, setActiveMissionId] = useState<MissionId>("launch");
   const [negotiated, setNegotiated] = useState<Set<MissionId>>(new Set());
+  const [defeatedCommanders, setDefeatedCommanders] = useState<Set<MissionId>>(
+    new Set(),
+  );
   const [currentDialogue, setCurrentDialogue] = useState<MissionId | null>(
     null,
   );
 
   const audio = useAudio();
+  const { stopEngine, stopStatic } = audio;
+
+  const resetRuntimeUi = useCallback(() => {
+    setOpenDriveId(null);
+    setGamePhase("base");
+    setActiveStage(0);
+    setActiveMissionId("launch");
+    setCurrentDialogue(null);
+    setCameraView("first");
+  }, []);
 
   const completeNegotiation = useCallback((id: MissionId) => {
     setNegotiated((prev) => {
       if (prev.has(id)) return prev;
       const next = new Set(prev);
       next.add(id);
+      return next;
+    });
+  }, []);
+
+  const markCommanderDefeated = useCallback((id: MissionId) => {
+    setDefeatedCommanders((prev) => {
+      if (prev.has(id)) return prev;
+      const next = new Set(prev);
+      next.add(id);
+      return next;
+    });
+  }, []);
+
+  const clearMissionProgress = useCallback((id: MissionId) => {
+    setNegotiated((prev) => {
+      if (!prev.has(id)) return prev;
+      const next = new Set(prev);
+      next.delete(id);
+      return next;
+    });
+    setDefeatedCommanders((prev) => {
+      if (!prev.has(id)) return prev;
+      const next = new Set(prev);
+      next.delete(id);
       return next;
     });
   }, []);
@@ -100,11 +144,17 @@ export function CockpitModeProvider({ children }: { children: ReactNode }) {
   const open = useCallback(() => setIsActive(true), []);
   const close = useCallback(() => {
     setIsActive(false);
-    setOpenDriveId(null);
-    audio.stopEngine();
-    audio.stopStatic();
-  }, [audio]);
-  const toggle = useCallback(() => setIsActive((v) => !v), []);
+    resetRuntimeUi();
+    stopEngine();
+    stopStatic();
+  }, [resetRuntimeUi, stopEngine, stopStatic]);
+  const toggle = useCallback(() => {
+    if (isActive) {
+      close();
+      return;
+    }
+    open();
+  }, [close, isActive, open]);
   const toggleCameraView = useCallback(() => {
     setCameraView((v) => (v === "first" ? "third" : "first"));
   }, []);
@@ -125,7 +175,7 @@ export function CockpitModeProvider({ children }: { children: ReactNode }) {
         if (openDriveId) {
           setOpenDriveId(null);
         } else {
-          setIsActive(false);
+          close();
         }
       } else if (e.key.toLowerCase() === "v") {
         setCameraView((v) => (v === "first" ? "third" : "first"));
@@ -133,14 +183,15 @@ export function CockpitModeProvider({ children }: { children: ReactNode }) {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [isActive, openDriveId]);
+  }, [close, isActive, openDriveId]);
 
   const currentMission = useMemo(() => {
     return (
+      MISSIONS.find((m) => m.id === activeMissionId) ??
       MISSIONS.find((m) => !collected.has(m.id)) ??
       MISSIONS[MISSIONS.length - 1]
     );
-  }, [collected]);
+  }, [activeMissionId, collected]);
 
   const collectDrive = useCallback((id: MissionId) => {
     setCollected((prev) => {
@@ -154,12 +205,11 @@ export function CockpitModeProvider({ children }: { children: ReactNode }) {
   const resetProgress = useCallback(() => {
     setCollected(new Set());
     setNegotiated(new Set());
-    setGamePhase("base");
-    setActiveStage(0);
-    setCurrentDialogue(null);
-    audio.stopEngine();
-    audio.stopStatic();
-  }, [audio]);
+    setDefeatedCommanders(new Set());
+    resetRuntimeUi();
+    stopEngine();
+    stopStatic();
+  }, [resetRuntimeUi, stopEngine, stopStatic]);
 
   const isComplete = useCallback(
     (id: MissionId) => collected.has(id),
@@ -169,6 +219,10 @@ export function CockpitModeProvider({ children }: { children: ReactNode }) {
   const progress = useMemo(
     () => ({ collected: collected.size, total: MISSIONS.length }),
     [collected],
+  );
+  const readoutsUnlocked = useMemo(
+    () => collected.size === MISSIONS.length && gamePhase === "base",
+    [collected, gamePhase],
   );
 
   const openDrive = useCallback((id: MissionId) => setOpenDriveId(id), []);
@@ -181,6 +235,8 @@ export function CockpitModeProvider({ children }: { children: ReactNode }) {
       close,
       toggle,
       currentMission,
+      activeMissionId,
+      setActiveMissionId,
       collected,
       collectDrive,
       resetProgress,
@@ -199,6 +255,10 @@ export function CockpitModeProvider({ children }: { children: ReactNode }) {
       completeNegotiation,
       currentDialogue,
       setCurrentDialogue,
+      defeatedCommanders,
+      markCommanderDefeated,
+      clearMissionProgress,
+      readoutsUnlocked,
       audio,
     }),
     [
@@ -207,6 +267,7 @@ export function CockpitModeProvider({ children }: { children: ReactNode }) {
       close,
       toggle,
       currentMission,
+      activeMissionId,
       collected,
       collectDrive,
       resetProgress,
@@ -219,9 +280,14 @@ export function CockpitModeProvider({ children }: { children: ReactNode }) {
       toggleCameraView,
       gamePhase,
       activeStage,
+      setActiveMissionId,
       negotiated,
       completeNegotiation,
       currentDialogue,
+      defeatedCommanders,
+      markCommanderDefeated,
+      clearMissionProgress,
+      readoutsUnlocked,
       audio,
     ],
   );

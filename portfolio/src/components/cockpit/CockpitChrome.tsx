@@ -28,6 +28,7 @@ export default function CockpitChrome({ input, player, enemyCounts }: Props) {
     cameraView,
     toggleCameraView,
     setGamePhase,
+    audio,
   } = useCockpit();
 
   // Poll player state each frame for instruments & compass
@@ -146,6 +147,22 @@ export default function CockpitChrome({ input, player, enemyCounts }: Props) {
 
         {/* Action Toggles */}
         <div className="flex items-center gap-3">
+          <div className="pointer-events-auto flex items-center gap-1 rounded bg-slate-950/80 px-2 py-1.5 backdrop-blur-md border border-cyan-500/20">
+            {(["mute", "low", "high"] as const).map((level) => (
+              <button
+                key={level}
+                onClick={() => audio.setOutputLevel(level)}
+                className={`rounded px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.24em] transition ${
+                  audio.outputLevel === level
+                    ? "bg-cyan-500/20 text-cyan-100"
+                    : "text-cyan-300/70 hover:text-cyan-100"
+                }`}
+              >
+                {level}
+              </button>
+            ))}
+          </div>
+
           <button
             onClick={toggleCameraView}
             className="pointer-events-auto relative overflow-hidden group rounded bg-slate-950/80 backdrop-blur-md border border-cyan-500/30 px-5 py-2 text-[10px] font-bold uppercase tracking-[0.3em] text-cyan-200 transition-all hover:border-cyan-400 hover:text-cyan-50 hover:shadow-[0_0_15px_rgba(6,182,212,0.3)] active:scale-95"

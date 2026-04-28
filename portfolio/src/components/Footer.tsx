@@ -1,16 +1,42 @@
-const Footer = () => {
+import { siteConfig } from "../config/site";
+
+export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-white py-8">
-      <div className="section-container text-center">
-        <p className="text-gray-400">
-          © {new Date().getFullYear()} Tejas S. All rights reserved.
-        </p>
-        <p className="text-gray-500 text-sm mt-2">
-          Built with React, TypeScript, and Tailwind CSS
-        </p>
+    <footer className="pb-10 pt-8">
+      <div className="section-container !py-0">
+        <div
+          className="flex flex-col gap-6 rounded-[28px] border px-6 py-6 sm:px-8 lg:flex-row lg:items-center lg:justify-between"
+          style={{
+            background: "var(--surface-soft)",
+            borderColor: "var(--panel-border)",
+            boxShadow: "var(--shadow-soft)",
+          }}
+        >
+          <div>
+            <p className="text-lg font-semibold text-app-primary">
+              {siteConfig.name} · {siteConfig.role}
+            </p>
+            <p className="mt-1 text-sm text-app-muted">
+              Fast portfolio for browsing, optional cockpit for immersion, and
+              a direct resume download for quick recruiter review.
+            </p>
+          </div>
+
+          <div className="flex flex-col items-start gap-3 sm:items-end">
+            <a
+              href={siteConfig.resumeDownloadPath}
+              download
+              className="btn-secondary w-full sm:w-auto"
+            >
+              Download resume
+            </a>
+            <p className="text-xs text-app-muted">
+              © {new Date().getFullYear()} {siteConfig.name}. Built with React,
+              TypeScript, and Tailwind CSS.
+            </p>
+          </div>
+        </div>
       </div>
     </footer>
-  )
+  );
 }
-
-export default Footer

@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaArrowRight, FaGithub, FaGlobe } from "react-icons/fa";
 import type { Project } from "../data/projects";
-import ProjectHologram from "../three/scenes/ProjectHologram";
 
 interface ProjectCardProps {
   project: Project;
@@ -36,7 +35,7 @@ const STATUS_TONE: Record<
   },
 };
 
-const inferMissionType = (project: Project) => {
+function inferMissionType(project: Project) {
   const tech = project.tech.join(" ").toLowerCase();
   const skills = project.skills.join(" ").toLowerCase();
   const combined = `${tech} ${skills}`;
@@ -46,7 +45,7 @@ const inferMissionType = (project: Project) => {
     combined.includes("directx") ||
     combined.includes("desktop")
   ) {
-    return "Desktop Mission";
+    return "Desktop app";
   }
 
   if (
@@ -55,7 +54,7 @@ const inferMissionType = (project: Project) => {
     combined.includes("mysql") ||
     combined.includes("api")
   ) {
-    return "Full-Stack Mission";
+    return "Full-stack app";
   }
 
   if (
@@ -63,13 +62,13 @@ const inferMissionType = (project: Project) => {
     combined.includes("tailwind") ||
     combined.includes("frontend")
   ) {
-    return "Frontend Mission";
+    return "Frontend app";
   }
 
-  return "Product Mission";
-};
+  return "Product build";
+}
 
-const inferImpactLabel = (project: Project) => {
+function inferImpactLabel(project: Project) {
   const text = `${project.tagline} ${project.description} ${project.highlights.join(" ")}`;
 
   if (text.includes("35%")) return "35% engagement lift";
@@ -79,10 +78,14 @@ const inferImpactLabel = (project: Project) => {
   if (text.includes("45%")) return "45% faster responses";
 
   return "Production-focused build";
-};
+}
 
-const ProjectCard = ({ project, index, inView }: ProjectCardProps) => {
-  const thumbnail = project.media.find((m) => m.type === "image");
+export default function ProjectCard({
+  project,
+  index,
+  inView,
+}: ProjectCardProps) {
+  const thumbnail = project.media.find((media) => media.type === "image");
 
   const missionType = useMemo(() => inferMissionType(project), [project]);
   const impactLabel = useMemo(() => inferImpactLabel(project), [project]);
@@ -106,20 +109,18 @@ const ProjectCard = ({ project, index, inView }: ProjectCardProps) => {
       <div className="relative flex items-center justify-between border-b border-white/10 px-5 py-3">
         <div className="min-w-0">
           <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">
-            Mission Terminal
+            Project snapshot
           </p>
           <p className="truncate text-xs font-semibold uppercase tracking-[0.16em] text-slate-300/80">
             {missionType}
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <span
-            className={`rounded-full border px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] ${statusTone.badge}`}
-          >
-            {statusTone.label}
-          </span>
-        </div>
+        <span
+          className={`rounded-full border px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] ${statusTone.badge}`}
+        >
+          {statusTone.label}
+        </span>
       </div>
 
       {thumbnail ? (
@@ -141,15 +142,24 @@ const ProjectCard = ({ project, index, inView }: ProjectCardProps) => {
           className="relative block h-44 overflow-hidden border-b border-white/10"
           tabIndex={-1}
         >
-          <ProjectHologram projectId={project.id} />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/10 to-transparent" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(34,211,238,0.18),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(251,191,36,0.18),transparent_22%),linear-gradient(135deg,rgba(15,23,42,0.98),rgba(30,41,59,0.9))]" />
+          <div className="relative flex h-full items-end p-5">
+            <div>
+              <span className="rounded-full border border-cyan-300/25 bg-cyan-300/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-cyan-100">
+                {missionType}
+              </span>
+              <p className="mt-3 max-w-[16rem] text-lg font-semibold text-slate-50">
+                {project.title}
+              </p>
+            </div>
+          </div>
         </Link>
       )}
 
       <div className="flex flex-1 flex-col px-5 py-5">
         <div className="mb-4 flex flex-wrap items-center gap-2">
           <span className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-cyan-100">
-            Inspectable
+            Case study
           </span>
           <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-300">
             {impactLabel}
@@ -188,15 +198,15 @@ const ProjectCard = ({ project, index, inView }: ProjectCardProps) => {
 
         <div className="mb-5">
           <div className="mb-2 text-[10px] uppercase tracking-[0.18em] text-slate-500">
-            Mission Stack
+            Tech used
           </div>
           <div className="flex flex-wrap gap-1.5">
-            {project.tech.slice(0, 4).map((t, i) => (
+            {project.tech.slice(0, 4).map((tech) => (
               <span
-                key={i}
+                key={tech}
                 className="rounded-md border border-white/10 bg-white/[0.06] px-2.5 py-0.5 text-xs text-amber-100"
               >
-                {t}
+                {tech}
               </span>
             ))}
             {project.tech.length > 4 && (
@@ -238,13 +248,11 @@ const ProjectCard = ({ project, index, inView }: ProjectCardProps) => {
             to={`/project/${project.id}`}
             className="inline-flex items-center gap-2 text-sm font-medium text-amber-200 transition-colors hover:text-amber-100 group/link"
           >
-            Inspect Mission
+            Open case study
             <FaArrowRight className="text-xs transition-transform group-hover/link:translate-x-1" />
           </Link>
         </div>
       </div>
     </motion.div>
   );
-};
-
-export default ProjectCard;
+}

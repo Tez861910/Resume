@@ -88,10 +88,12 @@ function PirateCruiser({
   position,
   isShielded,
   enabled,
+  onDestroyed,
 }: {
   position: THREE.Vector3;
   isShielded: boolean;
   enabled: boolean;
+  onDestroyed: () => void;
 }) {
   const pirateAsset = useGameAsset("station");
   const { audio } = useCockpit();
@@ -105,14 +107,36 @@ function PirateCruiser({
   const [alive, setAlive] = useState(true);
   const fireCooldown = useRef(0);
   const patternTimer = useRef(0);
+  const destroyedRef = useRef(false);
+  const velocityRef = useRef(new THREE.Vector3());
 
   useFrame((state, delta) => {
     if (!alive || !groupRef.current) return;
 
-    // Menacing movement
+    const playerPos = runtime.player.current.position;
+    const desiredAnchor = position
+      .clone()
+      .lerp(playerPos, isShielded ? 0.12 : 0.42)
+      .add(
+        new THREE.Vector3(
+          Math.cos(state.clock.elapsedTime * 0.55) * 14,
+          Math.sin(state.clock.elapsedTime * 0.65) * 5,
+          Math.sin(state.clock.elapsedTime * 0.4) * 18,
+        ),
+      );
+
+    const steering = desiredAnchor
+      .sub(groupRef.current.position)
+      .multiplyScalar(isShielded ? 0.45 : 0.9);
+    velocityRef.current.lerp(steering, Math.min(1, delta * 1.8));
+    if (velocityRef.current.length() > (isShielded ? 8 : 15)) {
+      velocityRef.current.setLength(isShielded ? 8 : 15);
+    }
+    groupRef.current.position.addScaledVector(velocityRef.current, delta);
+
+    const lookTarget = playerPos.clone().add(runtime.player.current.velocity);
+    groupRef.current.lookAt(lookTarget);
     groupRef.current.rotation.y += delta * 0.15;
-    groupRef.current.position.y =
-      position.y + Math.sin(state.clock.elapsedTime * 0.4) * 3;
 
     // Shield animation
     if (shieldRef.current && isShielded) {
@@ -130,7 +154,6 @@ function PirateCruiser({
       patternTimer.current += delta;
 
       if (fireCooldown.current <= 0) {
-        const playerPos = runtime.player.current.position;
         const dist = groupRef.current.position.distanceTo(playerPos);
 
         if (dist < 150) {
@@ -192,6 +215,10 @@ function PirateCruiser({
       if (newHealth <= 0) {
         setAlive(false);
         runtime.explosions.current?.spawn(groupRef.current.position, 100);
+        if (!destroyedRef.current) {
+          destroyedRef.current = true;
+          onDestroyed();
+        }
       }
     }
   });
@@ -255,7 +282,18 @@ function PirateCruiser({
  */
 export default function PirateMissionScene({ enabled }: { enabled: boolean }) {
   const runtime = useCockpitRuntime();
-  const { collected, collectDrive, cameraView } = useCockpit();
+  const {
+    collected,
+    collectDrive,
+    cameraView,
+    currentDialogue,
+    defeatedCommanders,
+    markCommanderDefeated,
+    negotiated,
+    setActiveMissionId,
+    setCurrentDialogue,
+    setGamePhase,
+  } = useCockpit();
 
   // Mission 1 is the Pirate Mission
   const mission = MISSIONS[1];
@@ -264,6 +302,9 @@ export default function PirateMissionScene({ enabled }: { enabled: boolean }) {
   const stationPos = useMemo(
     () => new THREE.Vector3(...mission.position),
     [mission],
+  );
+  const [bossDestroyed, setBossDestroyed] = useState(
+    defeatedCommanders.has(missionId),
   );
   const asteroidCenters = useMemo(
     () => [
@@ -289,6 +330,8 @@ export default function PirateMissionScene({ enabled }: { enabled: boolean }) {
   const aliveDrones =
     runtime.enemyCounts.current[missionId] ?? mission.enemyCount;
   const isShielded = aliveDrones > 0 && !collected.has(missionId);
+  const canRecoverDrive =
+    negotiated.has(missionId) && aliveDrones <= 0 && bossDestroyed;
 
   // Set initial player position slightly back so they fly in
   useEffect(() => {
@@ -296,6 +339,21 @@ export default function PirateMissionScene({ enabled }: { enabled: boolean }) {
     runtime.player.current.position.set(0, 0, 50);
     runtime.player.current.velocity.set(0, 0, -200); // Initial fast forward velocity
   }, [runtime.player]);
+
+  useEffect(() => {
+    setActiveMissionId(missionId);
+    if (!negotiated.has(missionId) && currentDialogue !== missionId) {
+      setCurrentDialogue(missionId);
+      setGamePhase("dialogue");
+    }
+  }, [
+    currentDialogue,
+    missionId,
+    negotiated,
+    setActiveMissionId,
+    setCurrentDialogue,
+    setGamePhase,
+  ]);
 
   return (
     <>
@@ -323,6 +381,10 @@ export default function PirateMissionScene({ enabled }: { enabled: boolean }) {
         position={stationPos}
         isShielded={isShielded}
         enabled={enabled}
+        onDestroyed={() => {
+          setBossDestroyed(true);
+          markCommanderDefeated(missionId);
+        }}
       />
       <EnemyBots
         stations={stations}
@@ -346,6 +408,7 @@ export default function PirateMissionScene({ enabled }: { enabled: boolean }) {
         missions={[mission]}
         collected={collected}
         enemyCounts={runtime.enemyCounts}
+        unlockStates={{ [missionId]: canRecoverDrive }}
         player={runtime.player}
         onCollect={collectDrive}
         enabled={enabled}

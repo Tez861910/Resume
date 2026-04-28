@@ -1,0 +1,41 @@
+TEJAS S
+
++91-8618904742 | tejassureshofficial@gmail.com | Bengaluru, India
+Portfolio: https://tez861910.github.io/Resume/
+GitHub: https://github.com/Tez861910
+LinkedIn: https://www.linkedin.com/in/tejas-s-57138816a/
+
+SUMMARY
+Full-stack developer with 1+ year of professional experience building performant web apps (React/Node/MySQL) and 3D desktop tooling (WPF/DirectX). Delivered measurable impact at Printalytix: 40% faster load times, 35% higher engagement, and streamlined manufacturing workflows. Strong in API design, database optimization, and responsive UI/UX.
+
+SKILLS
+- Languages: JavaScript, TypeScript, C#, Java, PHP
+- Frontend: React, Vite, Material UI, Tailwind CSS, Framer Motion, PWA
+- Backend: Node.js, Express.js, REST APIs, Sequelize ORM
+- Desktop: WPF/.NET 8, DirectX/HelixToolkit, MVVM, DI
+- Databases: MySQL, SQLite, query optimization
+- DevOps & Tools: Git, GitHub, VS Code, GoDaddy deployment, App Insights
+
+EXPERIENCE
+Software Engineer - Web & Desktop | Printalytix | Bengaluru, India | Dec 2024 - Dec 2025
+- Boosted web engagement 35% and cut page-load times ~40% through UI/SEO improvements, bundling, caching, and image optimization.
+- Architected MIND, a WPF/.NET 8 desktop app with DirectX/HelixToolkit for 3D model visualization, Microsoft Entra ID auth, and MVVM/DI.
+- Shipped the customer-facing Printalytix site with React/MUI/Redux/PWA frontend flows and a Node/Express + Sequelize/MySQL backend.
+- Automated internal workflows with React/Node apps and RESTful APIs, improving API responsiveness ~30%.
+
+Volunteer - Full-Stack Development | Hands On Lab under Prof. Ajay Gupta, Old Dominion University | Norfolk, VA, USA | Oct 2023 - Jan 2024
+- Built a university threads application supporting 500+ concurrent users with role-based access and real-time messaging.
+- Delivered an examination management system that automated assessments and cut manual overhead ~50%.
+- Optimized backend via query refinement and caching, improving response times ~45%.
+
+PROJECTS
+- MIND 3D Manufacturing Suite
+- Printalytix Web Platform
+- Open Solar Toolkit
+- Resolute Solutions Marketing Site
+- University Threads / Forum Platform
+- Examination Management System
+
+EDUCATION
+Bachelor of Computer Applications (BCA) - Computer Science
+Bengaluru North University | Aug 2018 - Aug 2024

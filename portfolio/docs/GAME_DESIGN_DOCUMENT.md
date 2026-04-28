@@ -106,9 +106,14 @@ The user (visitor/recruiter) is positioned as an operator or explorer navigating
 - [x] Build an Asset Pipeline to asynchronously load GLTF models (player, enemy, station, asteroid).
 - [x] Build Narrative Sandbox: Create a Base / Command Center UI to frame gameplay.
 - [x] Implement Scene Dialogues: Negotiation UI with enemy factions before combat initiates.
-- [x] Implement Audio System: Integrated synthesized engine hum, laser fire, radio static, and impact sounds.
+- [~] Audio System foundation exists (engine hum, laser fire, radio static, impact sounds), but reliability/tuning still needs work.
 - [x] Implement Visual Effects: Added Warp-in streaks and high-performance particle explosion system.
 - [x] Implement HUD Minimap/Radar: Real-time top-down tracking of off-screen enemies and pips for targets.
 - [ ] Implement multi-stage mission objectives (Escort, Destroy, Scan).
 - [ ] Implement Boss Battles: Larger cruisers guarding the final drives.
 - [ ] Add post-game summary that routes user to the Projects section.
+
+### Current Reality Check
+- The command center + stage 1 combat loop exists.
+- The broader multi-stage mission structure is still not implemented.
+- Audio is present as a foundation, but it should not be treated as finished.

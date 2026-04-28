@@ -12,6 +12,7 @@ interface Props {
   collected: Set<MissionId>;
   /** Map mission id → count of alive enemies (0 means cleared) */
   enemyCounts: MutableRefObject<Record<MissionId, number>>;
+  unlockStates?: Partial<Record<MissionId, boolean>>;
   player: MutableRefObject<PlayerState>;
   onCollect: (id: MissionId) => void;
   enabled: boolean;
@@ -22,13 +23,14 @@ export default function HardDrives({
   missions,
   collected,
   enemyCounts,
+  unlockStates,
   player,
   onCollect,
   enabled,
 }: Props) {
   const groupRef = useRef<THREE.Group>(null);
   const asset = useGameAsset("harddrive");
-  const { negotiated, setCurrentDialogue, setGamePhase } = useCockpit();
+  const { negotiated } = useCockpit();
 
   const entries = useMemo(
     () =>
@@ -50,9 +52,8 @@ export default function HardDrives({
       const remaining = enemyCounts.current[id] ?? 0;
 
       const isNegotiated = negotiated.has(id);
-      const hasNegotiation = missions.find((m) => m.id === id)?.negotiation;
-
-      const ready = !alreadyCollected && remaining <= 0;
+      const objectiveUnlocked = unlockStates?.[id] ?? true;
+      const ready = !alreadyCollected && isNegotiated && remaining <= 0 && objectiveUnlocked;
       child.visible = ready;
 
       const basePos = child.userData.basePos as THREE.Vector3;
@@ -62,12 +63,6 @@ export default function HardDrives({
         const dy = player.current.position.y - basePos.y;
         const dz = player.current.position.z - basePos.z;
         const d2 = dx * dx + dy * dy + dz * dz;
-
-        // Trigger negotiation if close and not done yet
-        if (hasNegotiation && !isNegotiated && d2 < 35 * 35) {
-          setCurrentDialogue(id);
-          setGamePhase("dialogue");
-        }
 
         if (ready && d2 < 5 * 5) {
           onCollect(id);

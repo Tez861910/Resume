@@ -57,9 +57,15 @@ const Skills = () => {
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.6 }}
       >
-        <h2 className="section-title">Technical Skills</h2>
+        <div className="mb-10 text-center">
+          <p className="section-eyebrow">Capabilities</p>
+          <h2 className="section-title">Technical skills</h2>
+          <p className="section-copy">
+            The stack I use to build responsive products, APIs, and desktop
+            tools without overengineering the experience.
+          </p>
+        </div>
 
-        {/* ── Skills grid: Simple, lightweight card layout ── */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {skillCategories.map((category, index) => (
             <motion.div

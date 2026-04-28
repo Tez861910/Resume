@@ -20,7 +20,8 @@ let lineIdCounter = 1;
  * mission progression (collected drives). Also shows "clear hostiles" status.
  */
 export default function MissionTerminal({ enemyCounts }: Props) {
-  const { currentMission, collected } = useCockpit();
+  const { currentMission, collected, currentDialogue, defeatedCommanders, negotiated } =
+    useCockpit();
   const [lines, setLines] = useState<Line[]>([]);
   const [activeTyping, setActiveTyping] = useState<string>("");
   const typeIdxRef = useRef(0);
@@ -92,9 +93,19 @@ export default function MissionTerminal({ enemyCounts }: Props) {
   const enemiesRemaining = enemyCounts.current[currentMission.id] ?? 0;
   const missionStatus = useMemo(() => {
     if (collected.has(currentMission.id)) return "COMPLETE";
-    if (enemiesRemaining > 0) return `HOSTILES: ${enemiesRemaining}`;
+    if (currentDialogue === currentMission.id) return "INCOMING COMMS";
+    if (!negotiated.has(currentMission.id)) return "AWAITING NEGOTIATION";
+    if (enemiesRemaining > 0) return `CLEAR ESCORTS: ${enemiesRemaining}`;
+    if (!defeatedCommanders.has(currentMission.id)) return "DESTROY CRUISER";
     return "DRIVE READY — RETRIEVE";
-  }, [collected, currentMission.id, enemiesRemaining]);
+  }, [
+    collected,
+    currentDialogue,
+    currentMission.id,
+    defeatedCommanders,
+    enemiesRemaining,
+    negotiated,
+  ]);
 
   return (
     <div className="rounded-xl border border-cyan-400/25 bg-slate-950/80 backdrop-blur-md p-3 font-mono shadow-xl shadow-cyan-900/30">
@@ -106,15 +117,21 @@ export default function MissionTerminal({ enemyCounts }: Props) {
             background:
               missionStatus === "COMPLETE"
                 ? "rgba(52,211,153,0.18)"
-                : enemiesRemaining > 0
+                : missionStatus === "INCOMING COMMS" ||
+                    missionStatus === "AWAITING NEGOTIATION"
+                  ? "rgba(34,211,238,0.18)"
+                  : enemiesRemaining > 0 || missionStatus === "DESTROY CRUISER"
                   ? "rgba(239,68,68,0.18)"
                   : "rgba(251,191,36,0.18)",
-            color:
-              missionStatus === "COMPLETE"
-                ? "#6ee7b7"
-                : enemiesRemaining > 0
-                  ? "#fca5a5"
-                  : "#fde68a",
+              color:
+                missionStatus === "COMPLETE"
+                  ? "#6ee7b7"
+                  : missionStatus === "INCOMING COMMS" ||
+                      missionStatus === "AWAITING NEGOTIATION"
+                    ? "#67e8f9"
+                    : enemiesRemaining > 0 || missionStatus === "DESTROY CRUISER"
+                    ? "#fca5a5"
+                    : "#fde68a",
           }}
         >
           {missionStatus}

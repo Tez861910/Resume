@@ -29,8 +29,8 @@ const experiences: ExperienceEntry[] = [
     period: "Dec 2024 – Dec 2025",
     icon: <FaBriefcase />,
     color: "amber",
-    routeLabel: "Primary Mission",
-    systemLabel: "Production Systems",
+    routeLabel: "Lead role",
+    systemLabel: "Production delivery",
     achievements: [
       "Boosted engagement 35% and cut load times ~40% via UI/SEO improvements, bundling, and caching.",
       "Architected MIND — a WPF/.NET 8 desktop app with DirectX/HelixToolkit 3D visualisation, Entra ID auth, MVVM/DI, mesh checks, and GST-ready quotation generation.",
@@ -45,8 +45,8 @@ const experiences: ExperienceEntry[] = [
     period: "Oct 2023 – Jan 2024",
     icon: <FaBriefcase />,
     color: "cyan",
-    routeLabel: "Collaboration Mission",
-    systemLabel: "Academic Platforms",
+    routeLabel: "Collaboration",
+    systemLabel: "Academic platforms",
     achievements: [
       "Built a university threads platform supporting 500+ concurrent users with role-based access and real-time messaging.",
       "Delivered an examination management system that automated assessments and reduced manual overhead by about 50%.",
@@ -60,8 +60,8 @@ const experiences: ExperienceEntry[] = [
     period: "Aug 2018 – Aug 2024",
     icon: <FaGraduationCap />,
     color: "emerald",
-    routeLabel: "Foundation Mission",
-    systemLabel: "Core Training",
+    routeLabel: "Education",
+    systemLabel: "Core training",
     achievements: [
       "Built a strong foundation in DBMS, web development, data structures, and algorithms.",
       "Completed a final-year project centered on full-stack web application development with MySQL.",
@@ -107,12 +107,12 @@ export default function Experience() {
         {/* ── Heading ──────────────────────────────────── */}
         <div className="mb-8 text-center">
           <motion.p
-            className="mb-3 text-xs uppercase tracking-[0.24em] text-emerald-300/70"
+            className="section-eyebrow"
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : {}}
             transition={{ duration: 0.35 }}
           >
-            Career Route
+            Experience
           </motion.p>
 
           <motion.h2
@@ -125,19 +125,18 @@ export default function Experience() {
           </motion.h2>
 
           <motion.p
-            className="mx-auto max-w-3xl text-sm leading-relaxed text-slate-300/80 sm:text-base"
+            className="section-copy"
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : {}}
             transition={{ duration: 0.4, delay: 0.06 }}
           >
-            A mission-route view of the teams, systems, and outcomes that shaped
-            my path across full-stack engineering, desktop tooling, and
-            production-focused delivery.
+            The teams, products, and responsibilities that shaped my work across
+            full-stack engineering, desktop tooling, and production delivery.
           </motion.p>
         </div>
 
         {/* ── Panel ──────────────────────────────────── */}
-        <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-slate-950/45 shadow-2xl shadow-black/20 backdrop-blur-xl">
+        <div className="app-panel relative">
           <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.05)_0%,rgba(255,255,255,0.012)_34%,rgba(255,255,255,0)_100%)]" />
           <div className="pointer-events-none absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-amber-300 via-cyan-300 to-emerald-300" />
 
@@ -151,10 +150,10 @@ export default function Experience() {
             >
               <span className="inline-flex items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-200">
                 <span className="h-2 w-2 rounded-full bg-emerald-300" />
-                Route Online
+                Timeline
               </span>
               <span className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-300">
-                Checkpoints Logged
+                Roles and education
               </span>
             </motion.div>
 
@@ -215,7 +214,7 @@ export default function Experience() {
                           <div className="flex flex-wrap items-center justify-between gap-3">
                             <div>
                               <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">
-                                Route Checkpoint{" "}
+                                Entry{" "}
                                 {String(index + 1).padStart(2, "0")}
                               </p>
                               <p
@@ -267,7 +266,7 @@ export default function Experience() {
                           <div className="mb-4 grid gap-3 sm:grid-cols-2">
                             <div className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2">
                               <div className="mb-1 text-[10px] uppercase tracking-[0.16em] text-slate-500">
-                                Mission Type
+                                Role focus
                               </div>
                               <div className="text-xs font-semibold text-slate-100">
                                 {exp.routeLabel}
@@ -275,7 +274,7 @@ export default function Experience() {
                             </div>
                             <div className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2">
                               <div className="mb-1 text-[10px] uppercase tracking-[0.16em] text-slate-500">
-                                System Focus
+                                Main area
                               </div>
                               <div className="text-xs font-semibold text-slate-100">
                                 {exp.systemLabel}
@@ -286,7 +285,7 @@ export default function Experience() {
                           {/* Achievements */}
                           <div>
                             <div className="mb-2 text-[10px] uppercase tracking-[0.18em] text-slate-500">
-                              Outcomes Logged
+                              Highlights
                             </div>
                             <ul className="space-y-2">
                               {exp.achievements.map((ach, ai) => (
@@ -315,7 +314,7 @@ export default function Experience() {
               <div className="mt-8 flex items-center gap-3 pl-14">
                 <div className="h-px flex-1 bg-gradient-to-r from-amber-400/25 to-transparent" />
                 <span className="select-none text-xs uppercase tracking-widest text-slate-400/45">
-                  route logged
+                  more below
                 </span>
                 <div className="h-px flex-1 bg-gradient-to-l from-amber-400/25 to-transparent" />
               </div>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCockpit } from "../../three/cockpit/CockpitModeProvider";
-import { MISSIONS } from "../../three/cockpit/missions";
+import { DRIVE_READOUTS, MISSIONS } from "../../three/cockpit/missions";
 
 export default function CommandCenter() {
   const {
@@ -12,6 +12,11 @@ export default function CommandCenter() {
     audio,
     resetProgress,
     setActiveStage,
+    setActiveMissionId,
+    collectDrive,
+    readoutsUnlocked,
+    setCurrentDialogue,
+    clearMissionProgress,
   } = useCockpit();
 
   const [booting, setBooting] = useState(true);
@@ -185,8 +190,12 @@ export default function CommandCenter() {
                   onClick={() => {
                     audio.initContext();
                     audio.startEngine();
+                    collectDrive("launch");
+                    clearMissionProgress("profile");
+                    setActiveMissionId("profile");
                     setActiveStage(1);
-                    setGamePhase("space");
+                    setCurrentDialogue("profile");
+                    setGamePhase("dialogue");
                   }}
                   className="group relative rounded-xl border border-amber-500/50 bg-amber-500/10 p-8 overflow-hidden transition-all hover:bg-amber-500/20 hover:border-amber-400 active:scale-[0.98] shadow-[0_0_20px_rgba(245,158,11,0.15)] hover:shadow-[0_0_30px_rgba(245,158,11,0.3)]"
                 >
@@ -219,7 +228,7 @@ export default function CommandCenter() {
                 </button>
               </motion.div>
 
-              {/* Right Col: Drives Collection */}
+              {/* Right Col: Review Room */}
               <motion.div
                 initial={{ x: 30, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
@@ -235,10 +244,10 @@ export default function CommandCenter() {
                 <div className="flex items-center justify-between mb-6 border-b border-emerald-900/60 pb-3">
                   <div className="flex items-center gap-3">
                     <div className="px-2 py-0.5 bg-emerald-500/20 text-emerald-300 text-[10px] uppercase tracking-widest border border-emerald-500/30">
-                      Vault
+                      Review Room
                     </div>
                     <h2 className="text-sm uppercase tracking-[0.2em] text-emerald-100">
-                      Decrypted Data Drives
+                      Hard-drive decrypt monitors
                     </h2>
                   </div>
                   <div className="flex items-center gap-2 bg-slate-950/50 px-3 py-1 rounded border border-emerald-900/50">
@@ -249,24 +258,93 @@ export default function CommandCenter() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 overflow-y-auto pr-2 pb-4 custom-scrollbar content-start">
+                <div className="grid gap-4 lg:grid-cols-3">
+                  {[0, 1, 2].map((screen) => {
+                    const start = screen * 2;
+                    const monitorDrives = MISSIONS.slice(start, start + 2);
+                    return (
+                      <div
+                        key={screen}
+                        className="relative min-h-[220px] rounded-2xl border border-cyan-500/20 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 p-4 shadow-[0_0_20px_rgba(8,145,178,0.12)]"
+                      >
+                        <div className="absolute inset-x-6 top-3 h-px bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent" />
+                        <div className="mb-4 flex items-center justify-between text-[10px] uppercase tracking-[0.3em]">
+                          <span className="text-cyan-300/80">
+                            Monitor {screen + 1}
+                          </span>
+                          <span className="text-emerald-300/70">
+                            {readoutsUnlocked ? "Decrypted" : "Locked"}
+                          </span>
+                        </div>
+
+                        {readoutsUnlocked ? (
+                          <div className="space-y-4">
+                            {monitorDrives.map((mission) => {
+                              const readout = DRIVE_READOUTS[mission.id];
+                              return (
+                                <div
+                                  key={mission.id}
+                                  className="rounded-xl border border-white/10 bg-slate-950/70 p-3"
+                                >
+                                  <div
+                                    className="text-[10px] font-bold uppercase tracking-[0.24em]"
+                                    style={{ color: mission.accent }}
+                                  >
+                                    {mission.codename}
+                                  </div>
+                                  <div className="mt-2 text-sm font-semibold text-amber-100">
+                                    {readout.headline}
+                                  </div>
+                                  <div className="mt-1 text-[11px] leading-relaxed text-slate-300">
+                                    {readout.lines.slice(0, 2).join(" · ")}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        ) : (
+                          <div className="flex h-[170px] flex-col justify-between rounded-xl border border-white/8 bg-slate-950/60 p-4 text-[11px] text-slate-400">
+                            <div>
+                              <div className="text-xs uppercase tracking-[0.22em] text-amber-300/80">
+                                Access Protocol
+                              </div>
+                              <p className="mt-3 leading-relaxed">
+                                The hard drives stay unreadable in the field.
+                                Recover the full set, return to base, and the
+                                review wall will decrypt them here.
+                              </p>
+                            </div>
+                            <div className="rounded border border-amber-500/20 bg-amber-500/10 px-3 py-2 text-[10px] uppercase tracking-[0.24em] text-amber-200/80">
+                              Awaiting all {MISSIONS.length} drives
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 overflow-y-auto pr-2 pb-4 custom-scrollbar content-start">
                   {MISSIONS.map((m, i) => {
                     const isCollected = collected.has(m.id);
+                    const canOpen = isCollected && readoutsUnlocked;
                     return (
                       <motion.button
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.4 + i * 0.1 }}
                         key={m.id}
-                        disabled={!isCollected}
-                        onClick={() => isCollected && openDrive(m.id)}
+                        disabled={!canOpen}
+                        onClick={() => canOpen && openDrive(m.id)}
                         className={`group relative text-left rounded-lg border p-5 transition-all overflow-hidden ${
-                          isCollected
+                          canOpen
                             ? "border-emerald-500/40 bg-gradient-to-br from-emerald-900/40 to-slate-900/60 hover:border-emerald-400 cursor-pointer shadow-[0_0_15px_rgba(16,185,129,0.05)] hover:shadow-[0_0_20px_rgba(16,185,129,0.15)]"
-                            : "border-slate-800 bg-slate-900/40 opacity-60 cursor-not-allowed"
+                            : isCollected
+                              ? "border-amber-500/20 bg-slate-900/70 cursor-not-allowed"
+                              : "border-slate-800 bg-slate-900/40 opacity-60 cursor-not-allowed"
                         }`}
                       >
-                        {isCollected && (
+                        {canOpen && (
                           <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] pointer-events-none mix-blend-overlay" />
                         )}
 
@@ -283,15 +361,17 @@ export default function CommandCenter() {
                             >
                               {m.codename}
                             </div>
-                            {isCollected && (
+                            {canOpen && (
                               <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_5px_rgba(52,211,153,1)]" />
                             )}
                           </div>
 
                           <div
                             className={`font-bold text-lg mb-2 tracking-wide ${
-                              isCollected
+                              canOpen
                                 ? "text-emerald-50 drop-shadow-md"
+                                : isCollected
+                                  ? "text-amber-100"
                                 : "text-slate-600"
                             }`}
                           >
@@ -300,18 +380,22 @@ export default function CommandCenter() {
 
                           <div
                             className={`text-[11px] leading-relaxed ${
-                              isCollected
+                              canOpen
                                 ? "text-emerald-100/70"
+                                : isCollected
+                                  ? "text-amber-200/70"
                                 : "text-slate-700"
                             }`}
                           >
-                            {isCollected
+                            {canOpen
                               ? m.driveTagline
-                              : "Data fragment missing. Launch to retrieve."}
+                              : isCollected
+                                ? "Recovered in the field. Return only after the full set is secured."
+                                : "Data fragment missing. Launch to retrieve."}
                           </div>
                         </div>
 
-                        {isCollected && (
+                        {canOpen && (
                           <div className="absolute bottom-0 right-0 p-3 opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0">
                             <svg
                               className="w-5 h-5 text-emerald-400/50"

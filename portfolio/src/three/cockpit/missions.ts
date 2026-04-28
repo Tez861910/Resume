@@ -296,7 +296,7 @@ export const DRIVE_READOUTS: Record<MissionId, DriveReadout> = {
       "LinkedIn: linkedin.com/in/tejas-s-57138816a",
     ],
     links: [
-      { label: "Email", href: "mailto:tejassureshofficial@gmail.com" },
+      { label: "Portfolio", href: "/" },
       { label: "GitHub", href: "https://github.com/Tez861910" },
       {
         label: "LinkedIn",

@@ -1,4 +1,12 @@
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useMemo, useState, useEffect } from "react";
+
+export type AudioOutputLevel = "mute" | "low" | "high";
+
+const OUTPUT_GAIN: Record<AudioOutputLevel, number> = {
+  mute: 0,
+  low: 0.48,
+  high: 1,
+};
 
 /**
  * useAudio Hook
@@ -8,6 +16,19 @@ import { useRef, useCallback } from "react";
  */
 export function useAudio() {
   const audioContextRef = useRef<AudioContext | null>(null);
+  const masterGainRef = useRef<GainNode | null>(null);
+  const [outputLevel, setOutputLevel] = useState<AudioOutputLevel>("high");
+
+  const ensureMasterGain = useCallback((ctx: AudioContext) => {
+    if (!masterGainRef.current) {
+      const master = ctx.createGain();
+      master.gain.setValueAtTime(OUTPUT_GAIN[outputLevel], ctx.currentTime);
+      master.connect(ctx.destination);
+      masterGainRef.current = master;
+    }
+
+    return masterGainRef.current;
+  }, [outputLevel]);
 
   // Engine components
   const engineOscRef = useRef<OscillatorNode | null>(null);
@@ -26,8 +47,17 @@ export function useAudio() {
     if (audioContextRef.current.state === "suspended") {
       audioContextRef.current.resume();
     }
+    ensureMasterGain(audioContextRef.current);
     return audioContextRef.current;
-  }, []);
+  }, [ensureMasterGain]);
+
+  useEffect(() => {
+    const ctx = audioContextRef.current;
+    const master = masterGainRef.current;
+    if (!ctx || !master) return;
+
+    master.gain.setTargetAtTime(OUTPUT_GAIN[outputLevel], ctx.currentTime, 0.08);
+  }, [outputLevel]);
 
   // Clean Engine Rumble (Sine + Low Pass)
   const startEngine = useCallback(() => {
@@ -37,6 +67,7 @@ export function useAudio() {
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     const filter = ctx.createBiquadFilter();
+    const master = ensureMasterGain(ctx);
 
     // Triangle is smoother than sawtooth
     osc.type = "triangle";
@@ -46,17 +77,17 @@ export function useAudio() {
     filter.frequency.setValueAtTime(120, ctx.currentTime);
     filter.Q.setValueAtTime(2, ctx.currentTime);
 
-    gain.gain.setValueAtTime(0, ctx.currentTime);
+    gain.gain.setValueAtTime(0.035, ctx.currentTime);
 
     osc.connect(filter);
     filter.connect(gain);
-    gain.connect(ctx.destination);
+    gain.connect(master);
 
     osc.start();
     engineOscRef.current = osc;
     engineGainRef.current = gain;
     engineFilterRef.current = filter;
-  }, [initContext]);
+  }, [ensureMasterGain, initContext]);
 
   const updateEngine = useCallback((speed: number, boost: number) => {
     const ctx = audioContextRef.current;
@@ -79,7 +110,7 @@ export function useAudio() {
       0.2,
     );
 
-    const volume = 0.03 + (speed / 50) * 0.05;
+    const volume = 0.05 + (speed / 45) * 0.11 + boost * 0.02;
     engineGainRef.current.gain.setTargetAtTime(volume, ctx.currentTime, 0.2);
   }, []);
 
@@ -106,6 +137,7 @@ export function useAudio() {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       const filter = ctx.createBiquadFilter();
+      const master = ensureMasterGain(ctx);
 
       osc.type = "sine";
       osc.frequency.setValueAtTime(isEnemy ? 180 : 320, ctx.currentTime);
@@ -114,17 +146,17 @@ export function useAudio() {
       filter.type = "lowpass";
       filter.frequency.setValueAtTime(800, ctx.currentTime);
 
-      gain.gain.setValueAtTime(0.06, ctx.currentTime);
+      gain.gain.setValueAtTime(0.14, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
 
       osc.connect(filter);
       filter.connect(gain);
-      gain.connect(ctx.destination);
+      gain.connect(master);
 
       osc.start();
       osc.stop(ctx.currentTime + 0.1);
     },
-    [initContext],
+    [ensureMasterGain, initContext],
   );
 
   // Filtered Radio Static
@@ -142,6 +174,7 @@ export function useAudio() {
     const source = ctx.createBufferSource();
     source.buffer = noiseBuffer;
     source.loop = true;
+    const master = ensureMasterGain(ctx);
 
     const filter = ctx.createBiquadFilter();
     filter.type = "bandpass";
@@ -149,16 +182,16 @@ export function useAudio() {
     filter.Q.setValueAtTime(1, ctx.currentTime);
 
     const gain = ctx.createGain();
-    gain.gain.setValueAtTime(0.015, ctx.currentTime);
+      gain.gain.setValueAtTime(0.035, ctx.currentTime);
 
     source.connect(filter);
     filter.connect(gain);
-    gain.connect(ctx.destination);
+    gain.connect(master);
 
     source.start();
     staticSourceRef.current = source;
     staticGainRef.current = gain;
-  }, [initContext]);
+  }, [ensureMasterGain, initContext]);
 
   const stopStatic = useCallback(() => {
     if (staticSourceRef.current) {
@@ -181,29 +214,46 @@ export function useAudio() {
     const ctx = initContext();
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
+    const master = ensureMasterGain(ctx);
 
     osc.type = "sine";
     osc.frequency.setValueAtTime(60, ctx.currentTime);
     osc.frequency.exponentialRampToValueAtTime(20, ctx.currentTime + 0.2);
 
-    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+    gain.gain.setValueAtTime(0.34, ctx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
 
     osc.connect(gain);
-    gain.connect(ctx.destination);
+    gain.connect(master);
 
     osc.start();
     osc.stop(ctx.currentTime + 0.2);
-  }, [initContext]);
+  }, [ensureMasterGain, initContext]);
 
-  return {
-    startEngine,
-    updateEngine,
-    stopEngine,
-    playLaser,
-    startStatic,
-    stopStatic,
-    playImpact,
-    initContext,
-  };
+  return useMemo(
+    () => ({
+      outputLevel,
+      setOutputLevel,
+      startEngine,
+      updateEngine,
+      stopEngine,
+      playLaser,
+      startStatic,
+      stopStatic,
+      playImpact,
+      initContext,
+    }),
+    [
+      outputLevel,
+      setOutputLevel,
+      startEngine,
+      updateEngine,
+      stopEngine,
+      playLaser,
+      startStatic,
+      stopStatic,
+      playImpact,
+      initContext,
+    ],
+  );
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import About from "./components/About";
@@ -11,17 +11,17 @@ import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import ProjectDetail from "./pages/ProjectDetail";
 import CockpitGame from "./pages/CockpitGame";
-import { GameProvider } from "./three/game/GameContext";
 import { CockpitModeProvider } from "./three/cockpit/CockpitModeProvider";
+import { ThemeProvider } from "./theme/ThemeProvider";
 
 function ScrollToHash() {
   const { hash } = useLocation();
 
   useEffect(() => {
     if (hash) {
-      const el = document.querySelector(hash);
-      if (el) {
-        setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 100);
+      const element = document.querySelector(hash);
+      if (element) {
+        setTimeout(() => element.scrollIntoView({ behavior: "smooth" }), 100);
       }
     } else {
       window.scrollTo(0, 0);
@@ -50,7 +50,7 @@ function AppShell() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      setIsScrolled(window.scrollY > 32);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -73,16 +73,14 @@ function AppShell() {
   );
 }
 
-function App() {
+export default function App() {
   return (
-    <BrowserRouter>
-      <GameProvider>
+    <ThemeProvider>
+      <BrowserRouter>
         <CockpitModeProvider>
           <AppShell />
         </CockpitModeProvider>
-      </GameProvider>
-    </BrowserRouter>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
-
-export default App;
