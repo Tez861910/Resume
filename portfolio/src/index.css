@@ -236,10 +236,10 @@
     .btn-primary {
         @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-transparent px-5 py-2 text-sm font-semibold transition-all duration-200 sm:px-6 sm:text-base;
         color: #081120;
-        background: linear-gradient(120deg, #22d3ee, #818cf8 52%, #fbbf24);
+        background: linear-gradient(120deg, #0891b2, #6366f1 52%, #d97706);
         box-shadow:
-            0 20px 38px -24px rgba(34, 211, 238, 0.4),
-            0 18px 32px -28px rgba(129, 140, 248, 0.42);
+            0 20px 38px -24px rgba(8, 145, 178, 0.25),
+            0 18px 32px -28px rgba(99, 102, 241, 0.28);
     }
 
     .btn-secondary {
