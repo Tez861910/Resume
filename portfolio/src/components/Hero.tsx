@@ -17,14 +17,6 @@ export default function Hero() {
       id="home"
       className="relative flex min-h-[100svh] items-center overflow-hidden pt-28 sm:pt-32"
     >
-      <div
-        className="pointer-events-none absolute inset-0 z-[1]"
-        style={{
-          background:
-            "radial-gradient(circle at 18% 22%, rgba(14,165,233,0.14), transparent 24%), radial-gradient(circle at 78% 24%, rgba(251,191,36,0.14), transparent 28%), radial-gradient(circle at 50% 78%, rgba(99,102,241,0.12), transparent 22%)",
-        }}
-      />
-
       <div className="relative z-10 section-container py-12 sm:py-16">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -131,65 +123,69 @@ export default function Hero() {
             </div>
           </div>
 
-            <motion.aside
+          <motion.aside
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
             className="app-panel p-6 sm:p-7"
           >
-              <div className="mb-5 flex flex-wrap items-center gap-2">
-                <span className="app-chip-cyan">Product systems</span>
-                <span className="app-chip">Web + desktop + mobile</span>
+            <div className="mb-5 flex flex-wrap items-center gap-2">
+              <span className="app-chip-cyan">Product systems</span>
+              <span className="app-chip">Web + desktop + mobile</span>
+            </div>
+
+            <div className="space-y-4">
+              <div className="app-card-soft">
+                <p className="mb-1 text-[10px] uppercase tracking-[0.22em] text-slate-500">
+                  What I build
+                </p>
+                <p className="text-sm leading-relaxed text-slate-100">
+                  Operational dashboards, company platforms, local-first
+                  utilities, and desktop workflows where clarity matters.
+                </p>
               </div>
 
-              <div className="space-y-4">
-                <div className="app-card-soft">
-                  <p className="mb-1 text-[10px] uppercase tracking-[0.22em] text-slate-500">
-                    What I build
-                  </p>
-                  <p className="text-sm leading-relaxed text-slate-100">
-                    Operational dashboards, company platforms, local-first
-                    utilities, and desktop workflows where clarity matters.
-                  </p>
-                </div>
+              <div className="app-card-soft">
+                <p className="mb-1 text-[10px] uppercase tracking-[0.22em] text-slate-500">
+                  Best fit
+                </p>
+                <p className="text-sm leading-relaxed text-slate-100">
+                  Teams that need someone comfortable moving between product
+                  narrative, UI decisions, and implementation details.
+                </p>
+              </div>
 
+              <div className="grid gap-3 sm:grid-cols-2">
                 <div className="app-card-soft">
-                  <p className="mb-1 text-[10px] uppercase tracking-[0.22em] text-slate-500">
-                    Best fit
-                  </p>
-                  <p className="text-sm leading-relaxed text-slate-100">
-                    Teams that need someone comfortable moving between product
-                    narrative, UI decisions, and implementation details.
-                  </p>
-                </div>
-
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <div className="app-card-soft">
                   <p className="mb-1 text-[10px] uppercase tracking-[0.22em] text-slate-500">
                     Preferred work
                   </p>
-                    <p className="text-sm font-semibold text-slate-100">
-                      Product engineering
-                    </p>
-                  </div>
-                  <div className="app-card-soft">
+                  <p className="text-sm font-semibold text-slate-100">
+                    Product engineering
+                  </p>
+                </div>
+                <div className="app-card-soft">
                   <p className="mb-1 text-[10px] uppercase tracking-[0.22em] text-slate-500">
                     Location
                   </p>
                   <p className="text-sm font-semibold text-slate-100">
-                      {siteConfig.location}
-                    </p>
-                  </div>
+                    {siteConfig.location}
+                  </p>
                 </div>
+              </div>
 
-                <div className="rounded-3xl border border-cyan-300/20 bg-cyan-300/8 p-5">
+              <div className="rounded-3xl border border-cyan-300/20 bg-cyan-300/8 p-5">
                 <p className="mb-2 text-[10px] uppercase tracking-[0.22em] text-cyan-200/80">
                   Cockpit mode
                 </p>
-                  <p className="text-sm leading-relaxed text-slate-100">
-                    A separate immersive route that reframes the same projects
-                    as mission briefings and recovered drive dossiers.
-                  </p>
+                <p className="text-sm leading-relaxed text-slate-100">
+                  An immersive route that turns the portfolio into mission
+                  briefings and recovered drive dossiers.
+                </p>
+                <p className="mt-2 text-xs leading-relaxed text-slate-400/80">
+                  Still evolving, especially as the touch layout and mission UI
+                  keep getting refined.
+                </p>
                 <ul className="mt-4 space-y-2 text-xs leading-relaxed text-slate-300/80">
                   {siteConfig.cockpit.requirements.map((item) => (
                     <li key={item} className="flex gap-2">

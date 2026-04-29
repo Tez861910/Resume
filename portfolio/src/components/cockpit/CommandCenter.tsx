@@ -28,29 +28,28 @@ export default function CommandCenter() {
 
   return (
     <div className="absolute inset-0 bg-slate-950 text-slate-300 font-mono overflow-hidden flex flex-col pointer-events-auto select-none">
-      {/* Background styling - Deep Cyberpunk Vibe */}
+      {/* Background styling - restrained command deck treatment */}
       <div className="absolute inset-0 pointer-events-none opacity-40">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_#083344_0%,_#020617_100%)]"></div>
-        {/* Grid lines */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(8,145,178,0.22)_0%,rgba(2,6,23,0.98)_72%)]" />
         <div
           className="absolute inset-0"
           style={{
             backgroundImage:
               "linear-gradient(rgba(34, 211, 238, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(34, 211, 238, 0.05) 1px, transparent 1px)",
-            backgroundSize: "60px 60px",
+            backgroundSize: "72px 72px",
             backgroundPosition: "center center",
           }}
         />
-        {/* Scanlines */}
         <div
           className="absolute inset-0"
           style={{
-            background:
-              "linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06))",
-            backgroundSize: "100% 2px, 3px 100%",
+            backgroundImage:
+              "linear-gradient(rgba(148, 163, 184, 0.06) 1px, transparent 1px)",
+            backgroundSize: "100% 3px",
             pointerEvents: "none",
           }}
         />
+        <div className="absolute inset-0 cockpit-noise opacity-[0.18]" />
       </div>
 
       <AnimatePresence>
@@ -199,7 +198,7 @@ export default function CommandCenter() {
                   }}
                   className="group relative rounded-xl border border-amber-500/50 bg-amber-500/10 p-8 overflow-hidden transition-all hover:bg-amber-500/20 hover:border-amber-400 active:scale-[0.98] shadow-[0_0_20px_rgba(245,158,11,0.15)] hover:shadow-[0_0_30px_rgba(245,158,11,0.3)]"
                 >
-                  <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.05] pointer-events-none mix-blend-overlay" />
+                  <div className="absolute inset-0 cockpit-noise opacity-[0.05] mix-blend-overlay" />
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
 
                   <div className="flex flex-col items-center gap-3 relative z-10">
@@ -345,7 +344,7 @@ export default function CommandCenter() {
                         }`}
                       >
                         {canOpen && (
-                          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] pointer-events-none mix-blend-overlay" />
+                          <div className="absolute inset-0 cockpit-noise opacity-[0.03] mix-blend-overlay" />
                         )}
 
                         <div className="relative z-10 flex flex-col h-full">

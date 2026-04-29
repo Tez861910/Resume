@@ -55,7 +55,7 @@ function inferMissionType(project: Project) {
     combined.includes("dart") ||
     combined.includes("mobile")
   ) {
-    return "Mobile app";
+    return "Cross-platform app";
   }
 
   if (

@@ -13,13 +13,13 @@ const Skills = () => {
     {
       title: "Languages",
       detail: "Primary implementation languages across product, desktop, and local-first work",
-      icon: <FaCode className="text-4xl text-primary-600" />,
+      icon: <FaCode className="text-4xl text-cyan-300" />,
       skills: ["TypeScript", "JavaScript", "C#", "Dart", "Rust", "SQL"],
     },
     {
       title: "Frontend & Product UI",
       detail: "Interfaces, routing, motion, and design-system level delivery",
-      icon: <FaReact className="text-4xl text-primary-600" />,
+      icon: <FaReact className="text-4xl text-cyan-300" />,
       skills: [
         "React",
         "Next.js",
@@ -34,7 +34,7 @@ const Skills = () => {
     {
       title: "Backend & APIs",
       detail: "Service layers, validation, and protected workflow handling",
-      icon: <FaNode className="text-4xl text-primary-600" />,
+      icon: <FaNode className="text-4xl text-cyan-300" />,
       skills: [
         "Node.js",
         "Express",
@@ -47,13 +47,13 @@ const Skills = () => {
     {
       title: "Desktop & 3D",
       detail: "Windows app delivery, rendering, reports, and workflow tooling",
-      icon: <SiDotnet className="text-4xl text-primary-600" />,
+      icon: <SiDotnet className="text-4xl text-cyan-300" />,
       skills: [".NET 8", "WinUI 3", "Win2D", "AssimpNet", "MVVM", "iText 7"],
     },
     {
       title: "Mobile & Local-First",
       detail: "Cross-platform delivery and on-device processing patterns",
-      icon: <FaDatabase className="text-4xl text-primary-600" />,
+      icon: <FaDatabase className="text-4xl text-cyan-300" />,
       skills: [
         "Flutter",
         "Flutter Rust Bridge",
@@ -65,7 +65,7 @@ const Skills = () => {
     {
       title: "Data & Delivery",
       detail: "Persistence, versioning, CI, and release workflow support",
-      icon: <SiTypescript className="text-4xl text-primary-600" />,
+      icon: <SiTypescript className="text-4xl text-cyan-300" />,
       skills: [
         "PostgreSQL",
         "MySQL",
