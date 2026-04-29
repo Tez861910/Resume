@@ -235,9 +235,17 @@
 
     .btn-primary {
         @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-transparent px-5 py-2 text-sm font-semibold transition-all duration-200 sm:px-6 sm:text-base;
-        color: #f8fafc;
-        background: #6366f1;
-        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        color: var(--text-primary);
+        background: #e0e7ff;
+        border-color: #c7d2fe;
+        box-shadow: 0 2px 8px rgba(99, 102, 241, 0.12);
+    }
+
+    html.dark .btn-primary {
+        color: #f1f5fe;
+        background: #4f46e5;
+        border-color: #6366f1;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
     }
 
     .btn-secondary {
