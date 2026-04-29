@@ -275,70 +275,12 @@
 }
 
 @layer base {
+    /* ── Borders ──────────────────────────────────────────────────────────── */
     html:not(.dark) .border-white\/10,
     html:not(.dark) .border-white\/12,
     html:not(.dark) .border-white\/15,
     html:not(.dark) .border-white\/20 {
         border-color: rgba(148, 163, 184, 0.22) !important;
-    }
-
-    html:not(.dark) .bg-slate-950\/55,
-    html:not(.dark) .bg-slate-950\/75,
-    html:not(.dark) .bg-slate-950\/80,
-    html:not(.dark) .bg-slate-900\/70 {
-        background: rgba(255, 255, 255, 0.72) !important;
-        box-shadow: var(--shadow-soft);
-    }
-
-    html:not(.dark) .bg-white\/\[0\.03\],
-    html:not(.dark) .bg-white\/\[0\.04\],
-    html:not(.dark) .bg-white\/5,
-    html:not(.dark) .bg-white\/10 {
-        background: rgba(255, 255, 255, 0.58) !important;
-    }
-
-    html:not(.dark) .text-slate-50,
-    html:not(.dark) .text-slate-100 {
-        color: var(--text-primary) !important;
-    }
-
-    html:not(.dark) .text-slate-200\/90,
-    html:not(.dark) .text-slate-200\/85,
-    html:not(.dark) .text-slate-300,
-    html:not(.dark) .text-slate-300\/80,
-    html:not(.dark) .text-slate-300\/75,
-    html:not(.dark) .text-slate-300\/70,
-    html:not(.dark) .text-slate-400 {
-        color: var(--text-secondary) !important;
-    }
-
-    html:not(.dark) .text-slate-500 {
-        color: var(--text-muted) !important;
-    }
-
-    html:not(.dark) .text-amber-100,
-    html:not(.dark) .text-amber-200 {
-        color: #b45309 !important;
-    }
-
-    html:not(.dark) .text-cyan-100,
-    html:not(.dark) .text-cyan-200 {
-        color: #0f766e !important;
-    }
-
-    html:not(.dark) .text-emerald-200,
-    html:not(.dark) .text-emerald-300 {
-        color: #047857 !important;
-    }
-
-    html:not(.dark) .bg-amber-300\/8,
-    html:not(.dark) .bg-amber-300\/10 {
-        background: rgba(251, 191, 36, 0.12) !important;
-    }
-
-    html:not(.dark) .bg-cyan-300\/8,
-    html:not(.dark) .bg-cyan-300\/10 {
-        background: rgba(34, 211, 238, 0.12) !important;
     }
 
     html:not(.dark) .border-amber-300\/20,
@@ -359,9 +301,119 @@
     }
 
     html:not(.dark) .border-emerald-300\/20,
+    html:not(.dark) .border-emerald-300\/25,
     html:not(.dark) .border-emerald-300\/30,
     html:not(.dark) .border-emerald-300\/35 {
         border-color: rgba(16, 185, 129, 0.2) !important;
+    }
+
+    /* ── Slate backgrounds ────────────────────────────────────────────────── */
+    /* Solid bg-slate-950 (e.g. experience timeline dot) → light surface */
+    html:not(.dark) .bg-slate-950 {
+        background: var(--surface-strong) !important;
+    }
+
+    html:not(.dark) .bg-slate-950\/55,
+    html:not(.dark) .bg-slate-950\/75,
+    html:not(.dark) .bg-slate-950\/80,
+    html:not(.dark) .bg-slate-900\/70 {
+        background: rgba(255, 255, 255, 0.82) !important;
+        box-shadow: var(--shadow-soft);
+    }
+
+    /* ── White/transparent backgrounds ───────────────────────────────────── */
+    html:not(.dark) .bg-white\/\[0\.03\],
+    html:not(.dark) .bg-white\/\[0\.04\],
+    html:not(.dark) .bg-white\/\[0\.06\],
+    html:not(.dark) .bg-white\/5,
+    html:not(.dark) .bg-white\/10 {
+        background: rgba(255, 255, 255, 0.68) !important;
+    }
+
+    /* ── Amber accent backgrounds ─────────────────────────────────────────── */
+    html:not(.dark) .bg-amber-200\/15,
+    html:not(.dark) .bg-amber-200\/20,
+    html:not(.dark) .bg-amber-300\/8,
+    html:not(.dark) .bg-amber-300\/10,
+    html:not(.dark) .bg-amber-300\/12 {
+        background: rgba(251, 191, 36, 0.1) !important;
+    }
+
+    /* ── Cyan accent backgrounds ──────────────────────────────────────────── */
+    html:not(.dark) .bg-cyan-300\/8,
+    html:not(.dark) .bg-cyan-300\/10,
+    html:not(.dark) .bg-cyan-300\/12 {
+        background: rgba(34, 211, 238, 0.08) !important;
+    }
+
+    /* ── Emerald accent backgrounds ───────────────────────────────────────── */
+    html:not(.dark) .bg-emerald-300\/8,
+    html:not(.dark) .bg-emerald-300\/10,
+    html:not(.dark) .bg-emerald-300\/12 {
+        background: rgba(52, 211, 153, 0.08) !important;
+    }
+
+    /* ── Text: slate primary/body ─────────────────────────────────────────── */
+    html:not(.dark) .text-slate-50,
+    html:not(.dark) .text-slate-100 {
+        color: var(--text-primary) !important;
+    }
+
+    html:not(.dark) .text-slate-200\/90,
+    html:not(.dark) .text-slate-200\/85,
+    html:not(.dark) .text-slate-300,
+    html:not(.dark) .text-slate-300\/80,
+    html:not(.dark) .text-slate-300\/78,
+    html:not(.dark) .text-slate-300\/75,
+    html:not(.dark) .text-slate-300\/70,
+    html:not(.dark) .text-slate-400 {
+        color: var(--text-secondary) !important;
+    }
+
+    html:not(.dark) .text-slate-400\/80,
+    html:not(.dark) .text-slate-400\/70,
+    html:not(.dark) .text-slate-500 {
+        color: var(--text-muted) !important;
+    }
+
+    /* Very low-opacity slate text — keep it muted but legible */
+    html:not(.dark) .text-slate-400\/45 {
+        color: rgba(100, 116, 139, 0.55) !important;
+    }
+
+    /* ── Text: amber accent ───────────────────────────────────────────────── */
+    html:not(.dark) .text-amber-100,
+    html:not(.dark) .text-amber-200,
+    html:not(.dark) .text-amber-300,
+    html:not(.dark) .text-amber-200\/80,
+    html:not(.dark) .text-amber-200\/75,
+    html:not(.dark) .text-amber-200\/70 {
+        color: #b45309 !important;
+    }
+
+    /* Hover states for amber — slightly darker so hover feels distinct */
+    html:not(.dark) .hover\:text-amber-200:hover,
+    html:not(.dark) .hover\:text-amber-100:hover {
+        color: #92400e !important;
+    }
+
+    /* ── Text: cyan accent ────────────────────────────────────────────────── */
+    html:not(.dark) .text-cyan-100,
+    html:not(.dark) .text-cyan-200,
+    html:not(.dark) .text-cyan-200\/80,
+    html:not(.dark) .text-cyan-300 {
+        color: #0f766e !important;
+    }
+
+    /* ── Text: emerald accent ─────────────────────────────────────────────── */
+    html:not(.dark) .text-emerald-200,
+    html:not(.dark) .text-emerald-300 {
+        color: #047857 !important;
+    }
+
+    /* ── Hover states: white text → invisible on white background ─────────── */
+    html:not(.dark) .hover\:text-white:hover {
+        color: var(--text-primary) !important;
     }
 }
 
