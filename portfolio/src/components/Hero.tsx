@@ -45,7 +45,7 @@ export default function Hero() {
             <p className="mb-4 max-w-3xl text-base leading-relaxed text-app-secondary sm:text-lg">
               Recent work spans React and Next.js product platforms, a .NET
               Windows app for 3D manufacturing workflows, and a cross-platform Flutter + Rust
-              local-first utility product. I care about practical UX, clear
+              utility suite. I care about practical UX, clear
               architecture, and software that holds up once people actually use
               it.
             </p>

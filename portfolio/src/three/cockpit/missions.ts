@@ -288,7 +288,7 @@ export const DRIVE_READOUTS: Record<MissionId, DriveReadout> = {
     headline: "Portfolio Hangar",
     subheadline: "Detailed project dossier",
     lines: [
-      "Pettige - local-first toolbox with 30+ utilities across PDF, image, QR, OCR, and developer workflows.",
+      "Pettige - local-first utility suite across PDF, image, audio, video, QR, OCR, storage, and developer workflows.",
       "Open Solar Toolkit - role-based operations platform covering sales, planning, supply chain, install, and maintenance.",
       "MIND - .NET 8 Windows software for 3D model analysis, manufacturing guidance, and reporting.",
       "ChemLife - Next.js company platform structured around technologies, concepts, knowledge content, and lead flow.",

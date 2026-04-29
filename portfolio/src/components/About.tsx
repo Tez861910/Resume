@@ -54,7 +54,7 @@ const About = () => {
     },
     {
       title: "Local-first tools",
-      detail: "Flutter + Rust utilities with on-device processing and storage",
+      detail: "Flutter + Rust utility suite with on-device PDF, media, and storage workflows",
     },
   ];
 

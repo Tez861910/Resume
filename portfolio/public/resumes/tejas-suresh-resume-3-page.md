@@ -6,7 +6,7 @@
 
 ## Summary
 
-I build product software across web, desktop, and mobile with a bias toward clarity, maintainability, and real operational usefulness. The common thread in my recent work is not a single framework but a type of problem: software that has to carry actual workflow load, whether that means multi-role dashboards, content-heavy company platforms, internal manufacturing tools, or local-first utility products. I am most useful in product engineering roles where interface decisions, content structure, and implementation details need to reinforce one another.
+I build product software across web, desktop, and cross-platform applications with a bias toward clarity, maintainability, and real operational usefulness. The common thread in my recent work is not a single framework but a type of problem: software that has to carry actual workflow load, whether that means multi-role dashboards, content-heavy company platforms, internal manufacturing tools, or local-first utility suites. I am most useful in product engineering roles where interface decisions, content structure, and implementation details need to reinforce one another.
 
 ## Product Focus
 
@@ -53,12 +53,12 @@ I build product software across web, desktop, and mobile with a bias toward clar
 
 ### Pettige
 **Product developer · 2025 – present**  
-**Flutter · Dart · Rust · Flutter Rust Bridge · SQLite**
+**Flutter · Dart · Rust · Flutter Rust Bridge · SQLite · FFmpeg**
 
-- Local-first toolbox with **30+ utilities** spanning PDF, image, QR, OCR, storage, audio, and developer workflows published to Windows Store, Google Play (internal testing), and scheduled for Flathub (Linux flatpaks).
+- Local-first utility suite with **30+ tools** spanning PDF, image, audio, video, QR, OCR, storage, and developer workflows.
 - Designed the split architecture between Flutter screens and a Rust core connected through Flutter Rust Bridge.
-- Structured the product by tool domains so broad utility coverage stays maintainable instead of collapsing into one large feature blob.
-- Kept packaging and release paths in scope across Android, Windows, and Apple-platform targets.
+- Built dedicated PDF Studio, Image Studio, Audio Studio, Video Studio, and Dev Workbench flows instead of one generic tool list.
+- Kept packaging, storage, and OCR paths in scope across Android, Windows, Linux, and Apple-platform targets.
 
 ### Open Solar Toolkit
 **Frontend and product systems developer · 2025 – present**  

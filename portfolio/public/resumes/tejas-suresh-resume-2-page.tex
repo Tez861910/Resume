@@ -81,7 +81,7 @@
 
 \section{Summary}
 \resumeSubHeadingListStart
-  \resumeItem{Full-stack product developer building software that has to hold up in real workflows, not just demos. Recent work spans web product platforms, content-rich company platforms, a Windows manufacturing app, and a Flutter + Rust local-first utility product. I work best where product clarity, interface structure, and implementation quality need to reinforce one another.}
+  \resumeItem{Full-stack product developer building software that has to hold up in real workflows, not just demos. Recent work spans web product platforms, content-rich company platforms, a Windows manufacturing app, and a Flutter + Rust utility suite. I work best where product clarity, interface structure, and implementation quality need to reinforce one another.}
 \resumeSubHeadingListEnd
 \vspace{-12pt}
 
@@ -123,11 +123,12 @@
 \section{Selected Projects}
 \resumeSubHeadingListStart
   \resumeProjectHeading
-    {\textbf{Pettige} $|$ \emph{Flutter, Dart, Rust, SQLite}}{}
+    {\textbf{Pettige} $|$ \emph{Flutter, Dart, Rust, SQLite, FFmpeg}}{}
     \resumeItemListStart
-      \resumeItem{Privacy-first, cross-platform toolbox with \textbf{30+ utilities} across PDF, image, QR, OCR, storage, audio, and developer workflows. Published to Windows Store, Google Play (internal testing), and Flathub.}
-      \resumeItem{Designed a split architecture where Flutter handles the product shell across all platforms (Windows, Linux, Android, iOS, macOS) and Rust performs heavy local processing with native-style performance.}
-      \resumeItem{Kept packaging and release paths visible across Android, Windows, and Apple-platform targets so the repo behaves like a product.}
+      \resumeItem{Privacy-first, cross-platform utility suite with \textbf{30+ tools} across PDF, image, audio, video, QR, OCR, encrypted storage, and developer workflows.}
+      \resumeItem{Built it around dedicated PDF Studio, Image Studio, Audio Studio, Video Studio, and Dev Workbench flows so the product stays navigable as the tool surface grows.}
+      \resumeItem{Designed a split architecture where Flutter handles routing and the product shell while Rust performs heavy local processing with native-style performance.}
+      \resumeItem{Structured SQLite-backed storage around on-device persistence, resumable uploads, and AES-256-GCM file protection.}
     \resumeItemListEnd
     \vspace{-10pt}
 

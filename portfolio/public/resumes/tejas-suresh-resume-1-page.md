@@ -6,14 +6,14 @@
 
 ## Summary
 
-Full-stack product developer building workflow-heavy software across web, desktop, and cross-platform applications. Recent work spans React and Next.js product platforms, a .NET Windows app for 3D manufacturing workflows, and a cross-platform Flutter + Rust local-first utility product. Strongest fit is product engineering where UX clarity, maintainable architecture, and real operational use all matter.
+Full-stack product developer building workflow-heavy software across web, desktop, and cross-platform applications. Recent work spans React and Next.js product platforms, a .NET Windows app for 3D manufacturing workflows, and a cross-platform Flutter + Rust utility suite. Strongest fit is product engineering where UX clarity, maintainable architecture, and real operational use all matter.
 
 ## Core Stack
 
 - **Frontend:** React, Next.js, TypeScript, Vite, Tailwind CSS, Framer Motion
 - **Backend & APIs:** Node.js, Express, Prisma, REST APIs, auth, validation, uploads
 - **Desktop & 3D:** .NET 8, WinUI 3, Win2D, AssimpNet, screenshot and document workflows
-- **Mobile, Data & Delivery:** Flutter, Flutter Rust Bridge, PostgreSQL, MySQL, SQLite, GitHub Actions, multi-platform release
+- **Cross-platform, Data & Delivery:** Flutter, Flutter Rust Bridge, PostgreSQL, MySQL, SQLite, GitHub Actions, multi-platform release
 
 ## Experience
 
@@ -33,7 +33,7 @@ Full-stack product developer building workflow-heavy software across web, deskto
 
 ## Selected Projects
 
-- **Pettige:** Cross-platform local-first toolbox with **30+ utilities**, encrypted storage, and on-device PDF, image, QR, OCR, and developer workflows deployed to Windows Store, Google Play, and Flathub.
+- **Pettige:** Cross-platform local-first utility suite with **30+ tools** across PDF, image, audio, video, QR, OCR, encrypted storage, and developer workflows.
 - **Open Solar Toolkit:** Multi-role solar operations platform covering **7 workstreams** across sales, project planning, supply chain, installation, maintenance, and reporting.
 - **MIND Manufacturing Intelligence:** Windows desktop workflow for 3D model analysis, manufacturing guidance, and structured report generation.
 - **ChemLife Innovations Platform:** Next.js 14 company platform with reusable content models for biotech technologies, knowledge content, and B2B inquiry flow.

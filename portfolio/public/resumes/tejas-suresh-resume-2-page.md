@@ -6,7 +6,7 @@
 
 ## Summary
 
-Full-stack product developer building software that has to hold up in real workflows, not just demos. My recent work spans web product platforms, content-rich company platforms, a Windows manufacturing app, and a cross-platform Flutter + Rust local-first utility product. I work best where product clarity, interface structure, and implementation quality need to reinforce one another.
+Full-stack product developer building software that has to hold up in real workflows, not just demos. My recent work spans web product platforms, content-rich company platforms, a Windows manufacturing app, and a cross-platform Flutter + Rust utility suite. I work best where product clarity, interface structure, and implementation quality need to reinforce one another.
 
 ## Core Capabilities
 
@@ -36,12 +36,12 @@ Full-stack product developer building software that has to hold up in real workf
 ## Selected Projects
 
 ### Pettige
-**Flutter · Dart · Rust · Flutter Rust Bridge · SQLite**
+**Flutter · Dart · Rust · Flutter Rust Bridge · SQLite · FFmpeg**
 
-- Privacy-first, cross-platform toolbox with **30+ utilities** across PDF, image, QR, OCR, file storage, audio, and developer workflows deployed to Windows Store (published), Google Play (internal testing), and Flathub (flatpak launching soon).
-- Designed a split architecture where Flutter handles the product shell and Rust performs heavy local processing with native-style performance.
-- Structured encrypted storage and SQLite-backed metadata so private files stay on-device by default.
-- Kept packaging and release paths visible across Android, Windows, and Apple-platform targets so the repo behaves like a product, not a lab exercise.
+- Privacy-first, cross-platform utility suite with **30+ tools** across PDF, image, audio, video, QR, OCR, encrypted storage, and developer workflows.
+- Built it around dedicated PDF Studio, Image Studio, Audio Studio, Video Studio, and Dev Workbench flows so the product stays navigable as the tool surface grows.
+- Designed a split architecture where Flutter handles routing and the product shell while Rust performs heavy local processing with native-style performance.
+- Structured SQLite-backed storage around on-device persistence, resumable uploads, and AES-256-GCM file protection.
 
 ### Open Solar Toolkit
 **React 19 · Vite · TypeScript · Tailwind CSS · DnD Kit · Recharts**
