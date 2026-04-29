@@ -235,11 +235,9 @@
 
     .btn-primary {
         @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-transparent px-5 py-2 text-sm font-semibold transition-all duration-200 sm:px-6 sm:text-base;
-        color: #081120;
-        background: linear-gradient(120deg, #0891b2, #6366f1 52%, #d97706);
-        box-shadow:
-            0 20px 38px -24px rgba(8, 145, 178, 0.25),
-            0 18px 32px -28px rgba(99, 102, 241, 0.28);
+        color: #f8fafc;
+        background: #6366f1;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
     }
 
     .btn-secondary {
