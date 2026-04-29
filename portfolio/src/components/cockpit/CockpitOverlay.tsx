@@ -19,10 +19,12 @@ import CockpitChrome from "./CockpitChrome";
 import CommandCenter from "./CommandCenter";
 import DriveReadoutModal from "./DriveReadoutModal";
 import DialogueOverlay from "./DialogueOverlay";
+import usePortraitTouchLayout from "./usePortraitTouchLayout";
 
 /** Top-level toggleable cockpit overlay. Renders only when active. */
 export default function CockpitOverlay() {
   const { isActive, openDriveId, gamePhase, currentDialogue } = useCockpit();
+  const isPortraitTouch = usePortraitTouchLayout(isActive);
   const input = useCockpitInput(isActive);
   const player = usePlayerState();
   const lasersRef = useRef<LasersHandle | null>(null);
@@ -55,28 +57,50 @@ export default function CockpitOverlay() {
   const overlay = (
     <CockpitRuntimeContext.Provider value={runtime}>
       <div
-        className="fixed inset-0 z-[200] bg-[#02030a]"
+        className="fixed inset-0 z-[200] overflow-hidden bg-[#02030a]"
         style={{ touchAction: "none" }}
       >
-        {gamePhase === "space" || gamePhase === "dialogue" ? (
-          <>
-            <div className="absolute inset-0">
-              <CockpitScene enabled={enabled} />
-            </div>
-            <CockpitChrome
-              input={input}
-              player={player}
-              enemyCounts={enemyCountsRef}
-            />
-            {gamePhase === "dialogue" && currentDialogue && <DialogueOverlay />}
-          </>
-        ) : (
-          <>
-            <CommandCenter />
-            <AnimatePresence>
-              {openDriveId && <DriveReadoutModal missionId={openDriveId} />}
-            </AnimatePresence>
-          </>
+        <div
+          className="absolute left-0 top-0"
+          style={
+            isPortraitTouch
+              ? {
+                  width: "100svh",
+                  height: "100vw",
+                  transform: "rotate(90deg) translateY(-100%)",
+                  transformOrigin: "top left",
+                }
+              : {
+                  width: "100%",
+                  height: "100%",
+                }
+          }
+        >
+          {gamePhase === "space" || gamePhase === "dialogue" ? (
+            <>
+              <div className="absolute inset-0">
+                <CockpitScene enabled={enabled} />
+              </div>
+              <CockpitChrome
+                input={input}
+                player={player}
+                enemyCounts={enemyCountsRef}
+              />
+              {gamePhase === "dialogue" && currentDialogue && <DialogueOverlay />}
+            </>
+          ) : (
+            <>
+              <CommandCenter />
+              <AnimatePresence>
+                {openDriveId && <DriveReadoutModal missionId={openDriveId} />}
+              </AnimatePresence>
+            </>
+          )}
+        </div>
+        {isPortraitTouch && (
+          <div className="pointer-events-none absolute inset-x-0 bottom-3 z-[220] px-4 text-center text-[11px] tracking-[0.12em] text-slate-400/80">
+            Landscape layout applied automatically for mobile play.
+          </div>
         )}
       </div>
     </CockpitRuntimeContext.Provider>
