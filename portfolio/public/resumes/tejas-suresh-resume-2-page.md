@@ -6,15 +6,15 @@
 
 ## Summary
 
-Full-stack product developer building software that has to hold up in real workflows, not just demos. My recent work spans private web products, content-rich company platforms, a Windows manufacturing app, and a local-first Flutter + Rust utility product. I work best where product clarity, interface structure, and implementation quality need to reinforce one another.
+Full-stack product developer building software that has to hold up in real workflows, not just demos. My recent work spans web product platforms, content-rich company platforms, a Windows manufacturing app, and a cross-platform Flutter + Rust utility suite. I work best where product clarity, interface structure, and implementation quality need to reinforce one another.
 
 ## Core Capabilities
 
 - **Product engineering:** dashboard-heavy products, workflow-oriented UI, protected flows, content architecture
-- **Frontend delivery:** React, Next.js, TypeScript, Vite, Tailwind CSS, Framer Motion, responsive systems
-- **Backend systems:** Node.js, Express, Prisma, REST APIs, validation, security middleware, uploads
-- **Desktop & mobile:** .NET 8, WinUI 3, Win2D, AssimpNet, Flutter, Flutter Rust Bridge
-- **Data & tooling:** PostgreSQL, MySQL, SQLite, Git, GitHub Actions, production-focused repo structure
+- **Frontend & product UI:** React, Next.js, TypeScript, Vite, Tailwind CSS, Framer Motion, Material UI
+- **Backend & APIs:** Node.js, Express, Prisma, Sequelize, REST APIs, auth, validation, uploads
+- **Desktop & cross-platform:** .NET 8, WinUI 3, Win2D, AssimpNet, Flutter, Flutter Rust Bridge, multi-platform release
+- **Data & delivery:** PostgreSQL, MySQL, SQLite, Git, GitHub Actions, build and release workflow support
 
 ## Experience
 
@@ -29,19 +29,19 @@ Full-stack product developer building software that has to hold up in real workf
 ### Volunteer — Full-Stack Development · Old Dominion University
 **Norfolk, VA, USA · Oct 2023 – Jan 2024**
 
-- Built a university threads platform supporting **500+ concurrent users** with role-based access and real-time messaging.
-- Delivered an examination management system that automated assessments and reduced manual overhead by about **50%**.
-- Optimised backend queries and caching strategy, improving response times by roughly **45%**.
+- Built a university threads platform with role-based access, discussion flows, and real-time messaging.
+- Delivered an examination management system covering assessment workflows, submissions, and administrative coordination.
+- Worked on backend queries, caching, and application structure to keep the platform responsive as features expanded.
 
 ## Selected Projects
 
 ### Pettige
-**Flutter · Dart · Rust · Flutter Rust Bridge · SQLite**
+**Flutter · Dart · Rust · Flutter Rust Bridge · SQLite · FFmpeg**
 
-- Privacy-first, local-first toolbox with **30+ utilities** across PDF, image, QR, OCR, file storage, audio, and developer workflows.
-- Designed a split architecture where Flutter handles the product shell and Rust performs heavy local processing with native-style performance.
-- Structured encrypted storage and SQLite-backed metadata so private files stay on-device by default.
-- Kept packaging and release paths visible across Android, Windows, and Apple-platform targets so the repo behaves like a product, not a lab exercise.
+- Privacy-first, cross-platform utility suite with **30+ tools** across PDF, image, audio, video, QR, OCR, encrypted storage, and developer workflows.
+- Built it around dedicated PDF Studio, Image Studio, Audio Studio, Video Studio, and Dev Workbench flows so the product stays navigable as the tool surface grows.
+- Designed a split architecture where Flutter handles routing and the product shell while Rust performs heavy local processing with native-style performance.
+- Structured SQLite-backed storage around on-device persistence, resumable uploads, and AES-256-GCM file protection.
 
 ### Open Solar Toolkit
 **React 19 · Vite · TypeScript · Tailwind CSS · DnD Kit · Recharts**

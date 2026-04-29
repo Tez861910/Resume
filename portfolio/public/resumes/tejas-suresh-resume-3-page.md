@@ -6,7 +6,7 @@
 
 ## Summary
 
-I build product software across web, desktop, and mobile with a bias toward clarity, maintainability, and real operational usefulness. The common thread in my recent work is not a single framework but a type of problem: software that has to carry actual workflow load, whether that means multi-role dashboards, content-heavy company platforms, internal manufacturing tools, or local-first utility products. I am most useful in product engineering roles where interface decisions, content structure, and implementation details need to reinforce one another.
+I build product software across web, desktop, and cross-platform applications with a bias toward clarity, maintainability, and real operational usefulness. The common thread in my recent work is not a single framework but a type of problem: software that has to carry actual workflow load, whether that means multi-role dashboards, content-heavy company platforms, internal manufacturing tools, or local-first utility suites. I am most useful in product engineering roles where interface decisions, content structure, and implementation details need to reinforce one another.
 
 ## Product Focus
 
@@ -27,7 +27,7 @@ I build product software across web, desktop, and mobile with a bias toward clar
 - **Frontend:** React, Next.js, TypeScript, Vite, Tailwind CSS, Framer Motion, routed SPA and app-router delivery
 - **Backend:** Node.js, Express, Prisma, REST APIs, validation, uploads, security middleware, operational scripts
 - **Desktop:** .NET 8, C#, WinUI 3, Win2D, AssimpNet, document and screenshot workflows
-- **Mobile & cross-platform:** Flutter, Dart, Rust, Flutter Rust Bridge, local-first architecture
+- **Mobile & cross-platform:** Flutter, Dart, Rust, Flutter Rust Bridge, local-first architecture, multi-platform packaging
 - **Data & tooling:** PostgreSQL, MySQL, SQLite, Git, GitHub Actions, production-oriented repository structure
 
 ## Experience
@@ -44,21 +44,21 @@ I build product software across web, desktop, and mobile with a bias toward clar
 ### Volunteer — Full-Stack Development · Old Dominion University
 **Norfolk, VA, USA · Oct 2023 – Jan 2024**
 
-- Built a university threads platform supporting **500+ concurrent users** with role-based access and real-time messaging.
-- Delivered an examination management system that automated assessments and reduced manual overhead by about **50%**.
-- Optimised backend queries and caching strategy, improving response times by roughly **45%**.
+- Built a university threads platform with role-based access, discussion flows, and real-time messaging.
+- Delivered an examination management system covering assessment workflows, submissions, and administrative coordination.
+- Worked on backend queries, caching, and application structure to keep the platform responsive as features expanded.
 - Strengthened early full-stack foundations around auth, validation, role-aware UX, and shared-system design.
 
 ## Project Highlights
 
 ### Pettige
 **Product developer · 2025 – present**  
-**Flutter · Dart · Rust · Flutter Rust Bridge · SQLite**
+**Flutter · Dart · Rust · Flutter Rust Bridge · SQLite · FFmpeg**
 
-- Local-first toolbox with **30+ utilities** spanning PDF, image, QR, OCR, storage, audio, and developer workflows.
+- Local-first utility suite with **30+ tools** spanning PDF, image, audio, video, QR, OCR, storage, and developer workflows.
 - Designed the split architecture between Flutter screens and a Rust core connected through Flutter Rust Bridge.
-- Structured the product by tool domains so broad utility coverage stays maintainable instead of collapsing into one large feature blob.
-- Kept packaging and release paths in scope across Android, Windows, and Apple-platform targets.
+- Built dedicated PDF Studio, Image Studio, Audio Studio, Video Studio, and Dev Workbench flows instead of one generic tool list.
+- Kept packaging, storage, and OCR paths in scope across Android, Windows, Linux, and Apple-platform targets.
 
 ### Open Solar Toolkit
 **Frontend and product systems developer · 2025 – present**  
@@ -117,8 +117,8 @@ I build product software across web, desktop, and mobile with a bias toward clar
 **Designer, writer, and frontend developer · 2025**  
 **React · TypeScript · Vite · Tailwind CSS · Framer Motion · React Router**
 
-- Built the main portfolio as a fast recruiter-facing route with deeper case studies, then added an optional cockpit mode for the immersive version of the same story.
-- Structured the project data model so private product work can be explained with more honesty and detail than a bullet-only resume allows.
+- Built the main portfolio as a fast main route with deeper case studies, then added a cockpit mode for an interactive version of the same story.
+- Structured the project data model so project work can be explained with more context and specificity than a bullet-only resume allows.
 - Kept the resume workflow in the same repository so the web portfolio and downloadable assets stay aligned.
 
 ## Education

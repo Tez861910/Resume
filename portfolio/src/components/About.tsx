@@ -26,24 +26,36 @@ const About = () => {
     },
     {
       label: "Right now",
-      value: "Private builds in motion",
+      value: "Current product mix",
       detail:
         "Solar ops, biotech platforms, local-first tools, and manufacturing apps",
     },
   ];
 
   const currentFocus = [
-    "Private products with enough scope to show architecture, workflow, and delivery decisions",
+    "Projects with enough scope to show architecture, workflow, and delivery decisions",
     "Interfaces that make dense information easier to use instead of simply prettier to look at",
     "Systems where frontend, backend, and content structure need to reinforce one another",
     "Projects that benefit from a practical handoff between product thinking and implementation",
   ];
 
-  const profileMetrics = [
-    { number: "30+", label: "Pettige Tools" },
-    { number: "4", label: "Resolute Verticals" },
-    { number: "7", label: "Solar Workstreams" },
-    { number: "3", label: "Web/Desktop/Mobile" },
+  const recentCoverage = [
+    {
+      title: "Operational products",
+      detail: "Role-aware dashboards, uploads, protected flows, and admin tooling",
+    },
+    {
+      title: "Company platforms",
+      detail: "Content-rich sites with stronger information architecture and inquiry paths",
+    },
+    {
+      title: "Desktop workflows",
+      detail: "Windows 3D inspection, manufacturing guidance, and reporting",
+    },
+    {
+      title: "Local-first tools",
+      detail: "Flutter + Rust utility suite with on-device PDF, media, and storage workflows",
+    },
   ];
 
   return (
@@ -86,10 +98,10 @@ const About = () => {
                     feels useful in real workflows, not just polished in a demo.
                   </p>
                   <p>
-                    My recent work spans private product systems: operational web
-                    platforms, multi-page company sites with real content depth, a
-                    Windows manufacturing app, and a local-first Flutter + Rust
-                    utility product.
+                    My recent work spans operational web platforms, multi-page
+                    company sites with real content depth, a Windows
+                    manufacturing app, and a cross-platform Flutter + Rust utility
+                    product.
                   </p>
                   <p>
                     That mix keeps me comfortable across React, Next.js, Node,
@@ -124,23 +136,23 @@ const About = () => {
 
             <div className="space-y-4">
               <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 sm:p-5">
-                <p className="mb-2 text-[10px] uppercase tracking-[0.24em] text-slate-500">
-                  Profile Metrics
+                <p className="mb-3 text-[10px] uppercase tracking-[0.24em] text-slate-500">
+                  Recent coverage
                 </p>
-                <div className="grid grid-cols-2 gap-3">
-                  {profileMetrics.map((stat, index) => (
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {recentCoverage.map((item, index) => (
                     <motion.div
-                      key={stat.label}
-                      className="rounded-2xl border border-white/10 bg-slate-900/70 p-4 text-center"
-                      initial={{ opacity: 0, scale: 0.8 }}
+                      key={item.title}
+                      className="rounded-2xl border border-white/10 bg-slate-900/70 p-4"
+                      initial={{ opacity: 0, scale: 0.96 }}
                       animate={inView ? { opacity: 1, scale: 1 } : {}}
                       transition={{ duration: 0.45, delay: index * 0.08 }}
                     >
-                      <div className="mb-1 text-3xl font-bold text-amber-200">
-                        {stat.number}
+                      <div className="mb-1 text-sm font-semibold text-slate-100 sm:text-base">
+                        {item.title}
                       </div>
-                      <div className="text-xs text-slate-300/80 sm:text-sm">
-                        {stat.label}
+                      <div className="text-xs leading-relaxed text-slate-300/80 sm:text-sm">
+                        {item.detail}
                       </div>
                     </motion.div>
                   ))}

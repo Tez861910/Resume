@@ -43,17 +43,11 @@ export default function Hero() {
             </h1>
 
             <p className="mb-4 max-w-3xl text-base leading-relaxed text-app-secondary sm:text-lg">
-              Recent work spans private React and Next.js products, a .NET
-              Windows app for 3D manufacturing workflows, and a Flutter + Rust
-              local-first utility platform. I care about practical UX, clean
+              Recent work spans React and Next.js product platforms, a .NET
+              Windows app for 3D manufacturing workflows, and a cross-platform Flutter + Rust
+              utility suite. I care about practical UX, clear
               architecture, and software that holds up once people actually use
               it.
-            </p>
-
-            <p className="mb-8 max-w-2xl text-sm leading-relaxed text-app-muted sm:text-base">
-              The resume stays intentionally lean. This website is the fuller
-              version: more project context, more narrative, and enough detail
-              for someone who wants to understand what I actually worked on.
             </p>
 
             <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap lg:justify-start">
@@ -83,8 +77,8 @@ export default function Hero() {
               {[
                 {
                   label: "Current work",
-                  value: "Private products",
-                  detail: "Operational tools, client platforms, and local-first apps",
+                  value: "Product platforms",
+                  detail: "Operational tools, company platforms, and local-first apps",
                 },
                 {
                   label: "Platforms",
@@ -193,9 +187,8 @@ export default function Hero() {
                   Cockpit mode
                 </p>
                   <p className="text-sm leading-relaxed text-slate-100">
-                    The cockpit is optional. If you want the direct read, stay
-                    here. If you want the same portfolio reframed as mission
-                    briefings and recovered drive dossiers, launch the cockpit.
+                    A separate immersive route that reframes the same projects
+                    as mission briefings and recovered drive dossiers.
                   </p>
                 <ul className="mt-4 space-y-2 text-xs leading-relaxed text-slate-300/80">
                   {siteConfig.cockpit.requirements.map((item) => (

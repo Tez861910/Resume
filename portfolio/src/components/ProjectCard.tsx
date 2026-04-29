@@ -84,19 +84,39 @@ function inferImpactLabel(project: Project) {
   const text = `${project.tagline} ${project.description} ${project.highlights.join(" ")}`;
   const lowerText = text.toLowerCase();
 
-  if (text.includes("30+")) return "30+ tools";
+  if (lowerText.includes("local-first")) return "Local-first build";
+  if (text.includes("30+") || lowerText.includes("utilities")) return "Utility suite";
   if (
     lowerText.includes("four business verticals") ||
-    lowerText.includes("four verticals")
+    lowerText.includes("four verticals") ||
+    lowerText.includes("service lines")
   ) {
     return "Multi-vertical build";
   }
-  if (text.includes("35%")) return "35% engagement lift";
-  if (text.includes("40%")) return "40% faster loads";
-  if (text.includes("500+")) return "500+ users served";
-  if (text.includes("50%")) return "50% less manual work";
-  if (text.includes("45%")) return "45% faster responses";
-  if (lowerText.includes("local-first")) return "Local-first build";
+  if (
+    lowerText.includes("workstreams") ||
+    lowerText.includes("role-aware") ||
+    lowerText.includes("role-based")
+  ) {
+    return "Operational platform";
+  }
+  if (
+    lowerText.includes("manufacturing") ||
+    lowerText.includes("3d model") ||
+    lowerText.includes("desktop")
+  ) {
+    return "Desktop workflow";
+  }
+  if (
+    lowerText.includes("content-rich") ||
+    lowerText.includes("knowledge content") ||
+    lowerText.includes("company platform")
+  ) {
+    return "Content platform";
+  }
+  if (lowerText.includes("uploads") || lowerText.includes("protected")) {
+    return "Workflow platform";
+  }
 
   return "Production-focused build";
 }

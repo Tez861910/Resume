@@ -18,8 +18,8 @@ export default function Footer() {
               {siteConfig.name} · {siteConfig.role}
             </p>
             <p className="mt-1 text-sm text-app-muted">
-              Detailed website, lean resume, and an optional cockpit route for
-              the immersive version of the same story.
+              Project case studies, resume downloads, and the immersive cockpit
+              route in one place.
             </p>
           </div>
 

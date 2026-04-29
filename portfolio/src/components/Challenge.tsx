@@ -9,8 +9,8 @@ export default function Challenge() {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const cockpitHighlights = [
     "Each station maps to a real section of the portfolio: profile, skills, experience, projects, and contact.",
-    "Recovered drives unlock fuller readouts, so the cockpit mirrors the same content instead of becoming a disconnected mini-game.",
-    "It is intentionally heavier and more experimental, while the main site stays the fast default path.",
+    "Recovered drives expand the same project stories with matching readouts and links.",
+    "It leans more experimental than the main site, while the underlying content stays aligned.",
   ];
 
   return (
@@ -31,9 +31,8 @@ export default function Challenge() {
             <p className="section-eyebrow">Optional Immersive Route</p>
             <h2 className="section-title">Cockpit experience</h2>
             <p className="section-copy">
-              The main portfolio is the clean, fast version. The cockpit is a
-              separate immersive mode for people who want a more experimental
-              walkthrough.
+              A separate immersive route built from the same project data and
+              narrative as the main portfolio.
             </p>
           </div>
 
@@ -50,12 +49,13 @@ export default function Challenge() {
                 </div>
 
                 <h3 className="mb-3 text-2xl font-bold text-slate-50 sm:text-3xl">
-                  Launch the cockpit when you want the mission-style version of the portfolio.
+                  Launch the cockpit for the interactive version of the same
+                  portfolio.
                 </h3>
                 <p className="mb-5 max-w-2xl text-sm leading-relaxed text-slate-300/80 sm:text-base">
-                  {siteConfig.cockpit.description} It is heavier, it can take a
-                  bit to initialize, and it is not the best first stop if you
-                  just want the recruiter-friendly overview.
+                  {siteConfig.cockpit.description} It is heavier and takes a bit
+                  longer to initialize because it leans on richer scenes and
+                  interactions.
                 </p>
 
                 <div className="mb-6 rounded-2xl border border-white/10 bg-white/[0.04] p-4">

@@ -81,7 +81,7 @@
 
 \section{Summary}
 \resumeSubHeadingListStart
-  \resumeItem{Full-stack product developer building software that has to hold up in real workflows, not just demos. Recent work spans private web products, content-rich company platforms, a Windows manufacturing app, and a Flutter + Rust local-first utility product. I work best where product clarity, interface structure, and implementation quality need to reinforce one another.}
+  \resumeItem{Full-stack product developer building software that has to hold up in real workflows, not just demos. Recent work spans web product platforms, content-rich company platforms, a Windows manufacturing app, and a Flutter + Rust utility suite. I work best where product clarity, interface structure, and implementation quality need to reinforce one another.}
 \resumeSubHeadingListEnd
 \vspace{-12pt}
 
@@ -89,10 +89,10 @@
 \begin{itemize}[leftmargin=0.15in, label={}]
   \small{\item{
     \textbf{Product engineering}{: workflow-oriented UI, dashboard systems, protected flows, content architecture} \\
-    \textbf{Frontend delivery}{: React, Next.js, TypeScript, Vite, Tailwind CSS, Framer Motion} \\
-    \textbf{Backend systems}{: Node.js, Express, Prisma, REST APIs, validation, uploads, security middleware} \\
-    \textbf{Desktop \& mobile}{: .NET 8, WinUI 3, Win2D, AssimpNet, Flutter, Flutter Rust Bridge} \\
-    \textbf{Data \& tooling}{: PostgreSQL, MySQL, SQLite, Git, GitHub Actions}
+    \textbf{Frontend \& product UI}{: React, Next.js, TypeScript, Vite, Tailwind CSS, Framer Motion, Material UI} \\
+    \textbf{Backend \& APIs}{: Node.js, Express, Prisma, Sequelize, REST APIs, auth, validation, uploads} \\
+    \textbf{Desktop \& cross-platform}{: .NET 8, WinUI 3, Win2D, AssimpNet, Flutter, Flutter Rust Bridge, multi-platform release} \\
+    \textbf{Data \& delivery}{: PostgreSQL, MySQL, SQLite, Git, GitHub Actions, build and release workflow support}
   }}
 \end{itemize}
 \vspace{-14pt}
@@ -113,9 +113,9 @@
     {Volunteer --- Full-Stack Development}{Oct 2023 -- Jan 2024}
     {Old Dominion University}{Norfolk, VA, USA}
     \resumeItemListStart
-      \resumeItem{Built a university threads platform supporting \textbf{500+ concurrent users} with role-based access and real-time messaging.}
-      \resumeItem{Delivered an examination management system that reduced manual overhead by about \textbf{50\%}.}
-      \resumeItem{Optimised backend queries and caching strategy, improving response times by roughly \textbf{45\%}.}
+      \resumeItem{Built a university threads platform with role-based access, discussion flows, and real-time messaging.}
+      \resumeItem{Delivered an examination management system covering assessment workflows, submissions, and administrative coordination.}
+      \resumeItem{Worked on backend queries, caching, and application structure to keep the platform responsive as features expanded.}
     \resumeItemListEnd
 \resumeSubHeadingListEnd
 \vspace{-12pt}
@@ -123,11 +123,12 @@
 \section{Selected Projects}
 \resumeSubHeadingListStart
   \resumeProjectHeading
-    {\textbf{Pettige} $|$ \emph{Flutter, Dart, Rust, SQLite}}{}
+    {\textbf{Pettige} $|$ \emph{Flutter, Dart, Rust, SQLite, FFmpeg}}{}
     \resumeItemListStart
-      \resumeItem{Privacy-first, local-first toolbox with \textbf{30+ utilities} across PDF, image, QR, OCR, storage, audio, and developer workflows.}
-      \resumeItem{Designed a split architecture where Flutter handles the product shell and Rust performs heavy local processing with native-style performance.}
-      \resumeItem{Kept packaging and release paths visible across Android, Windows, and Apple-platform targets so the repo behaves like a product.}
+      \resumeItem{Privacy-first, cross-platform utility suite with \textbf{30+ tools} across PDF, image, audio, video, QR, OCR, encrypted storage, and developer workflows.}
+      \resumeItem{Built it around dedicated PDF Studio, Image Studio, Audio Studio, Video Studio, and Dev Workbench flows so the product stays navigable as the tool surface grows.}
+      \resumeItem{Designed a split architecture where Flutter handles routing and the product shell while Rust performs heavy local processing with native-style performance.}
+      \resumeItem{Structured SQLite-backed storage around on-device persistence, resumable uploads, and AES-256-GCM file protection.}
     \resumeItemListEnd
     \vspace{-10pt}
 
