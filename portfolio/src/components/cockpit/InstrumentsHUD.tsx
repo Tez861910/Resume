@@ -53,7 +53,7 @@ export default function InstrumentsHUD({ player }: Props) {
       <div className="relative flex flex-col md:flex-row items-end gap-6 pb-4">
         {/* Left Wing - Shields */}
         <div className="w-[180px] bg-slate-950/80 backdrop-blur-md border-t-2 border-r-2 border-cyan-500/50 p-3 rounded-tr-xl relative overflow-hidden shadow-[10px_0_20px_rgba(6,182,212,0.1)]">
-          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.05]" />
+          <div className="absolute inset-0 cockpit-noise opacity-[0.05]" />
           <div className="relative z-10 flex flex-col gap-1">
             <div className="flex justify-between items-end mb-1">
               <span className="text-[10px] font-bold text-cyan-400 uppercase tracking-widest">
@@ -77,7 +77,7 @@ export default function InstrumentsHUD({ player }: Props) {
           </div>
 
           <div className="bg-slate-950/80 backdrop-blur-md border-t-2 border-cyan-500/50 px-6 py-4 rounded-t-2xl w-full flex flex-col items-center relative overflow-hidden shadow-[0_-10px_20px_rgba(6,182,212,0.1)]">
-            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.05]" />
+            <div className="absolute inset-0 cockpit-noise opacity-[0.05]" />
 
             <div className="text-[10px] text-cyan-500/80 uppercase tracking-[0.4em] mb-1">
               Velocity
@@ -104,7 +104,7 @@ export default function InstrumentsHUD({ player }: Props) {
         <div
           className={`w-[180px] bg-slate-950/80 backdrop-blur-md border-t-2 border-l-2 p-3 rounded-tl-xl relative overflow-hidden transition-colors duration-300 ${isCritical ? "border-rose-500/80 shadow-[-10px_0_20px_rgba(225,29,72,0.2)]" : "border-emerald-500/50 shadow-[-10px_0_20px_rgba(16,185,129,0.1)]"}`}
         >
-          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.05]" />
+          <div className="absolute inset-0 cockpit-noise opacity-[0.05]" />
           <div className="relative z-10 flex flex-col gap-1">
             <div className="flex justify-between items-end mb-1">
               <span

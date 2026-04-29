@@ -55,7 +55,7 @@ function inferMissionType(project: Project) {
     combined.includes("dart") ||
     combined.includes("mobile")
   ) {
-    return "Mobile app";
+    return "Cross-platform app";
   }
 
   if (
@@ -186,7 +186,7 @@ export default function ProjectCard({
           className="relative block h-44 overflow-hidden border-b border-white/10"
           tabIndex={-1}
         >
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(34,211,238,0.18),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(251,191,36,0.18),transparent_22%),linear-gradient(135deg,rgba(15,23,42,0.98),rgba(30,41,59,0.9))]" />
+          <div className="absolute inset-0 bg-slate-950" />
           <div className="relative flex h-full items-end p-5">
             <div>
               <span className="rounded-full border border-cyan-300/25 bg-cyan-300/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-cyan-100">

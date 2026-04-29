@@ -6,47 +6,93 @@
 
 @layer base {
     :root {
-        --bg-top: #f8fafc;
-        --bg-mid: #eef2ff;
-        --bg-bottom: #e2e8f0;
-        --text-primary: #0f172a;
-        --text-secondary: #334155;
-        --text-muted: #64748b;
-        --surface-soft: rgba(255, 255, 255, 0.94);
-        --surface-strong: rgba(255, 255, 255, 0.97);
-        --panel-bg: rgba(15, 23, 42, 0.88);
-        --panel-border: rgba(51, 65, 85, 0.16);
-        --panel-shadow: 0 28px 80px -40px rgba(15, 23, 42, 0.28);
-        --shadow-soft: 0 16px 38px -30px rgba(15, 23, 42, 0.22);
-        --hero-orb: rgba(14, 165, 233, 0.12);
-        --chip-bg: rgba(255, 255, 255, 0.11);
-        --chip-border: rgba(255, 255, 255, 0.18);
-        --chip-text: rgba(241, 245, 249, 0.98);
-        --chip-accent-bg: rgba(251, 191, 36, 0.2);
-        --chip-accent-border: rgba(251, 191, 36, 0.34);
-        --chip-accent-text: #fef3c7;
-        --chip-cyan-bg: rgba(34, 211, 238, 0.18);
-        --chip-cyan-border: rgba(34, 211, 238, 0.3);
-        --chip-cyan-text: #cffafe;
-        --ghost-bg: rgba(8, 145, 178, 0.14);
-        --ghost-border: rgba(8, 145, 178, 0.28);
+        --bg-top: #f7f8fc;
+        --bg-bottom: #eef1f8;
+        --depth-glow:
+            radial-gradient(
+                ellipse 55% 32% at 78% 104%,
+                rgba(245, 158, 11, 0.03),
+                transparent 62%
+            ),
+            radial-gradient(
+                ellipse 115% 52% at 50% -6%,
+                rgba(99, 102, 241, 0.05),
+                transparent 64%
+            );
+        --grain-opacity: 0.022;
+        --text-primary: #081120;
+        --text-secondary: #223044;
+        --text-muted: #5f6f84;
+        --surface-soft: rgba(255, 255, 255, 0.78);
+        --surface-strong: rgba(255, 255, 255, 0.9);
+        --surface-card: rgba(255, 255, 255, 0.74);
+        --surface-card-muted: rgba(255, 255, 255, 0.58);
+        --panel-bg: linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.92),
+            rgba(255, 255, 255, 0.72)
+        );
+        --panel-border: rgba(148, 163, 184, 0.22);
+        --panel-shadow:
+            0 28px 80px -42px rgba(59, 130, 246, 0.18),
+            0 22px 58px -40px rgba(244, 114, 182, 0.16);
+        --shadow-soft:
+            0 20px 44px -34px rgba(15, 23, 42, 0.14),
+            0 18px 34px -34px rgba(59, 130, 246, 0.1);
+        --chip-bg: rgba(255, 255, 255, 0.72);
+        --chip-border: rgba(148, 163, 184, 0.24);
+        --chip-text: #1f2937;
+        --chip-accent-bg: rgba(251, 191, 36, 0.16);
+        --chip-accent-border: rgba(245, 158, 11, 0.26);
+        --chip-accent-text: #92400e;
+        --chip-cyan-bg: rgba(34, 211, 238, 0.14);
+        --chip-cyan-border: rgba(8, 145, 178, 0.22);
+        --chip-cyan-text: #0f766e;
+        --action-primary-bg: #0f172a;
+        --action-primary-border: rgba(15, 23, 42, 0.18);
+        --action-primary-text: #f8fafc;
+        --action-primary-shadow:
+            0 18px 34px -26px rgba(15, 23, 42, 0.32),
+            0 10px 24px -20px rgba(8, 145, 178, 0.18);
+        --ghost-bg: rgba(34, 211, 238, 0.1);
+        --ghost-border: rgba(34, 211, 238, 0.22);
         --ghost-text: #0f172a;
     }
 
     html.dark {
-        --bg-top: #020617;
-        --bg-mid: #0f172a;
-        --bg-bottom: #020617;
+        --bg-top: #030912;
+        --bg-bottom: #030710;
+        --depth-glow:
+            radial-gradient(
+                ellipse 62% 38% at 82% 108%,
+                rgba(245, 158, 11, 0.042),
+                transparent 66%
+            ),
+            radial-gradient(
+                ellipse 136% 68% at 48% -12%,
+                rgba(79, 70, 229, 0.10),
+                transparent 70%
+            );
+        --grain-opacity: 0.036;
         --text-primary: #f8fafc;
         --text-secondary: rgba(226, 232, 240, 0.92);
-        --text-muted: rgba(148, 163, 184, 0.88);
-        --surface-soft: rgba(15, 23, 42, 0.72);
-        --surface-strong: rgba(15, 23, 42, 0.9);
-        --panel-bg: rgba(2, 6, 23, 0.84);
+        --text-muted: rgba(148, 163, 184, 0.82);
+        --surface-soft: rgba(10, 15, 29, 0.72);
+        --surface-strong: rgba(10, 15, 29, 0.88);
+        --surface-card: rgba(12, 18, 34, 0.78);
+        --surface-card-muted: rgba(255, 255, 255, 0.05);
+        --panel-bg: linear-gradient(
+            180deg,
+            rgba(12, 18, 34, 0.84),
+            rgba(5, 9, 20, 0.78)
+        );
         --panel-border: rgba(148, 163, 184, 0.18);
-        --panel-shadow: 0 28px 80px -40px rgba(2, 6, 23, 0.65);
-        --shadow-soft: 0 16px 38px -30px rgba(2, 6, 23, 0.52);
-        --hero-orb: rgba(251, 191, 36, 0.12);
+        --panel-shadow:
+            0 30px 90px -42px rgba(6, 182, 212, 0.22),
+            0 22px 64px -40px rgba(168, 85, 247, 0.24);
+        --shadow-soft:
+            0 18px 44px -34px rgba(2, 6, 23, 0.54),
+            0 14px 28px -28px rgba(6, 182, 212, 0.16);
         --chip-bg: rgba(255, 255, 255, 0.06);
         --chip-border: rgba(255, 255, 255, 0.12);
         --chip-text: rgba(226, 232, 240, 0.9);
@@ -56,6 +102,12 @@
         --chip-cyan-bg: rgba(34, 211, 238, 0.14);
         --chip-cyan-border: rgba(34, 211, 238, 0.28);
         --chip-cyan-text: #cffafe;
+        --action-primary-bg: #155e75;
+        --action-primary-border: rgba(34, 211, 238, 0.26);
+        --action-primary-text: #ecfeff;
+        --action-primary-shadow:
+            0 20px 40px -28px rgba(6, 182, 212, 0.28),
+            0 14px 30px -24px rgba(8, 145, 178, 0.2);
         --ghost-bg: rgba(34, 211, 238, 0.12);
         --ghost-border: rgba(34, 211, 238, 0.28);
         --ghost-text: #cffafe;
@@ -66,6 +118,9 @@
     }
 
     body {
+        position: relative;
+        min-height: 100vh;
+        isolation: isolate;
         color: var(--text-primary);
         font-family:
             "Space Grotesk",
@@ -74,13 +129,33 @@
             BlinkMacSystemFont,
             "Segoe UI",
             sans-serif;
-        background:
-            radial-gradient(circle at top, var(--hero-orb), transparent 34%),
-            linear-gradient(180deg, var(--bg-top), var(--bg-mid), var(--bg-bottom));
+        background: linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
         overflow-x: hidden;
         transition:
             background 220ms ease,
             color 220ms ease;
+    }
+
+    body::before,
+    body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    body::before {
+        z-index: -2;
+        background: var(--depth-glow);
+    }
+
+    body::after {
+        z-index: -1;
+        /* SVG fractal noise grain — the premium texture detail */
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.88' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        background-size: 200px 200px;
+        background-repeat: repeat;
+        opacity: var(--grain-opacity);
     }
 
     a,
@@ -106,7 +181,9 @@
 
     .section-eyebrow {
         @apply mb-3 text-center text-xs font-semibold uppercase tracking-[0.24em];
-        color: #f59e0b;
+        background: linear-gradient(90deg, #f59e0b, #22d3ee, #818cf8);
+        -webkit-background-clip: text;
+        color: transparent;
     }
 
     .section-copy {
@@ -116,24 +193,22 @@
 
     .app-panel {
         @apply overflow-hidden rounded-[28px] border backdrop-blur-xl;
-        background:
-            linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 24%),
-            var(--panel-bg);
+        background: var(--panel-bg);
         border-color: var(--panel-border);
         box-shadow: var(--panel-shadow);
     }
 
     .app-card {
         @apply rounded-2xl border p-5 backdrop-blur-sm;
-        background: rgba(15, 23, 42, 0.72);
-        border-color: rgba(255, 255, 255, 0.12);
+        background: var(--surface-card);
+        border-color: var(--panel-border);
         box-shadow: var(--shadow-soft);
     }
 
     .app-card-soft {
         @apply rounded-2xl border p-4;
-        background: rgba(255, 255, 255, 0.06);
-        border-color: rgba(255, 255, 255, 0.12);
+        background: var(--surface-card-muted);
+        border-color: var(--panel-border);
     }
 
     .app-chip,
@@ -171,22 +246,23 @@
     }
 
     .btn-primary {
-        @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-transparent px-5 py-3 text-sm font-semibold transition-all duration-200 sm:px-6 sm:text-base;
-        color: #0f172a;
-        background: linear-gradient(135deg, #fbbf24, #fde68a);
-        box-shadow: 0 18px 34px -24px rgba(245, 158, 11, 0.75);
+        @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-transparent px-5 py-2 text-sm font-semibold transition-all duration-200 sm:px-6 sm:text-base;
+        color: var(--action-primary-text);
+        background: var(--action-primary-bg);
+        border-color: var(--action-primary-border);
+        box-shadow: var(--action-primary-shadow);
     }
 
     .btn-secondary {
-        @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-full border px-5 py-3 text-sm font-semibold transition-all duration-200 sm:px-6 sm:text-base;
-        background: var(--surface-soft);
-        border-color: rgba(148, 163, 184, 0.24);
+        @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full border px-5 py-2 text-sm font-semibold transition-all duration-200 sm:px-6 sm:text-base;
+        background: var(--surface-strong);
+        border-color: var(--panel-border);
         color: var(--text-primary);
         box-shadow: var(--shadow-soft);
     }
 
     .btn-ghost {
-        @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-full border px-5 py-3 text-sm font-semibold transition-all duration-200 sm:px-6 sm:text-base;
+        @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full border px-5 py-2 text-sm font-semibold transition-all duration-200 sm:px-6 sm:text-base;
         background: var(--ghost-bg);
         border-color: var(--ghost-border);
         color: var(--ghost-text);
@@ -195,17 +271,219 @@
 
     .icon-link {
         @apply inline-flex h-11 w-11 items-center justify-center rounded-full border transition-all duration-200 hover:-translate-y-0.5;
-        background: var(--surface-soft);
-        border-color: rgba(148, 163, 184, 0.24);
+        background: var(--surface-strong);
+        border-color: var(--panel-border);
         color: var(--text-primary);
         box-shadow: var(--shadow-soft);
     }
 
+    .cockpit-banner {
+        @apply rounded-3xl border p-4 backdrop-blur-xl;
+        background: rgba(2, 6, 23, 0.82);
+        border-color: rgba(148, 163, 184, 0.16);
+        color: #e2e8f0;
+        box-shadow:
+            0 28px 72px -42px rgba(2, 6, 23, 0.86),
+            inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+
+    .cockpit-chip,
+    .cockpit-chip-muted {
+        @apply inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em];
+        backdrop-filter: blur(16px);
+    }
+
+    .cockpit-chip {
+        background: rgba(8, 145, 178, 0.14);
+        border-color: rgba(34, 211, 238, 0.24);
+        color: #cffafe;
+    }
+
+    .cockpit-chip-muted {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(148, 163, 184, 0.16);
+        color: rgba(226, 232, 240, 0.84);
+    }
+
+    .cockpit-button,
+    .cockpit-button-accent,
+    .cockpit-button-danger {
+        @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full border px-5 py-2 text-sm font-semibold transition-all duration-200 sm:px-6;
+        background: rgba(15, 23, 42, 0.92);
+        box-shadow: 0 16px 34px -24px rgba(2, 6, 23, 0.84);
+    }
+
+    .cockpit-button {
+        border-color: rgba(148, 163, 184, 0.18);
+        color: #e2e8f0;
+    }
+
+    .cockpit-button-accent {
+        border-color: rgba(34, 211, 238, 0.24);
+        background: rgba(8, 145, 178, 0.14);
+        color: #cffafe;
+    }
+
+    .cockpit-button-danger {
+        border-color: rgba(251, 113, 133, 0.24);
+        color: #fecdd3;
+    }
+
+    .cockpit-noise {
+        pointer-events: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        background-repeat: repeat;
+        background-size: 180px 180px;
+    }
+
     .card {
         @apply rounded-2xl border p-6 backdrop-blur-sm transition-all duration-300;
-        background: rgba(15, 23, 42, 0.7);
-        border-color: rgba(255, 255, 255, 0.12);
+        background: var(--surface-card);
+        border-color: var(--panel-border);
         box-shadow: var(--shadow-soft);
+    }
+}
+
+@layer base {
+    /* ── Borders ──────────────────────────────────────────────────────────── */
+    html:not(.dark) .border-white\/10,
+    html:not(.dark) .border-white\/12,
+    html:not(.dark) .border-white\/15,
+    html:not(.dark) .border-white\/20 {
+        border-color: rgba(148, 163, 184, 0.22) !important;
+    }
+
+    html:not(.dark) .border-amber-300\/20,
+    html:not(.dark) .border-amber-300\/30,
+    html:not(.dark) .border-amber-300\/35,
+    html:not(.dark) .border-amber-300\/40,
+    html:not(.dark) .border-amber-200\/30,
+    html:not(.dark) .border-amber-200\/40 {
+        border-color: rgba(245, 158, 11, 0.22) !important;
+    }
+
+    html:not(.dark) .border-cyan-300\/20,
+    html:not(.dark) .border-cyan-300\/25,
+    html:not(.dark) .border-cyan-300\/30,
+    html:not(.dark) .border-cyan-300\/35,
+    html:not(.dark) .border-cyan-500\/20 {
+        border-color: rgba(8, 145, 178, 0.2) !important;
+    }
+
+    html:not(.dark) .border-emerald-300\/20,
+    html:not(.dark) .border-emerald-300\/25,
+    html:not(.dark) .border-emerald-300\/30,
+    html:not(.dark) .border-emerald-300\/35 {
+        border-color: rgba(16, 185, 129, 0.2) !important;
+    }
+
+    /* ── Slate backgrounds ────────────────────────────────────────────────── */
+    /* Solid bg-slate-950 (e.g. experience timeline dot) → light surface */
+    html:not(.dark) .bg-slate-950 {
+        background: var(--surface-strong) !important;
+    }
+
+    html:not(.dark) .bg-slate-950\/55,
+    html:not(.dark) .bg-slate-950\/75,
+    html:not(.dark) .bg-slate-950\/80,
+    html:not(.dark) .bg-slate-900\/70 {
+        background: rgba(255, 255, 255, 0.82) !important;
+        box-shadow: var(--shadow-soft);
+    }
+
+    /* ── White/transparent backgrounds ───────────────────────────────────── */
+    html:not(.dark) .bg-white\/\[0\.03\],
+    html:not(.dark) .bg-white\/\[0\.04\],
+    html:not(.dark) .bg-white\/\[0\.06\],
+    html:not(.dark) .bg-white\/5,
+    html:not(.dark) .bg-white\/10 {
+        background: rgba(255, 255, 255, 0.68) !important;
+    }
+
+    /* ── Amber accent backgrounds ─────────────────────────────────────────── */
+    html:not(.dark) .bg-amber-200\/15,
+    html:not(.dark) .bg-amber-200\/20,
+    html:not(.dark) .bg-amber-300\/8,
+    html:not(.dark) .bg-amber-300\/10,
+    html:not(.dark) .bg-amber-300\/12 {
+        background: rgba(251, 191, 36, 0.1) !important;
+    }
+
+    /* ── Cyan accent backgrounds ──────────────────────────────────────────── */
+    html:not(.dark) .bg-cyan-300\/8,
+    html:not(.dark) .bg-cyan-300\/10,
+    html:not(.dark) .bg-cyan-300\/12 {
+        background: rgba(34, 211, 238, 0.08) !important;
+    }
+
+    /* ── Emerald accent backgrounds ───────────────────────────────────────── */
+    html:not(.dark) .bg-emerald-300\/8,
+    html:not(.dark) .bg-emerald-300\/10,
+    html:not(.dark) .bg-emerald-300\/12 {
+        background: rgba(52, 211, 153, 0.08) !important;
+    }
+
+    /* ── Text: slate primary/body ─────────────────────────────────────────── */
+    html:not(.dark) .text-slate-50,
+    html:not(.dark) .text-slate-100 {
+        color: var(--text-primary) !important;
+    }
+
+    html:not(.dark) .text-slate-200\/90,
+    html:not(.dark) .text-slate-200\/85,
+    html:not(.dark) .text-slate-300,
+    html:not(.dark) .text-slate-300\/80,
+    html:not(.dark) .text-slate-300\/78,
+    html:not(.dark) .text-slate-300\/75,
+    html:not(.dark) .text-slate-300\/70,
+    html:not(.dark) .text-slate-400 {
+        color: var(--text-secondary) !important;
+    }
+
+    html:not(.dark) .text-slate-400\/80,
+    html:not(.dark) .text-slate-400\/70,
+    html:not(.dark) .text-slate-500 {
+        color: var(--text-muted) !important;
+    }
+
+    /* Very low-opacity slate text — keep it muted but legible */
+    html:not(.dark) .text-slate-400\/45 {
+        color: rgba(100, 116, 139, 0.55) !important;
+    }
+
+    /* ── Text: amber accent ───────────────────────────────────────────────── */
+    html:not(.dark) .text-amber-100,
+    html:not(.dark) .text-amber-200,
+    html:not(.dark) .text-amber-300,
+    html:not(.dark) .text-amber-200\/80,
+    html:not(.dark) .text-amber-200\/75,
+    html:not(.dark) .text-amber-200\/70 {
+        color: #b45309 !important;
+    }
+
+    /* Hover states for amber — slightly darker so hover feels distinct */
+    html:not(.dark) .hover\:text-amber-200:hover,
+    html:not(.dark) .hover\:text-amber-100:hover {
+        color: #92400e !important;
+    }
+
+    /* ── Text: cyan accent ────────────────────────────────────────────────── */
+    html:not(.dark) .text-cyan-100,
+    html:not(.dark) .text-cyan-200,
+    html:not(.dark) .text-cyan-200\/80,
+    html:not(.dark) .text-cyan-300 {
+        color: #0f766e !important;
+    }
+
+    /* ── Text: emerald accent ─────────────────────────────────────────────── */
+    html:not(.dark) .text-emerald-200,
+    html:not(.dark) .text-emerald-300 {
+        color: #047857 !important;
+    }
+
+    /* ── Hover states: white text → invisible on white background ─────────── */
+    html:not(.dark) .hover\:text-white:hover {
+        color: var(--text-primary) !important;
     }
 }
 

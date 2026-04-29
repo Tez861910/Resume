@@ -31,13 +31,13 @@ export default function Challenge() {
             <p className="section-eyebrow">Optional Immersive Route</p>
             <h2 className="section-title">Cockpit experience</h2>
             <p className="section-copy">
-              A separate immersive route built from the same project data and
-              narrative as the main portfolio.
+              A darker, more experimental route that explores the same work
+              through mission briefings and recovered drive readouts.
             </p>
           </div>
 
           <div className="app-panel relative p-6 sm:p-8 lg:p-10">
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(34,211,238,0.18),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(251,191,36,0.14),transparent_24%)]" />
+            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.04)_0%,rgba(255,255,255,0.015)_36%,rgba(255,255,255,0)_100%)]" />
             <div className="relative grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
               <div>
                 <div className="mb-5 flex flex-wrap items-center gap-2">
@@ -49,13 +49,13 @@ export default function Challenge() {
                 </div>
 
                 <h3 className="mb-3 text-2xl font-bold text-slate-50 sm:text-3xl">
-                  Launch the cockpit for the interactive version of the same
+                  Launch the cockpit for a more immersive way to browse the same
                   portfolio.
                 </h3>
                 <p className="mb-5 max-w-2xl text-sm leading-relaxed text-slate-300/80 sm:text-base">
-                  {siteConfig.cockpit.description} It is heavier and takes a bit
-                  longer to initialize because it leans on richer scenes and
-                  interactions.
+                  {siteConfig.cockpit.description} It is heavier than the main
+                  site by design, so the standard portfolio remains the faster
+                  default path.
                 </p>
 
                 <div className="mb-6 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
