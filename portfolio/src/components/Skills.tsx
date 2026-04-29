@@ -63,7 +63,9 @@ const Skills = () => {
           <h2 className="section-title">Technical skills</h2>
           <p className="section-copy">
             The stack I use across product sites, operational systems, desktop
-            tooling, and local-first app work.
+            tooling, and local-first app work. The point is not collecting
+            buzzwords - it is choosing the right surface and keeping it
+            maintainable.
           </p>
         </div>
 

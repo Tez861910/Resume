@@ -6,17 +6,17 @@ export const siteConfig = {
   location: "Bengaluru, India",
   github: "https://github.com/Tez861910",
   linkedin: "https://www.linkedin.com/in/tejas-s-57138816a/",
-  resumeDownloadPath: "/Tejas-Suresh-Resume.txt",
+  resumePagePath: "/resume",
   cockpit: {
     route: "/cockpit",
-    badge: "Optional immersive mode",
-    title: "Cockpit mission",
+    badge: "Detailed immersive route",
+    title: "Cockpit dossier",
     description:
-      "A separate GPU-heavy interactive experience for people who want the immersive version of the portfolio.",
+      "A separate GPU-heavy mission route that turns the portfolio into a series of briefings, encounters, and recovered drive dossiers.",
     requirements: [
       "Best on a desktop or laptop with GPU acceleration enabled.",
-      "Modern WebGPU/WebGL-capable hardware gives the smoothest experience.",
-      "Initial loading can take a little time, so the main portfolio stays available as the fast default view.",
+      "Modern WebGPU or WebGL-capable hardware gives the smoothest experience.",
+      "Initial loading can take a little time, so the main portfolio stays available as the fast default path.",
     ],
   },
 } as const;

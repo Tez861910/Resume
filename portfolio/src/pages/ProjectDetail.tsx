@@ -20,6 +20,12 @@ const ProjectDetail = () => {
 
   const images = project.media.filter((m) => m.type === 'image')
   const videos = project.media.filter((m) => m.type === 'video')
+  const quickFacts = [
+    project.category ? { label: 'Category', value: project.category } : null,
+    project.role ? { label: 'Role', value: project.role } : null,
+    project.timeline ? { label: 'Timeline', value: project.timeline } : null,
+    project.status ? { label: 'Status', value: project.status } : null,
+  ].filter(Boolean) as { label: string; value: string }[]
 
   return (
     <div className="min-h-screen pt-24 pb-16">
@@ -81,6 +87,29 @@ const ProjectDetail = () => {
             )}
           </div>
         </motion.div>
+
+        {quickFacts.length > 0 && (
+          <motion.section
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.08 }}
+            className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-8"
+          >
+            {quickFacts.map((fact) => (
+              <div
+                key={fact.label}
+                className="card border border-white/15"
+              >
+                <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500 mb-2">
+                  {fact.label}
+                </p>
+                <p className="text-sm font-semibold text-slate-100 leading-relaxed">
+                  {fact.value}
+                </p>
+              </div>
+            ))}
+          </motion.section>
+        )}
 
         {/* Media Gallery */}
         {project.media.length > 0 && (
@@ -171,11 +200,23 @@ const ProjectDetail = () => {
           <p className="text-lg text-slate-200/90 leading-relaxed">{project.intent}</p>
         </motion.section>
 
+        {project.problem && (
+          <motion.section
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.18 }}
+            className="card border border-white/15 mb-8"
+          >
+            <h2 className="text-2xl font-bold text-slate-50 mb-4">Project Context</h2>
+            <p className="text-slate-200/90 leading-relaxed">{project.problem}</p>
+          </motion.section>
+        )}
+
         {/* Description & Highlights */}
         <motion.section
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          transition={{ duration: 0.5, delay: 0.22 }}
           className="card border border-white/15 mb-8"
         >
           <h2 className="text-2xl font-bold text-slate-50 mb-4">Overview</h2>
@@ -191,6 +232,48 @@ const ProjectDetail = () => {
             ))}
           </ul>
         </motion.section>
+
+        {(project.responsibilities?.length || project.outcomes?.length) && (
+          <div className="grid gap-6 sm:grid-cols-2 mb-8">
+            {project.responsibilities?.length ? (
+              <motion.section
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.24 }}
+                className="card border border-white/15"
+              >
+                <h2 className="text-2xl font-bold text-slate-50 mb-4">What I handled</h2>
+                <ul className="space-y-2">
+                  {project.responsibilities.map((item, i) => (
+                    <li key={i} className="flex items-start gap-3 text-slate-200/90">
+                      <span className="text-cyan-300 mt-1">▸</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </motion.section>
+            ) : null}
+
+            {project.outcomes?.length ? (
+              <motion.section
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.28 }}
+                className="card border border-white/15"
+              >
+                <h2 className="text-2xl font-bold text-slate-50 mb-4">Why it matters</h2>
+                <ul className="space-y-2">
+                  {project.outcomes.map((item, i) => (
+                    <li key={i} className="flex items-start gap-3 text-slate-200/90">
+                      <span className="text-emerald-300 mt-1">▸</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </motion.section>
+            ) : null}
+          </div>
+        )}
 
         {/* Tech Stack & Skills */}
         <div className="grid sm:grid-cols-2 gap-6 mb-8">

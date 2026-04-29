@@ -11,6 +11,7 @@ import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import ProjectDetail from "./pages/ProjectDetail";
 import CockpitGame from "./pages/CockpitGame";
+import ResumeDownloads from "./pages/ResumeDownloads";
 import { CockpitModeProvider } from "./three/cockpit/CockpitModeProvider";
 import { ThemeProvider } from "./theme/ThemeProvider";
 
@@ -64,6 +65,7 @@ function AppShell() {
         <Navbar isScrolled={isScrolled} />
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/resume" element={<ResumeDownloads />} />
           <Route path="/project/:id" element={<ProjectDetail />} />
           <Route path="/cockpit/*" element={<CockpitGame />} />
         </Routes>

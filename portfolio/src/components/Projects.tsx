@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 import projects from "../data/projects";
 import { siteConfig } from "../config/site";
@@ -122,22 +123,21 @@ export default function Projects() {
                   Quick scan
                 </p>
                 <p className="text-sm font-semibold text-slate-100">
-                  Want the short version first? Download the resume, then come
-                  back here for the fuller project write-ups.
+                  The resume is the short version. These project pages are where
+                  I keep the fuller story, scope, and implementation detail.
                 </p>
                 <p className="mt-1 text-xs text-slate-300/75">
-                  Every card opens a fuller project breakdown with context,
-                  stack, decisions, and outcomes.
+                  Every card opens a deeper breakdown with context, role, stack,
+                  responsibilities, and why the work matters.
                 </p>
               </div>
 
-              <a
-                href={siteConfig.resumeDownloadPath}
-                download
+              <Link
+                to={siteConfig.resumePagePath}
                 className="btn-secondary w-full sm:w-auto"
               >
                 Download resume
-              </a>
+              </Link>
             </motion.div>
 
             <div className="grid gap-6 md:grid-cols-2">

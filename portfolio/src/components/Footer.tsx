@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { siteConfig } from "../config/site";
 
 export default function Footer() {
@@ -17,19 +18,18 @@ export default function Footer() {
               {siteConfig.name} · {siteConfig.role}
             </p>
             <p className="mt-1 text-sm text-app-muted">
-              Fast portfolio for browsing, optional cockpit for immersion, and
-              a direct resume download for quick recruiter review.
+              Detailed website, lean resume, and an optional cockpit route for
+              the immersive version of the same story.
             </p>
           </div>
 
           <div className="flex flex-col items-start gap-3 sm:items-end">
-            <a
-              href={siteConfig.resumeDownloadPath}
-              download
+            <Link
+              to={siteConfig.resumePagePath}
               className="btn-secondary w-full sm:w-auto"
             >
               Download resume
-            </a>
+            </Link>
             <p className="text-xs text-app-muted">
               © {new Date().getFullYear()} {siteConfig.name}. Built with React,
               TypeScript, and Tailwind CSS.
