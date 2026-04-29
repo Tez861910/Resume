@@ -16,7 +16,7 @@ export default function Projects() {
     {
       label: "Projects",
       value: `${projects.length}`,
-      detail: "Private products, live sites, and selected shipped work",
+      detail: "Product platforms, live sites, and selected shipped work",
     },
     {
       label: "Platforms",
@@ -42,9 +42,8 @@ export default function Projects() {
           <p className="section-eyebrow">Selected work</p>
           <h2 className="section-title">Featured projects</h2>
           <p className="section-copy">
-            A straightforward look at the private products, company platforms,
-            and tools I have built or worked on across web, desktop, and
-            mobile.
+            A grounded look at the products, company platforms, and tools I
+            have built or worked on across web, desktop, and mobile.
           </p>
         </div>
 
@@ -64,8 +63,9 @@ export default function Projects() {
                 </div>
 
                 <p className="text-sm leading-relaxed text-slate-300/80 sm:text-base">
-                  Each card is easy to scan quickly, with a deeper project page
-                  for the fuller context, stack, and implementation decisions.
+                  Each card gives the summary, and every project page goes
+                  deeper into role, stack, responsibilities, and implementation
+                  decisions.
                 </p>
               </div>
 
@@ -92,26 +92,6 @@ export default function Projects() {
               </div>
             </div>
 
-            <div className="mb-6 grid gap-3 md:grid-cols-3">
-              {[
-                "01 Scan the summary",
-                "02 Open the case study",
-                "03 Review stack and outcomes",
-              ].map((step, index) => (
-                <motion.div
-                  key={step}
-                  className="rounded-2xl border border-white/10 bg-slate-900/70 px-4 py-3"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={inView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.28, delay: 0.12 + index * 0.05 }}
-                >
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-200/85">
-                    {step}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-
             <motion.div
               className="mb-6 flex flex-col gap-4 rounded-2xl border border-amber-300/20 bg-amber-300/8 px-4 py-4 sm:flex-row sm:items-center sm:justify-between"
               initial={{ opacity: 0, y: 10 }}
@@ -120,15 +100,15 @@ export default function Projects() {
             >
               <div>
                 <p className="mb-1 text-[10px] uppercase tracking-[0.22em] text-amber-200/70">
-                  Quick scan
+                  Resume options
                 </p>
                 <p className="text-sm font-semibold text-slate-100">
-                  The resume is the short version. These project pages are where
-                  I keep the fuller story, scope, and implementation detail.
+                  Download the 1, 2, or 3 page resume set from the shared
+                  resume library.
                 </p>
                 <p className="mt-1 text-xs text-slate-300/75">
-                  Every card opens a deeper breakdown with context, role, stack,
-                  responsibilities, and why the work matters.
+                  The project pages carry the longer writeups, context, and
+                  implementation notes.
                 </p>
               </div>
 

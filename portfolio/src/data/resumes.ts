@@ -56,7 +56,7 @@ export const resumeVariants: ResumeVariant[] = [
     id: "3-page",
     label: "3 pages",
     summary:
-      "Detailed version covering the fuller project narrative, architecture focus, and private-product range shown across the portfolio.",
+      "Detailed version covering the broader project narrative, architecture focus, and product range shown across the portfolio.",
     useCase:
       "For deeper technical review of scope, workflow ownership, and platform breadth.",
     highlights: [

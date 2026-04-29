@@ -243,7 +243,7 @@ export const DRIVE_READOUTS: Record<MissionId, DriveReadout> = {
       "Base: Bengaluru, India",
       "Status: Open to opportunities",
       "Focus: product systems, workflow-heavy UI, and software that stays useful after launch",
-      "Current mix: private web platforms, a Windows manufacturing app, and a Flutter + Rust local-first product",
+      "Current mix: web product platforms, a Windows manufacturing app, and a cross-platform Flutter + Rust local-first product distributed across Windows Store, Google Play, and Flathub",
     ],
   },
   profile: {
@@ -263,12 +263,12 @@ export const DRIVE_READOUTS: Record<MissionId, DriveReadout> = {
     headline: "Capability Constellation",
     subheadline: "Current stack and working surface",
     lines: [
-      "Languages: JavaScript, TypeScript, C#, Java, Rust",
-      "Frontend: React, Next.js, Vite, Tailwind, Material UI, Framer Motion, Flutter",
-      "Backend: Node.js, Express, REST APIs, Prisma, Sequelize",
-      "Desktop and mobile: .NET 8, WinUI, Win2D, Flutter, FFI, MVVM",
-      "Data and storage: PostgreSQL, MySQL, SQLite, encrypted local file storage",
-      "Tooling: Git, GitHub Actions, VS Code, release automation, product-oriented dev workflows",
+      "Languages: TypeScript, JavaScript, C#, Dart, Rust, SQL",
+      "Frontend and UI: React, Next.js, Vite, Tailwind CSS, Material UI, Framer Motion, routing systems",
+      "Backend and APIs: Node.js, Express, REST APIs, Prisma, Sequelize, auth and validation",
+      "Desktop and 3D: .NET 8, WinUI 3, Win2D, AssimpNet, MVVM, document workflows",
+      "Cross-platform & local-first: Flutter, Dart, Rust, Flutter Rust Bridge, multi-platform deployment, on-device processing",
+      "Data and delivery: PostgreSQL, MySQL, SQLite, Git, GitHub Actions, build automation",
     ],
   },
   career: {

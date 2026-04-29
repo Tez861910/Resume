@@ -216,8 +216,8 @@ export default function Contact() {
                   </div>
 
                   <p className="text-sm leading-relaxed text-slate-300/78">
-                    GitHub has code, LinkedIn has the recruiter-facing summary,
-                    and email above is the main place to reach me directly.
+                    GitHub has code, LinkedIn has experience, and email above is
+                    the main place to reach me directly.
                   </p>
                 </div>
               </div>

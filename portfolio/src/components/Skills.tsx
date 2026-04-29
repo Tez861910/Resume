@@ -12,41 +12,68 @@ const Skills = () => {
   const skillCategories = [
     {
       title: "Languages",
+      detail: "Primary implementation languages across product, desktop, and local-first work",
       icon: <FaCode className="text-4xl text-primary-600" />,
-      skills: ["JavaScript", "TypeScript", "C#", "Java", "Rust"],
+      skills: ["TypeScript", "JavaScript", "C#", "Dart", "Rust", "SQL"],
     },
     {
-      title: "Frontend",
+      title: "Frontend & Product UI",
+      detail: "Interfaces, routing, motion, and design-system level delivery",
       icon: <FaReact className="text-4xl text-primary-600" />,
       skills: [
         "React",
         "Next.js",
         "Vite",
+        "Tailwind CSS",
         "Material UI",
-        "Tailwind",
         "Framer Motion",
-        "Flutter",
+        "React Router",
+        "TanStack Router",
       ],
     },
     {
-      title: "Backend",
+      title: "Backend & APIs",
+      detail: "Service layers, validation, and protected workflow handling",
       icon: <FaNode className="text-4xl text-primary-600" />,
-      skills: ["Node.js", "Express.js", "REST APIs", "Prisma", "Sequelize"],
+      skills: [
+        "Node.js",
+        "Express",
+        "REST APIs",
+        "Prisma",
+        "Sequelize",
+        "Auth & Validation",
+      ],
     },
     {
-      title: "Desktop & Mobile",
+      title: "Desktop & 3D",
+      detail: "Windows app delivery, rendering, reports, and workflow tooling",
       icon: <SiDotnet className="text-4xl text-primary-600" />,
-      skills: [".NET 8", "WinUI / Win2D", "Flutter", "MVVM", "FFI"],
+      skills: [".NET 8", "WinUI 3", "Win2D", "AssimpNet", "MVVM", "iText 7"],
     },
     {
-      title: "Data & Storage",
+      title: "Mobile & Local-First",
+      detail: "Cross-platform delivery and on-device processing patterns",
       icon: <FaDatabase className="text-4xl text-primary-600" />,
-      skills: ["PostgreSQL", "MySQL", "SQLite", "Encrypted File Storage"],
+      skills: [
+        "Flutter",
+        "Flutter Rust Bridge",
+        "FFI",
+        "On-Device Processing",
+        "Encrypted Storage",
+      ],
     },
     {
-      title: "Tools",
+      title: "Data & Delivery",
+      detail: "Persistence, versioning, CI, and release workflow support",
       icon: <SiTypescript className="text-4xl text-primary-600" />,
-      skills: ["Git", "GitHub Actions", "VS Code", "Release Automation", "Vite"],
+      skills: [
+        "PostgreSQL",
+        "MySQL",
+        "SQLite",
+        "Git",
+        "GitHub Actions",
+        "Build & Release Automation",
+      ],
     },
   ];
 
@@ -62,10 +89,8 @@ const Skills = () => {
           <p className="section-eyebrow">Capabilities</p>
           <h2 className="section-title">Technical skills</h2>
           <p className="section-copy">
-            The stack I use across product sites, operational systems, desktop
-            tooling, and local-first app work. The point is not collecting
-            buzzwords - it is choosing the right surface and keeping it
-            maintainable.
+            The technologies and delivery surfaces I keep returning to across
+            product platforms, desktop tooling, and local-first app work.
           </p>
         </div>
 
@@ -80,9 +105,14 @@ const Skills = () => {
             >
               <div className="flex items-center gap-3 mb-4">
                 {category.icon}
-                <h3 className="text-xl font-bold text-slate-50">
-                  {category.title}
-                </h3>
+                <div>
+                  <h3 className="text-xl font-bold text-slate-50">
+                    {category.title}
+                  </h3>
+                  <p className="mt-1 text-xs leading-relaxed text-slate-300/70">
+                    {category.detail}
+                  </p>
+                </div>
               </div>
               <div className="flex flex-wrap gap-2">
                 {category.skills.map((skill, skillIndex) => (

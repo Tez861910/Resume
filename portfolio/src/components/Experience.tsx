@@ -48,9 +48,9 @@ const experiences: ExperienceEntry[] = [
     routeLabel: "Collaboration",
     systemLabel: "Academic platforms",
     achievements: [
-      "Built a university threads platform supporting 500+ concurrent users with role-based access and real-time messaging.",
-      "Delivered an examination management system that automated assessments and reduced manual overhead by about 50%.",
-      "Optimised backend queries and caching strategy, improving response times by roughly 45%.",
+      "Built a university threads platform with role-based access, discussion flows, and real-time messaging.",
+      "Delivered an examination management system covering assessment workflows, submissions, and administrative coordination.",
+      "Worked on backend queries, caching, and application structure to keep the platform responsive as features expanded.",
     ],
   },
   {

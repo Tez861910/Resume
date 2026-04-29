@@ -30,12 +30,12 @@ const projects: Project[] = [
   {
     id: 'pettige',
     title: 'Pettige',
-    tagline: 'Local-first toolbox with 30+ utilities powered by Flutter and Rust',
-    category: 'Cross-platform product',
+    tagline: 'Cross-platform local-first toolbox with 30+ utilities (Windows, Linux, Android, iOS, macOS)',
+    category: 'Cross-platform utility application',
     timeline: '2025 - present',
     role: 'Product developer',
     description:
-      'Pettige is a privacy-first utility app where document, image, developer, and storage workflows run on-device instead of through a remote backend. Flutter handles the UI, routing, and app shell, while Rust modules take care of the heavy lifting for PDF operations, image processing, hashing, QR workflows, OCR-related features, and encrypted file storage through Flutter Rust Bridge. The repo also includes packaging and release paths across Android, Windows, iOS, and macOS, so it is structured like a real cross-platform product rather than a one-off demo.',
+      'Pettige is a privacy-first cross-platform utility application where document, image, developer, and storage workflows run on-device instead of through a remote backend. Flutter handles the UI, routing, and app shell across all platforms, while Rust modules take care of the heavy lifting for PDF operations, image processing, hashing, QR workflows, OCR-related features, and encrypted file storage through Flutter Rust Bridge. Currently published to Windows Store and Google Play (internal testing), with Linux flatpaks launching on Flathub soon and iOS/macOS builds coming next. The repo includes full packaging and release paths across Windows, Linux, Android, iOS, and macOS, structured as a production cross-platform product.',
     intent:
       'I wanted a toolbox that feels genuinely useful without asking people to upload private files to someone else\'s server. That pushed the architecture toward local-first defaults: keep the interface approachable in Flutter, move CPU-heavy work into Rust, and make privacy the normal path instead of a premium feature.',
     problem:
@@ -56,7 +56,7 @@ const projects: Project[] = [
       'Flutter + Rust architecture connected through Flutter Rust Bridge',
       'Encrypted on-device storage with SQLite metadata and AES-256-GCM file protection',
       'Modular Rust plugins for PDF, image, storage, audio, common, and developer-tool domains',
-      'Cross-platform packaging and release workflows for Android and Windows, with Apple platforms wired in',
+      'Cross-platform packaging and release workflows for Windows, Linux, Android, iOS, and macOS',
     ],
     tech: ['Flutter', 'Dart', 'Rust', 'Flutter Rust Bridge', 'SQLite', 'FFI'],
     skills: ['Local-First Product Design', 'Cross-Platform Development', 'Rust Integration', 'Privacy-Focused Architecture', 'Native Performance', 'Release Engineering'],
@@ -252,7 +252,7 @@ const projects: Project[] = [
     timeline: '2023 - 2024',
     role: 'Full-stack developer',
     description:
-      'This was an earlier multi-user platform built as a split client/server application, with React and Material UI on the frontend and an Express-based backend using Sequelize plus SQL-oriented dependencies. The repo includes authentication, validation, logging, rate limiting, cookie/session handling, file upload support, and database integration across MySQL/MSSQL-related tooling. It is older than the private product work above, but it still matters because it shows the foundation of my full-stack thinking around roles, protected flows, and application structure.',
+      'This was an earlier multi-user platform built as a split client/server application, with React and Material UI on the frontend and an Express-based backend using Sequelize plus SQL-oriented dependencies. The repo includes authentication, validation, logging, rate limiting, cookie/session handling, file upload support, and database integration across MySQL/MSSQL-related tooling. It is older than the more recent product platforms above, but it still matters because it shows the foundation of my full-stack thinking around roles, protected flows, and application structure.',
     intent:
       'The goal was to build a discussion environment where different user types could share one system without sharing the same permissions or experience. That made it a good training ground for the kind of auth, validation, and multi-user application decisions that still show up in my later work.',
     problem:
@@ -288,20 +288,20 @@ const projects: Project[] = [
     timeline: '2025',
     role: 'Designer, writer, and frontend developer',
     description:
-      'This site is the lightweight, recruiter-friendly front door for my work. It is built with React, TypeScript, Vite, Tailwind, motion-driven sections, routed project case studies, and a separate heavier cockpit route for people who want the interactive version. The goal was to make the main experience quick to browse while still leaving room for deeper project context.',
+      'This site is the main front door for my work. It is built with React, TypeScript, Vite, Tailwind, motion-driven sections, routed project case studies, and a separate heavier cockpit route that reinterprets the same portfolio through briefings and recovered-drive UI. The goal was to keep the main experience quick to browse while still leaving room for deeper project context.',
     intent:
-      'I wanted the portfolio to feel like a clear handoff instead of a flashy obstacle course. The main site stays fast and readable, while the project pages and optional cockpit route let me show more depth without forcing every visitor through the same path.',
+      'I wanted the portfolio to feel clear and considered instead of theatrical. The main site stays fast and readable, while the project pages and cockpit route add depth without hiding the work behind spectacle.',
     problem:
-      'A portfolio has to serve two very different reading modes: the quick recruiter scan and the deeper technical review. I built this site to support both without making the first path feel thin or the second path feel hidden.',
+      'A portfolio has to serve different reading modes: a quick pass through the main story and a deeper technical review of project decisions. I built this site to support both without making either path feel compromised.',
     responsibilities: [
-      'Designed the fast main narrative so visitors can understand the work quickly without being trapped in an overly cinematic experience.',
+      'Designed the fast main narrative so visitors can understand the work quickly without being pushed through an overly cinematic experience.',
       'Built the project data model and routed detail pages so the site can hold more context than a one-page summary allows.',
-      'Added the optional cockpit route as a second layer for people who want a more interactive version of the same story.',
+      'Added the cockpit route as an alternate interactive layer built from the same project data and story.',
       'Kept the repo tied to the resume workflow so the web portfolio and lean PDF stay aligned.',
     ],
     outcomes: [
       'The site can now act as the detailed companion to the resume instead of duplicating it.',
-      'It gives me room to explain private product work more honestly and usefully than a bullet-only resume can.',
+      'It gives me room to explain product work with more context and specificity than a bullet-only resume can.',
       'It also serves as a live example of how I think about narrative, information density, and frontend delivery.',
     ],
     highlights: [
