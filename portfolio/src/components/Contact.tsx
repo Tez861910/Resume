@@ -1,6 +1,12 @@
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { FaEnvelope, FaGithub, FaLinkedin, FaMapMarkerAlt, FaPhone } from "react-icons/fa";
+import {
+  FaEnvelope,
+  FaGithub,
+  FaLinkedin,
+  FaMapMarkerAlt,
+  FaPhone,
+} from "react-icons/fa";
 import { siteConfig } from "../config/site";
 
 const contactInfo = [
@@ -35,6 +41,13 @@ const socialLinks = [
   },
 ];
 
+const collaborationTopics = [
+  "Full-stack or frontend-heavy product roles where someone needs to own details, not just tickets",
+  "Internal tools, operational dashboards, or workflow software that needs clearer UX and structure",
+  "Client or company platforms that need better content architecture, information design, or implementation quality",
+  "Projects that need someone comfortable moving between interface decisions, code, and product narrative",
+];
+
 export default function Contact() {
   const [ref, inView] = useInView({
     triggerOnce: true,
@@ -58,40 +71,42 @@ export default function Contact() {
           </p>
         </div>
 
-        <div className="mx-auto max-w-5xl">
+        <div className="mx-auto max-w-6xl">
           <div className="app-panel relative">
             <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(180deg,rgba(255,255,255,0.06)_0%,rgba(255,255,255,0.015)_38%,rgba(255,255,255,0)_100%)]" />
             <div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-amber-300 via-cyan-300 to-emerald-300" />
 
-            <div className="relative grid gap-8 p-6 sm:p-8 lg:grid-cols-[1.05fr_0.95fr] lg:p-10">
-              <div>
-                <div className="mb-6 flex flex-wrap items-center gap-3">
-                  <span className="app-chip-accent">
-                    <span className="h-2 w-2 rounded-full bg-amber-300 shadow-[0_0_12px_rgba(252,211,77,0.8)]" />
-                    One direct contact path
-                  </span>
-                  <span className="app-chip">Open to roles and projects</span>
+            <div className="relative grid gap-6 p-6 sm:p-8 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.95fr)] lg:items-start lg:gap-6 lg:p-10">
+              <div className="space-y-4">
+                <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 sm:p-6">
+                  <div className="mb-6 flex flex-wrap items-center gap-3">
+                    <span className="app-chip-accent">
+                      <span className="h-2 w-2 rounded-full bg-amber-300 shadow-[0_0_12px_rgba(252,211,77,0.8)]" />
+                      One direct contact path
+                    </span>
+                    <span className="app-chip">Open to roles and projects</span>
+                  </div>
+
+                  <div className="space-y-4 text-sm leading-relaxed text-slate-200/90 sm:text-lg">
+                    <p>
+                      I&apos;m always open to discussing new product builds,
+                      full-stack engineering roles, desktop tooling, and
+                      performance-focused frontend or backend work.
+                    </p>
+                    <p>
+                      If you&apos;re hiring, building something ambitious, or want
+                      help improving speed, UX, architecture, or delivery
+                      quality, I&apos;d be glad to connect.
+                    </p>
+                    <p>
+                      I kept the contact flow simple on purpose: one main email
+                      action, plus phone and profile links if they are more
+                      useful for your context.
+                    </p>
+                  </div>
                 </div>
 
-                <div className="space-y-4 text-sm leading-relaxed text-slate-200/90 sm:text-lg">
-                  <p>
-                    I’m always open to discussing new product builds, full-stack
-                    engineering roles, desktop tooling, and performance-focused
-                    frontend or backend work.
-                  </p>
-                  <p>
-                    If you’re hiring, building something ambitious, or want help
-                    improving speed, UX, architecture, or delivery quality, I’d
-                    be glad to connect.
-                  </p>
-                  <p>
-                    I kept the contact flow simple on purpose: one main email
-                    action, plus phone and profile links if they are more useful
-                    for your context.
-                  </p>
-                </div>
-
-                <div className="mt-8 rounded-2xl border border-amber-300/20 bg-amber-300/8 p-4 sm:p-5">
+                <div className="rounded-2xl border border-amber-300/20 bg-amber-300/8 p-4 sm:p-5">
                   <p className="mb-2 text-[10px] uppercase tracking-[0.24em] text-slate-500">
                     Primary contact
                   </p>
@@ -114,6 +129,23 @@ export default function Contact() {
                     </div>
                   </div>
                 </div>
+
+                <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 sm:p-5">
+                  <p className="mb-3 text-[10px] uppercase tracking-[0.24em] text-slate-500">
+                    Good reasons to reach out
+                  </p>
+                  <ul className="space-y-2">
+                    {collaborationTopics.map((item) => (
+                      <li
+                        key={item}
+                        className="flex items-start gap-3 text-sm leading-relaxed text-slate-200/85"
+                      >
+                        <span className="mt-1 text-emerald-300">▸</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
 
               <div className="space-y-4">
@@ -122,7 +154,7 @@ export default function Contact() {
                     Contact details
                   </p>
 
-                  <div className="grid gap-3">
+                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
                     {contactInfo.map((info, index) => (
                       <motion.div
                         key={info.label}

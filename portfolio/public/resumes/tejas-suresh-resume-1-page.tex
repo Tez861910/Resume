@@ -1,0 +1,159 @@
+\documentclass[letterpaper,10pt]{article}
+
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{fontawesome5}
+\usepackage{qrcode}
+\usepackage{tikz}
+\input{glyphtounicode}
+\usepackage[sfdefault]{roboto}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\addtolength{\oddsidemargin}{-0.62in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1.24in}
+\addtolength{\topmargin}{-.92in}
+\addtolength{\textheight}{1.82in}
+
+\urlstyle{same}
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+\titleformat{\section}{\vspace{-4pt}\scshape\raggedright\large\bfseries}{}{0em}{}[\color{black}\titlerule \vspace{-6pt}]
+\pdfgentounicode=1
+
+\newcommand{\resumeItem}[1]{\item\small{{#1 \vspace{-2pt}}}}
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-1pt}\item
+    \begin{tabular*}{1.0\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & \textbf{\small #2} \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-6pt}
+}
+\newcommand{\resumeProjectHeading}[2]{
+    \item
+    \begin{tabular*}{1.001\textwidth}{l@{\extracolsep{\fill}}r}
+      \small#1 & \textbf{\small #2}\\
+    \end{tabular*}\vspace{-6pt}
+}
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.0in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}[leftmargin=0.15in]}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+\renewcommand\labelitemi{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\begin{document}
+
+\begin{center}
+  {\Huge \scshape Tejas S}\\[-2pt]
+  {\small Bengaluru, India}\\[3pt]
+  {\small
+    \faPhone\ +91-8618904742 \quad
+    \href{mailto:tejassureshofficial@gmail.com}{\faEnvelope\ \underline{tejassureshofficial@gmail.com}} \quad
+    \href{https://tejassureshofficial.in}{\faGlobe\ \underline{tejassureshofficial.in}} \quad
+    \href{https://www.linkedin.com/in/tejas-s-57138816a/}{\faLinkedin\ \underline{LinkedIn}} \quad
+    \href{https://github.com/Tez861910}{\faGithub\ \underline{GitHub}}
+  }
+\end{center}
+\vspace{-8pt}
+
+\begin{tikzpicture}[remember picture,overlay]
+  \node[anchor=north east] at ([xshift=-0.8cm,yshift=-0.9cm]current page.north east)
+    {\qrcode[height=1.35cm]{https://tejassureshofficial.in}};
+\end{tikzpicture}
+
+\section{Summary}
+\resumeSubHeadingListStart
+  \resumeItem{Full-stack product developer building workflow-heavy software across web, desktop, and mobile. Recent work spans private React and Next.js products, a .NET Windows app for 3D manufacturing workflows, and a Flutter + Rust local-first utility platform. Strongest fit is product engineering where UX clarity, maintainable architecture, and real operational use all matter.}
+\resumeSubHeadingListEnd
+\vspace{-12pt}
+
+\section{Core Stack}
+\begin{itemize}[leftmargin=0.15in, label={}]
+  \small{\item{
+    \textbf{Frontend}{: React, Next.js, TypeScript, Vite, Tailwind CSS, Framer Motion} \\
+    \textbf{Backend}{: Node.js, Express, Prisma, REST APIs, validation, protected workflows} \\
+    \textbf{Desktop \& Mobile}{: .NET 8, WinUI 3, Win2D, AssimpNet, Flutter, Flutter Rust Bridge} \\
+    \textbf{Data \& Tools}{: PostgreSQL, MySQL, SQLite, Git, GitHub Actions, responsive UI systems}
+  }}
+\end{itemize}
+\vspace{-14pt}
+
+\section{Experience}
+\resumeSubHeadingListStart
+  \resumeSubheading
+    {Software Engineer --- Product, Web \& Desktop}{Dec 2024 -- Dec 2025}
+    {Printalytix}{Bengaluru, India}
+    \resumeItemListStart
+      \resumeItem{Built customer-facing and internal product surfaces across React and Node-based systems with upload-heavy flows, validation, and protected operations.}
+      \resumeItem{Worked on \textbf{MIND}, a .NET 8 Windows desktop app for 3D model inspection, manufacturing guidance, screenshots, and report generation.}
+      \resumeItem{Contributed across frontend, backend, and workflow design instead of staying in a single layer of the stack.}
+    \resumeItemListEnd
+
+  \resumeSubheading
+    {Volunteer --- Full-Stack Development}{Oct 2023 -- Jan 2024}
+    {Old Dominion University}{Norfolk, VA, USA}
+    \resumeItemListStart
+      \resumeItem{Built a university threads platform supporting \textbf{500+ concurrent users} with role-based access and real-time messaging.}
+      \resumeItem{Delivered an examination management system that reduced manual overhead by about \textbf{50\%}.}
+      \resumeItem{Optimised backend queries and caching strategy, improving response times by roughly \textbf{45\%}.}
+    \resumeItemListEnd
+\resumeSubHeadingListEnd
+\vspace{-12pt}
+
+\section{Selected Projects}
+\resumeSubHeadingListStart
+  \resumeProjectHeading
+    {\textbf{Pettige} $|$ \emph{Flutter, Rust, SQLite}}{}
+    \resumeItemListStart
+      \resumeItem{Local-first toolbox with \textbf{30+ utilities}, encrypted storage, and on-device PDF, image, QR, OCR, and developer workflows.}
+    \resumeItemListEnd
+    \vspace{-10pt}
+
+  \resumeProjectHeading
+    {\textbf{Open Solar Toolkit} $|$ \emph{React 19, TypeScript, Tailwind, DnD Kit}}{}
+    \resumeItemListStart
+      \resumeItem{Role-based solar operations platform spanning \textbf{7 workstreams} across sales, planning, supply chain, installation, maintenance, and reporting.}
+    \resumeItemListEnd
+    \vspace{-10pt}
+
+  \resumeProjectHeading
+    {\textbf{MIND Manufacturing Intelligence} $|$ \emph{.NET 8, WinUI 3, Win2D, AssimpNet}}{}
+    \resumeItemListStart
+      \resumeItem{Windows desktop workflow for 3D model analysis, manufacturing guidance, screenshots, and structured report generation.}
+    \resumeItemListEnd
+    \vspace{-10pt}
+
+  \resumeProjectHeading
+    {\textbf{ChemLife + Resolute} $|$ \emph{Next.js, React, Tailwind, EmailJS}}{}
+    \resumeItemListStart
+      \resumeItem{Company platforms with reusable content systems, routed inquiry flows, and multi-vertical presentation across biotech and B2B delivery.}
+    \resumeItemListEnd
+\resumeSubHeadingListEnd
+\vspace{-8pt}
+
+\section{Education}
+\resumeSubHeadingListStart
+  \resumeSubheading
+    {Bachelor of Computer Applications (BCA) --- Computer Science}{Aug 2018 -- Aug 2024}
+    {Bengaluru North University}{Bengaluru, India}
+\resumeSubHeadingListEnd
+
+\end{document}

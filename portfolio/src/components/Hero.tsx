@@ -51,9 +51,9 @@ export default function Hero() {
             </p>
 
             <p className="mb-8 max-w-2xl text-sm leading-relaxed text-app-muted sm:text-base">
-              This main site is the quick, lightweight version for hiring teams
-              and busy reviewers. The cockpit is there if you want the
-              heavier interactive version.
+              The resume stays intentionally lean. This website is the fuller
+              version: more project context, more narrative, and enough detail
+              for someone who wants to understand what I actually worked on.
             </p>
 
             <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap lg:justify-start">
@@ -61,14 +61,14 @@ export default function Hero() {
                 <span>View projects</span>
                 <FaArrowRight className="text-xs" />
               </a>
-              <a
-                href={siteConfig.resumeDownloadPath}
-                download
+              <button
+                type="button"
+                onClick={() => navigate(siteConfig.resumePagePath)}
                 className="btn-secondary w-full sm:w-auto"
               >
                 <FaDownload className="text-xs" />
                 <span>Download resume</span>
-              </a>
+              </button>
               <button
                 type="button"
                 onClick={() => navigate(siteConfig.cockpit.route)}
@@ -84,7 +84,7 @@ export default function Hero() {
                 {
                   label: "Current work",
                   value: "Private products",
-                  detail: "Operational tools, client sites, and local-first apps",
+                  detail: "Operational tools, client platforms, and local-first apps",
                 },
                 {
                   label: "Platforms",
@@ -94,7 +94,7 @@ export default function Hero() {
                 {
                   label: "Approach",
                   value: "Clarity first",
-                  detail: "Useful flows, maintainable code, strong handoff",
+                  detail: "Useful flows, maintainable code, stronger handoff",
                 },
               ].map((stat, index) => (
                 <motion.div
@@ -148,7 +148,7 @@ export default function Hero() {
                 <span className="app-chip">Web + desktop + mobile</span>
               </div>
 
-            <div className="space-y-4">
+              <div className="space-y-4">
                 <div className="app-card-soft">
                   <p className="mb-1 text-[10px] uppercase tracking-[0.22em] text-slate-500">
                     What I build
@@ -159,33 +159,44 @@ export default function Hero() {
                   </p>
                 </div>
 
-              <div className="grid gap-3 sm:grid-cols-2">
                 <div className="app-card-soft">
+                  <p className="mb-1 text-[10px] uppercase tracking-[0.22em] text-slate-500">
+                    Best fit
+                  </p>
+                  <p className="text-sm leading-relaxed text-slate-100">
+                    Teams that need someone comfortable moving between product
+                    narrative, UI decisions, and implementation details.
+                  </p>
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="app-card-soft">
                   <p className="mb-1 text-[10px] uppercase tracking-[0.22em] text-slate-500">
                     Preferred work
                   </p>
-                  <p className="text-sm font-semibold text-slate-100">
-                    Product engineering
-                  </p>
-                </div>
-                <div className="app-card-soft">
+                    <p className="text-sm font-semibold text-slate-100">
+                      Product engineering
+                    </p>
+                  </div>
+                  <div className="app-card-soft">
                   <p className="mb-1 text-[10px] uppercase tracking-[0.22em] text-slate-500">
                     Location
                   </p>
                   <p className="text-sm font-semibold text-slate-100">
-                    {siteConfig.location}
-                  </p>
+                      {siteConfig.location}
+                    </p>
+                  </div>
                 </div>
-              </div>
 
-              <div className="rounded-3xl border border-cyan-300/20 bg-cyan-300/8 p-5">
+                <div className="rounded-3xl border border-cyan-300/20 bg-cyan-300/8 p-5">
                 <p className="mb-2 text-[10px] uppercase tracking-[0.22em] text-cyan-200/80">
                   Cockpit mode
                 </p>
-                <p className="text-sm leading-relaxed text-slate-100">
-                  The cockpit is optional. If you just want the fast version,
-                  stay on the main portfolio and use the resume download above.
-                </p>
+                  <p className="text-sm leading-relaxed text-slate-100">
+                    The cockpit is optional. If you want the direct read, stay
+                    here. If you want the same portfolio reframed as mission
+                    briefings and recovered drive dossiers, launch the cockpit.
+                  </p>
                 <ul className="mt-4 space-y-2 text-xs leading-relaxed text-slate-300/80">
                   {siteConfig.cockpit.requirements.map((item) => (
                     <li key={item} className="flex gap-2">

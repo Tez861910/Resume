@@ -89,14 +89,10 @@ export default function Navbar({ isScrolled }: NavbarProps) {
               )}
 
               <ThemeToggle />
-              <a
-                href={siteConfig.resumeDownloadPath}
-                download
-                className="btn-secondary"
-              >
+              <Link to={siteConfig.resumePagePath} className="btn-secondary">
                 <FaDownload className="text-xs" />
                 Resume
-              </a>
+              </Link>
               <Link to={siteConfig.cockpit.route} className="btn-ghost">
                 <FaGamepad className="text-sm" />
                 Cockpit
@@ -166,15 +162,14 @@ export default function Navbar({ isScrolled }: NavbarProps) {
               )}
 
               <div className="mt-4 grid gap-3">
-                <a
-                  href={siteConfig.resumeDownloadPath}
-                  download
+                <Link
+                  to={siteConfig.resumePagePath}
                   className="btn-secondary"
                   onClick={() => setIsOpen(false)}
                 >
                   <FaDownload className="text-xs" />
                   Download resume
-                </a>
+                </Link>
                 <Link
                   to={siteConfig.cockpit.route}
                   className="btn-ghost"

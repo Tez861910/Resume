@@ -108,7 +108,10 @@ export default function ProjectCard({
 }: ProjectCardProps) {
   const thumbnail = project.media.find((media) => media.type === "image");
 
-  const missionType = useMemo(() => inferMissionType(project), [project]);
+  const missionType = useMemo(
+    () => project.category ?? inferMissionType(project),
+    [project],
+  );
   const impactLabel = useMemo(() => inferImpactLabel(project), [project]);
   const statusTone = STATUS_TONE[project.status ?? ""] ?? {
     badge: "border-white/15 bg-white/[0.06] text-slate-100",

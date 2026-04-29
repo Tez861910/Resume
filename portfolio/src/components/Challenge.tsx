@@ -7,6 +7,11 @@ import { siteConfig } from "../config/site";
 export default function Challenge() {
   const navigate = useNavigate();
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
+  const cockpitHighlights = [
+    "Each station maps to a real section of the portfolio: profile, skills, experience, projects, and contact.",
+    "Recovered drives unlock fuller readouts, so the cockpit mirrors the same content instead of becoming a disconnected mini-game.",
+    "It is intentionally heavier and more experimental, while the main site stays the fast default path.",
+  ];
 
   return (
     <section
@@ -45,13 +50,30 @@ export default function Challenge() {
                 </div>
 
                 <h3 className="mb-3 text-2xl font-bold text-slate-50 sm:text-3xl">
-                  Launch the direct cockpit route when you want the 3D version.
+                  Launch the cockpit when you want the mission-style version of the portfolio.
                 </h3>
                 <p className="mb-5 max-w-2xl text-sm leading-relaxed text-slate-300/80 sm:text-base">
                   {siteConfig.cockpit.description} It is heavier, it can take a
                   bit to initialize, and it is not the best first stop if you
                   just want the recruiter-friendly overview.
                 </p>
+
+                <div className="mb-6 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+                  <p className="mb-3 text-[10px] uppercase tracking-[0.22em] text-slate-500">
+                    What is inside
+                  </p>
+                  <ul className="space-y-2">
+                    {cockpitHighlights.map((item) => (
+                      <li
+                        key={item}
+                        className="flex items-start gap-3 text-sm leading-relaxed text-slate-200/85"
+                      >
+                        <span className="mt-1 text-cyan-200">▸</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
 
                 <div className="flex flex-col gap-3 sm:flex-row">
                   <motion.button

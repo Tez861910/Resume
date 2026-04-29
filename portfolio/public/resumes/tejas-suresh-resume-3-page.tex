@@ -1,0 +1,234 @@
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{fontawesome5}
+\usepackage{qrcode}
+\usepackage{tikz}
+\input{glyphtounicode}
+\usepackage[sfdefault]{roboto}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\addtolength{\oddsidemargin}{-0.55in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1.1in}
+\addtolength{\topmargin}{-.76in}
+\addtolength{\textheight}{1.18in}
+
+\urlstyle{same}
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+\titleformat{\section}{\vspace{-2pt}\scshape\raggedright\large\bfseries}{}{0em}{}[\color{black}\titlerule \vspace{-6pt}]
+\pdfgentounicode=1
+
+\newcommand{\resumeItem}[1]{\item\small{{#1 \vspace{-1pt}}}}
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-1pt}\item
+    \begin{tabular*}{1.0\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & \textbf{\small #2} \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-6pt}
+}
+\newcommand{\resumeProjectHeading}[2]{
+    \item
+    \begin{tabular*}{1.001\textwidth}{l@{\extracolsep{\fill}}r}
+      \small#1 & \textbf{\small #2}\\
+    \end{tabular*}\vspace{-6pt}
+}
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.0in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}[leftmargin=0.15in]}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-4pt}}
+\renewcommand\labelitemi{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\begin{document}
+
+\begin{center}
+  {\Huge \scshape Tejas S}\\[-2pt]
+  {\small Bengaluru, India}\\[3pt]
+  {\small
+    \faPhone\ +91-8618904742 \quad
+    \href{mailto:tejassureshofficial@gmail.com}{\faEnvelope\ \underline{tejassureshofficial@gmail.com}} \quad
+    \href{https://tejassureshofficial.in}{\faGlobe\ \underline{tejassureshofficial.in}} \quad
+    \href{https://www.linkedin.com/in/tejas-s-57138816a/}{\faLinkedin\ \underline{LinkedIn}} \quad
+    \href{https://github.com/Tez861910}{\faGithub\ \underline{GitHub}}
+  }
+\end{center}
+\vspace{-8pt}
+
+\begin{tikzpicture}[remember picture,overlay]
+  \node[anchor=north east] at ([xshift=-0.8cm,yshift=-0.9cm]current page.north east)
+    {\qrcode[height=1.4cm]{https://tejassureshofficial.in}};
+\end{tikzpicture}
+
+\section{Summary}
+\resumeSubHeadingListStart
+  \resumeItem{I build product software across web, desktop, and mobile with a bias toward clarity, maintainability, and real operational usefulness. The common thread in my recent work is software that has to carry actual workflow load: multi-role dashboards, content-heavy company platforms, internal manufacturing tools, and local-first utility products. I am most useful in product engineering roles where interface decisions, content structure, and implementation details need to reinforce one another.}
+\resumeSubHeadingListEnd
+\vspace{-10pt}
+
+\section{Product Focus}
+\resumeSubHeadingListStart
+  \resumeItem{Workflow-oriented interfaces that make dense information easier to use, not just prettier to look at.}
+  \resumeItem{Product surfaces that span frontend, backend, and operational rules rather than isolated UI tickets.}
+  \resumeItem{Content systems where information architecture matters as much as visuals.}
+  \resumeItem{Delivery environments where maintainability, debugging, and future extension are part of the work from day one.}
+\resumeSubHeadingListEnd
+\vspace{-10pt}
+
+\section{Working Style}
+\resumeSubHeadingListStart
+  \resumeItem{Understand the domain before optimising the UI so the product solves the actual workflow instead of only looking polished.}
+  \resumeItem{Keep frontend structure, backend rules, and content architecture aligned so the software feels coherent to real users.}
+  \resumeItem{Prefer maintainable systems with clear extension paths over one-off hero implementations.}
+  \resumeItem{Stay comfortable moving between product framing, implementation detail, and final presentation quality.}
+\resumeSubHeadingListEnd
+\vspace{-10pt}
+
+\section{Core Stack}
+\begin{itemize}[leftmargin=0.15in, label={}]
+  \small{\item{
+    \textbf{Frontend}{: React, Next.js, TypeScript, Vite, Tailwind CSS, Framer Motion} \\
+    \textbf{Backend}{: Node.js, Express, Prisma, REST APIs, validation, uploads, security middleware} \\
+    \textbf{Desktop}{: .NET 8, C\#, WinUI 3, Win2D, AssimpNet, screenshot and document workflows} \\
+    \textbf{Mobile \& Cross-Platform}{: Flutter, Dart, Rust, Flutter Rust Bridge, local-first architecture} \\
+    \textbf{Data \& Tooling}{: PostgreSQL, MySQL, SQLite, Git, GitHub Actions, production-oriented repo structure}
+  }}
+\end{itemize}
+\vspace{-12pt}
+
+\section{Experience}
+\resumeSubHeadingListStart
+  \resumeSubheading
+    {Software Engineer --- Product, Web \& Desktop}{Dec 2024 -- Dec 2025}
+    {Printalytix}{Bengaluru, India}
+    \resumeItemListStart
+      \resumeItem{Worked across customer-facing and internal product surfaces, from upload-heavy web flows to operations-focused tooling.}
+      \resumeItem{Built and evolved \textbf{MIND} as a .NET 8 Windows application for 3D model inspection, manufacturing guidance, screenshot capture, and report generation.}
+      \resumeItem{Delivered React and Node-based systems with protected workflows, validation, uploads, and maintainable product structure.}
+      \resumeItem{Contributed across frontend, backend, and workflow design instead of staying in one layer of the stack.}
+      \resumeItem{Helped shape software that supports real operational follow-through rather than just presentation.}
+    \resumeItemListEnd
+
+  \resumeSubheading
+    {Volunteer --- Full-Stack Development}{Oct 2023 -- Jan 2024}
+    {Old Dominion University}{Norfolk, VA, USA}
+    \resumeItemListStart
+      \resumeItem{Built a university threads platform supporting \textbf{500+ concurrent users} with role-based access and real-time messaging.}
+      \resumeItem{Delivered an examination management system that automated assessments and reduced manual overhead by about \textbf{50\%}.}
+      \resumeItem{Optimised backend queries and caching strategy, improving response times by roughly \textbf{45\%}.}
+      \resumeItem{Strengthened early full-stack foundations around auth, validation, role-aware UX, and shared-system design.}
+    \resumeItemListEnd
+\resumeSubHeadingListEnd
+\vspace{-10pt}
+
+\section{Project Highlights}
+\resumeSubHeadingListStart
+  \resumeProjectHeading
+    {\textbf{Pettige} --- Product developer $|$ \emph{2025 -- present}}{}
+    \resumeItemListStart
+      \resumeItem{Local-first toolbox with \textbf{30+ utilities} spanning PDF, image, QR, OCR, storage, audio, and developer workflows.}
+      \resumeItem{Designed the split architecture between Flutter screens and a Rust core connected through Flutter Rust Bridge.}
+      \resumeItem{Structured the product by tool domains so broad utility coverage stays maintainable instead of collapsing into one large feature blob.}
+      \resumeItem{Kept packaging and release paths in scope across Android, Windows, and Apple-platform targets.}
+    \resumeItemListEnd
+    \vspace{-8pt}
+
+  \resumeProjectHeading
+    {\textbf{Open Solar Toolkit} --- Frontend and product systems developer $|$ \emph{2025 -- present}}{}
+    \resumeItemListStart
+      \resumeItem{Solar operations platform covering \textbf{7 workstreams} across administration, project management, sales, supply chain, installation, maintenance, and user dashboards.}
+      \resumeItem{Approached the product as a set of specialised interfaces inside one shared system rather than a generic one-size-fits-all dashboard.}
+      \resumeItem{Built around operational density, with drag-and-drop interaction support, charting, theming, responsiveness, and validation tooling already in scope.}
+      \resumeItem{Demonstrates how I structure multi-role products so the shared system stays coherent while each workflow keeps its own shape.}
+    \resumeItemListEnd
+    \vspace{-8pt}
+
+  \resumeProjectHeading
+    {\textbf{MIND Manufacturing Intelligence} --- Desktop product developer $|$ \emph{2025 -- present}}{}
+    \resumeItemListStart
+      \resumeItem{Windows desktop application for inspecting 3D models and supporting manufacturing decisions in one workflow.}
+      \resumeItem{Worked across views, view models, rendering services, assets, screenshot capture, and PDF/reporting paths.}
+      \resumeItem{Treated diagnostics and debuggability as first-class concerns because rendering-heavy internal tools need observability to remain maintainable.}
+      \resumeItem{Shows range beyond web work into workflow-heavy desktop software where correctness and operator clarity matter.}
+    \resumeItemListEnd
+    \vspace{-8pt}
+
+  \resumeProjectHeading
+    {\textbf{ChemLife Innovations Platform} --- Web platform developer $|$ \emph{2025}}{}
+    \resumeItemListStart
+      \resumeItem{Content-rich company platform for an animal-nutrition and biotech business with reusable data models for technologies, concepts, awards, and knowledge content.}
+      \resumeItem{Structured the site so technical credibility, educational content, and future lead-generation flows can live in one maintainable system.}
+      \resumeItem{Treated content architecture as a core engineering concern instead of leaving company information scattered across unrelated pages.}
+      \resumeItem{Demonstrates how business websites can become structured product surfaces instead of thin marketing shells.}
+    \resumeItemListEnd
+    \vspace{-8pt}
+
+  \resumeProjectHeading
+    {\textbf{Resolute Solutions Site} --- Frontend developer and content systems builder $|$ \emph{2025}}{}
+    \resumeItemListStart
+      \resumeItem{Live multi-vertical business site spanning \textbf{4 service lines} with shared navigation, inquiry flow, and distinct presentation per vertical.}
+      \resumeItem{Extended the housekeeping side into a more catalogue-like product surface instead of a generic marketing page.}
+      \resumeItem{Carried the work through to production delivery with PWA support, build tooling, and deployment considerations.}
+      \resumeItem{Shows how one codebase can support multiple visual identities without losing system coherence.}
+    \resumeItemListEnd
+    \vspace{-8pt}
+
+  \resumeProjectHeading
+    {\textbf{Printalytix Platform} --- Full-stack product developer $|$ \emph{2024 -- 2025}}{}
+    \resumeItemListStart
+      \resumeItem{Full-stack workflow platform for customer intake, uploads, protected operations, and ongoing internal follow-through.}
+      \resumeItem{Worked across frontend, backend, and data layers so validation, access rules, and product structure behave like one system.}
+      \resumeItem{Helped modernise the frontend workflow while keeping richer form, table, and upload surfaces intact.}
+      \resumeItem{Reinforces the kind of work I enjoy most: practical software that supports transactions and operations rather than isolated screens.}
+    \resumeItemListEnd
+    \vspace{-8pt}
+
+  \resumeProjectHeading
+    {\textbf{University Threads Platform} --- Full-stack developer $|$ \emph{2023 -- 2024}}{}
+    \resumeItemListStart
+      \resumeItem{Earlier multi-user collaboration platform that still shows the foundations of my full-stack approach.}
+      \resumeItem{Built around authentication, validation, rate limiting, logging, and role-aware behaviour instead of static page rendering alone.}
+      \resumeItem{Useful because it demonstrates the base layer beneath later product work: shared systems, protected routes, and structure.}
+    \resumeItemListEnd
+    \vspace{-8pt}
+
+  \resumeProjectHeading
+    {\textbf{Personal Portfolio \& Resume} --- Designer, writer, and frontend developer $|$ \emph{2025}}{}
+    \resumeItemListStart
+      \resumeItem{Built the main portfolio as a fast recruiter-facing route with deeper case studies, then added an optional cockpit mode for the immersive version of the same story.}
+      \resumeItem{Structured the project data model so private product work can be explained with more honesty and detail than a bullet-only resume allows.}
+      \resumeItem{Kept the resume workflow in the same repository so the web portfolio and downloadable assets stay aligned.}
+    \resumeItemListEnd
+\resumeSubHeadingListEnd
+\vspace{-8pt}
+
+\section{Education}
+\resumeSubHeadingListStart
+  \resumeSubheading
+    {Bachelor of Computer Applications (BCA) --- Computer Science}{Aug 2018 -- Aug 2024}
+    {Bengaluru North University}{Bengaluru, India}
+    \resumeItemListStart
+      \resumeItem{Built a foundation in DBMS, web development, data structures, and algorithms.}
+      \resumeItem{Completed a final-year project centred on full-stack web application development with MySQL.}
+    \resumeItemListEnd
+\resumeSubHeadingListEnd
+\end{document}

@@ -27,11 +27,12 @@ const SKILL_CLUSTERS: ClusterDef[] = [
     shape: "ring",
     skills: [
       { name: "React" },
+      { name: "Next.js" },
       { name: "Vite" },
       { name: "Material UI" },
       { name: "Tailwind CSS" },
       { name: "Framer Motion" },
-      { name: "PWA" },
+      { name: "Flutter" },
     ],
   },
   {
@@ -44,7 +45,8 @@ const SKILL_CLUSTERS: ClusterDef[] = [
       { name: "Node.js" },
       { name: "Express.js" },
       { name: "REST APIs" },
-      { name: "Sequelize ORM" },
+      { name: "Prisma" },
+      { name: "Sequelize" },
     ],
   },
   {
@@ -58,21 +60,21 @@ const SKILL_CLUSTERS: ClusterDef[] = [
       { name: "TypeScript" },
       { name: "C#" },
       { name: "Java" },
-      { name: "PHP" },
+      { name: "Rust" },
     ],
   },
   {
     id: "desktop",
-    label: "Desktop & 3D",
+    label: "Desktop & Mobile",
     color: PALETTE.AMBER_BRIGHT,
     center: [1.4, -1.9, -0.4],
     shape: "diamond",
     skills: [
-      { name: "WPF / .NET 8" },
-      { name: "DirectX" },
-      { name: "HelixToolkit" },
+      { name: ".NET 8" },
+      { name: "WinUI / Win2D" },
+      { name: "Flutter" },
+      { name: "FFI" },
       { name: "MVVM" },
-      { name: "DI" },
     ],
   },
   {
@@ -82,9 +84,10 @@ const SKILL_CLUSTERS: ClusterDef[] = [
     center: [-2.4, -1.8, 0.3],
     shape: "sphere",
     skills: [
+      { name: "PostgreSQL" },
       { name: "MySQL" },
       { name: "SQLite" },
-      { name: "Query Optimization" },
+      { name: "Encrypted Storage" },
     ],
   },
   {
@@ -95,9 +98,10 @@ const SKILL_CLUSTERS: ClusterDef[] = [
     shape: "ring",
     skills: [
       { name: "Git" },
+      { name: "GitHub Actions" },
       { name: "VS Code" },
-      { name: "GoDaddy" },
-      { name: "App Insights" },
+      { name: "Release Automation" },
+      { name: "Vite" },
     ],
   },
 ];
