@@ -139,14 +139,14 @@ const projects: Project[] = [
     status: 'In Progress',
   },
   {
-    id: 'chemlife-platform',
-    title: 'ChemLife Innovations Platform',
+    id: 'potential-client-website',
+    title: 'Potential Client Website',
     tagline: 'Next.js 14 platform for biotech content, technology pages, and B2B lead flow',
     category: 'Content-rich company platform',
     timeline: '2025',
     role: 'Web platform developer',
     description:
-      'ChemLife is a content-rich company platform for an animal-nutrition and biotech business. Built on Next.js and Tailwind, it structures the business around technology pages, concept verticals, awards, a knowledge hub, and contact flows, with the core content modeled in TypeScript data files for predictable rendering and maintainability. The repo also shows ongoing product thinking beyond a brochure site: lead-generation flows, downloads, analytics, richer case-study content, and SEO/metadata improvements are all being treated as part of the product surface.',
+      'Potential Client Website is a content-rich company platform for an animal-nutrition and biotech business. Built on Next.js and Tailwind, it structures the business around technology pages, concept verticals, awards, a knowledge hub, and contact flows, with the core content modeled in TypeScript data files for predictable rendering and maintainability. The repo also shows ongoing product thinking beyond a brochure site: lead-generation flows, downloads, analytics, richer case-study content, and SEO/metadata improvements are all being treated as part of the product surface.',
     intent:
       'I wanted the site to feel credible to technical buyers and business stakeholders at the same time. That meant treating company content like a system: technology data, concept offerings, knowledge content, awards, and contact flows all needed to be structured clearly enough to grow without becoming hard to maintain.',
     problem:

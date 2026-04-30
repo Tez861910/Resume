@@ -291,7 +291,7 @@ export const DRIVE_READOUTS: Record<MissionId, DriveReadout> = {
       "Pettige - local-first utility suite across PDF, image, audio, video, QR, OCR, storage, and developer workflows.",
       "Open Solar Toolkit - role-based operations platform covering sales, planning, supply chain, install, and maintenance.",
       "MIND - .NET 8 Windows software for 3D model analysis, manufacturing guidance, and reporting.",
-      "ChemLife - Next.js company platform structured around technologies, concepts, knowledge content, and lead flow.",
+      "Potential Client Website - Next.js company platform structured around technologies, concepts, knowledge content, and lead flow.",
       "Resolute Solutions - live multi-vertical business site with product catalogue depth and routed inquiry flows.",
       "Printalytix - full-stack workflow platform for uploads, protected operations, and ongoing internal and customer use.",
     ],
