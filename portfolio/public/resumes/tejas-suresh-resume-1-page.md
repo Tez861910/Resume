@@ -36,7 +36,7 @@ Full-stack product developer building workflow-heavy software across web, deskto
 - **Pettige:** Cross-platform local-first utility suite with **30+ tools** across PDF, image, audio, video, QR, OCR, encrypted storage, and developer workflows.
 - **Open Solar Toolkit:** Multi-role solar operations platform covering **7 workstreams** across sales, project planning, supply chain, installation, maintenance, and reporting.
 - **MIND Manufacturing Intelligence:** Windows desktop workflow for 3D model analysis, manufacturing guidance, and structured report generation.
-- **ChemLife Innovations Platform:** Next.js 14 company platform with reusable content models for biotech technologies, knowledge content, and B2B inquiry flow.
+- **Potential Client Website:** Next.js 14 company platform with reusable content models for biotech technologies, knowledge content, and B2B inquiry flow.
 - **Resolute Solutions Site:** Multi-vertical business platform spanning **4 service lines** with routed inquiry flows and structured catalogue content.
 
 ## Education

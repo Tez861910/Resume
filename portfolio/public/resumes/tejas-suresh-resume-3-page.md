@@ -78,7 +78,7 @@ I build product software across web, desktop, and cross-platform applications wi
 - Treated diagnostics and debuggability as first-class concerns because rendering-heavy internal tools need observability to remain maintainable.
 - Shows range beyond web work into workflow-heavy desktop software where correctness and operator clarity matter.
 
-### ChemLife Innovations Platform
+### Potential Client Website
 **Web platform developer · 2025**  
 **Next.js 14 · React 18 · TypeScript · Tailwind CSS · App Router**
 

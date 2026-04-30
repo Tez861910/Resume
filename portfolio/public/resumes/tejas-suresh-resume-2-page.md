@@ -59,7 +59,7 @@ Full-stack product developer building software that has to hold up in real workf
 - Kept diagnostics and maintainability central because graphics-heavy internal tools need strong observability.
 - Shows range beyond web work into workflow-heavy internal software where operator clarity and correctness matter.
 
-### ChemLife Innovations Platform
+### Potential Client Website
 **Next.js 14 · React 18 · TypeScript · Tailwind CSS**
 
 - Built a content-rich company platform for biotech and animal-nutrition audiences with reusable data models for technologies, concepts, awards, and knowledge content.
