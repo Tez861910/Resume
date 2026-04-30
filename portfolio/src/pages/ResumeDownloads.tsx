@@ -1,5 +1,11 @@
 import type { ReactNode } from "react";
-import { FaArrowLeft, FaDownload, FaFileAlt, FaFileCode } from "react-icons/fa";
+import {
+  FaArrowLeft,
+  FaDownload,
+  FaFileAlt,
+  FaFileCode,
+  FaImage,
+} from "react-icons/fa";
 import { Link } from "react-router-dom";
 import {
   RESUME_FORMAT_LABELS,
@@ -9,6 +15,7 @@ import {
 
 const formatIcons: Record<ResumeFormat, ReactNode> = {
   pdf: <FaDownload className="text-xs" />,
+  png: <FaImage className="text-xs" />,
   md: <FaFileAlt className="text-xs" />,
   tex: <FaFileCode className="text-xs" />,
 };
@@ -23,7 +30,8 @@ export default function ResumeDownloads() {
             <h1 className="section-title mb-4">Resume library</h1>
             <p className="section-copy !max-w-none">
               Three resume versions are available here, each with a different
-              level of detail and each offered in PDF, Markdown, and LaTeX.
+              level of detail and each offered in PDF, PNG image, Markdown, and
+              LaTeX.
             </p>
           </div>
 
@@ -40,7 +48,8 @@ export default function ResumeDownloads() {
           <p className="text-sm leading-relaxed text-slate-100 sm:text-base">
             The 1-page version is the shortest overview, the 2-page version
             adds broader project coverage, and the 3-page version provides the
-            fullest technical context.
+            fullest technical context. PNG exports are included for portals that
+            only accept image uploads.
           </p>
         </div>
 
@@ -78,7 +87,7 @@ export default function ResumeDownloads() {
                 ))}
               </ul>
 
-              <div className="grid gap-3 sm:grid-cols-3 xl:grid-cols-1">
+              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-2">
                 {(Object.keys(variant.files) as ResumeFormat[]).map((format) => (
                   <a
                     key={format}
