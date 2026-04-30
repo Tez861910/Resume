@@ -1,4 +1,4 @@
-export type ResumeFormat = "pdf" | "md" | "tex";
+export type ResumeFormat = "pdf" | "png" | "md" | "tex";
 
 export interface ResumeVariant {
   id: "1-page" | "2-page" | "3-page";
@@ -11,6 +11,7 @@ export interface ResumeVariant {
 
 export const RESUME_FORMAT_LABELS: Record<ResumeFormat, string> = {
   pdf: "PDF",
+  png: "PNG image",
   md: "Markdown",
   tex: "LaTeX",
 };
@@ -30,6 +31,7 @@ export const resumeVariants: ResumeVariant[] = [
     ],
     files: {
       pdf: "/resumes/tejas-suresh-resume-1-page.pdf",
+      png: "/resumes/tejas-suresh-resume-1-page.png",
       md: "/resumes/tejas-suresh-resume-1-page.md",
       tex: "/resumes/tejas-suresh-resume-1-page.tex",
     },
@@ -48,6 +50,7 @@ export const resumeVariants: ResumeVariant[] = [
     ],
     files: {
       pdf: "/resumes/tejas-suresh-resume-2-page.pdf",
+      png: "/resumes/tejas-suresh-resume-2-page.png",
       md: "/resumes/tejas-suresh-resume-2-page.md",
       tex: "/resumes/tejas-suresh-resume-2-page.tex",
     },
@@ -66,6 +69,7 @@ export const resumeVariants: ResumeVariant[] = [
     ],
     files: {
       pdf: "/resumes/tejas-suresh-resume-3-page.pdf",
+      png: "/resumes/tejas-suresh-resume-3-page.png",
       md: "/resumes/tejas-suresh-resume-3-page.md",
       tex: "/resumes/tejas-suresh-resume-3-page.tex",
     },
