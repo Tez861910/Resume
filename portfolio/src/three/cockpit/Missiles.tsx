@@ -26,19 +26,33 @@ const Missiles = forwardRef<MissilesHandle, { color?: string }>(function Missile
   ref,
 ) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
+  const glowRef = useRef<THREE.InstancedMesh>(null);
   const missilesRef = useRef<Missile[]>([]);
   const dummy = useMemo(() => new THREE.Object3D(), []);
 
   const mat = useMemo(
     () =>
-      new THREE.MeshStandardMaterial({
+      new THREE.MeshBasicMaterial({
         color,
-        emissive: color,
-        emissiveIntensity: 2,
+        transparent: true,
+        opacity: 0.95,
       }),
     [color],
   );
-  const geo = useMemo(() => new THREE.CylinderGeometry(0.3, 0.1, 1.5, 8), []);
+  const geo = useMemo(() => new THREE.CylinderGeometry(0.15, 0.08, 1.2, 6), []);
+
+  const glowMat = useMemo(
+    () =>
+      new THREE.MeshBasicMaterial({
+        color,
+        transparent: true,
+        opacity: 0.4,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      }),
+    [color],
+  );
+  const glowGeo = useMemo(() => new THREE.ConeGeometry(0.2, 1.8, 6), []);
 
   useEffect(() => {
     missilesRef.current = Array.from({ length: MAX }, () => ({
@@ -58,8 +72,13 @@ const Missiles = forwardRef<MissilesHandle, { color?: string }>(function Missile
         if (!m) return;
         m.alive = true;
         m.pos.copy(origin);
-        // Initial direction: slightly up or random
-        m.velocity.set(Math.random() - 0.5, 1, Math.random() - 0.5).normalize().multiplyScalar(SPEED);
+        // Initial direction: toward target with slight variance
+        const dir = new THREE.Vector3().subVectors(target, origin).normalize();
+        dir.x += (Math.random() - 0.5) * 0.15;
+        dir.y += (Math.random() - 0.5) * 0.15;
+        dir.z += (Math.random() - 0.5) * 0.15;
+        dir.normalize();
+        m.velocity.copy(dir).multiplyScalar(SPEED);
         m.target = target;
         m.ttl = TTL;
       },
@@ -81,6 +100,7 @@ const Missiles = forwardRef<MissilesHandle, { color?: string }>(function Missile
   useFrame((_, delta) => {
     const dt = Math.min(delta, 0.05);
     const mesh = meshRef.current;
+    const glowMesh = glowRef.current;
     if (!mesh) return;
 
     let idx = 0;
@@ -107,23 +127,44 @@ const Missiles = forwardRef<MissilesHandle, { color?: string }>(function Missile
 
       m.pos.addScaledVector(m.velocity, dt);
 
+      const velDir = m.velocity.clone().normalize();
       dummy.position.copy(m.pos);
-      dummy.quaternion.setFromUnitVectors(cylAxis, m.velocity.clone().normalize());
+      dummy.quaternion.setFromUnitVectors(cylAxis, velDir);
       dummy.updateMatrix();
       mesh.setMatrixAt(idx, dummy.matrix);
+
+      // Glow trail — positioned behind missile, pointing backward
+      if (glowMesh) {
+        dummy.position.copy(m.pos).addScaledVector(velDir, -0.9);
+        dummy.quaternion.setFromUnitVectors(cylAxis, velDir.clone().negate());
+        glowMesh.setMatrixAt(idx, dummy.matrix);
+      }
+
       idx++;
     }
     mesh.count = idx;
     mesh.instanceMatrix.needsUpdate = true;
+    if (glowMesh) {
+      glowMesh.count = idx;
+      glowMesh.instanceMatrix.needsUpdate = true;
+    }
   });
 
   return (
-    <instancedMesh
-      ref={meshRef}
-      args={[geo, mat, MAX]}
-      frustumCulled={false}
-      count={0}
-    />
+    <>
+      <instancedMesh
+        ref={meshRef}
+        args={[geo, mat, MAX]}
+        frustumCulled={false}
+        count={0}
+      />
+      <instancedMesh
+        ref={glowRef}
+        args={[glowGeo, glowMat, MAX]}
+        frustumCulled={false}
+        count={0}
+      />
+    </>
   );
 });
 

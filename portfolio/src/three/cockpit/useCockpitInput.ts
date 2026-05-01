@@ -12,6 +12,8 @@ export interface InputState {
   fireTrigger: number;
   /** incremented each time a missile should fire */
   missileTrigger: number;
+  /** incremented each time target lock should cycle */
+  targetLockTrigger: number;
   _mobileThrottle?: boolean;
   _mobileYaw?: boolean;
   _mobilePitch?: boolean;
@@ -28,6 +30,7 @@ export function createInitialInput(): InputState {
     fire: false,
     fireTrigger: 0,
     missileTrigger: 0,
+    targetLockTrigger: 0,
   };
 }
 
@@ -44,6 +47,7 @@ export function useCockpitInput(active: boolean) {
   const pointerLockedRef = useRef(false);
   const lastFireRef = useRef(0);
   const lastMissileRef = useRef(0);
+  const lastTargetLockRef = useRef(0);
 
   // Keyboard
   useEffect(() => {
@@ -64,6 +68,13 @@ export function useCockpitInput(active: boolean) {
         if (now - lastMissileRef.current > 800) {
           lastMissileRef.current = now;
           inputRef.current.missileTrigger++;
+        }
+      }
+      if (k === "t") {
+        const now = performance.now();
+        if (now - lastTargetLockRef.current > 300) {
+          lastTargetLockRef.current = now;
+          inputRef.current.targetLockTrigger++;
         }
       }
     };

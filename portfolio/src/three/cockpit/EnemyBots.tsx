@@ -4,6 +4,7 @@ import * as THREE from "three";
 import type { MutableRefObject } from "react";
 import type { MissionId } from "./missions";
 import type { LasersHandle } from "./Lasers";
+import type { MissilesHandle } from "./Missiles";
 import type { ExplosionsHandle } from "./Explosions";
 import type { PlayerState } from "./usePlayerState";
 import { useGameAsset } from "./AssetPipeline";
@@ -37,6 +38,7 @@ interface Props {
   }[];
   lasers: MutableRefObject<LasersHandle | null>;
   enemyLasers: MutableRefObject<LasersHandle | null>;
+  missiles: MutableRefObject<MissilesHandle | null>;
   explosions: MutableRefObject<ExplosionsHandle | null>;
   enemies: MutableRefObject<THREE.Vector3[]>;
   player: MutableRefObject<PlayerState>;
@@ -49,6 +51,7 @@ export default function EnemyBots({
   stations,
   lasers,
   enemyLasers,
+  missiles,
   explosions,
   enemies,
   player,
@@ -173,6 +176,14 @@ export default function EnemyBots({
         b.alive = false;
         recordKill();
         explosions.current?.spawn(b.pos, 15);
+        continue;
+      }
+
+      if (enabled && missiles.current?.consumeHit(b.pos, 3.5)) {
+        b.alive = false;
+        recordKill();
+        explosions.current?.spawn(b.pos, 35);
+        audio.playImpact();
         continue;
       }
 

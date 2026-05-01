@@ -234,6 +234,25 @@ function PirateCruiser({
         }
       }
     }
+
+    if (
+      !isShielded &&
+      runtime.missiles.current?.consumeHit(groupRef.current.position, 8)
+    ) {
+      const newHealth = Math.max(0, health - 0.08);
+      setHealth(newHealth);
+      audio.playImpact();
+      runtime.explosions.current?.spawn(groupRef.current.position, 50);
+      if (newHealth <= 0) {
+        setAlive(false);
+        recordKill();
+        runtime.explosions.current?.spawn(groupRef.current.position, 120);
+        if (!destroyedRef.current) {
+          destroyedRef.current = true;
+          onDestroyed();
+        }
+      }
+    }
   });
 
   if (!hasBoss || !alive) return null;
@@ -400,6 +419,7 @@ export default function PirateMissionScene({ enabled }: { enabled: boolean }) {
         stations={stations}
         lasers={runtime.lasers}
         enemyLasers={runtime.enemyLasers}
+        missiles={runtime.missiles}
         explosions={runtime.explosions}
         enemies={runtime.enemies}
         player={runtime.player}

@@ -143,12 +143,10 @@ export default function CockpitChrome({ input, player, enemyCounts }: Props) {
         </div>
       )}
 
-      {/* Instruments (bottom dashboard center) - 1st person only */}
-      {isFirstPerson && (
-        <div className="absolute bottom-3 sm:bottom-5 left-1/2 -translate-x-1/2 pointer-events-none w-[min(560px,94vw)]">
-          <InstrumentsHUD player={player} />
-        </div>
-      )}
+      {/* Instruments (bottom dashboard center) — both views */}
+      <div className="absolute bottom-3 sm:bottom-5 left-1/2 -translate-x-1/2 pointer-events-none w-[min(560px,94vw)]">
+        <InstrumentsHUD player={player} />
+      </div>
 
       {/* Mission terminal (bottom-left) */}
       <div className="absolute left-3 sm:left-6 bottom-[160px] sm:bottom-[150px] max-w-[min(360px,70vw)] pointer-events-auto">
@@ -230,6 +228,7 @@ function KbdHint() {
           <div>
             <span className="text-amber-200">Shift</span> boost ·{" "}
             <span className="text-amber-200">F / R-click</span> missile ·{" "}
+            <span className="text-amber-200">T</span> target lock ·{" "}
             <span className="text-amber-200">V</span> view ·{" "}
             <span className="text-amber-200">Esc</span> exit
           </div>

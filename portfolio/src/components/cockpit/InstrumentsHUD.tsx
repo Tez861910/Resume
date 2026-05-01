@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import type { MutableRefObject } from "react";
 import type { PlayerState } from "../../three/cockpit/usePlayerState";
 
@@ -6,15 +7,23 @@ interface Props {
 }
 
 export default function InstrumentsHUD({ player }: Props) {
+  const [, setTick] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => setTick((t) => t + 1), 80);
+    return () => clearInterval(interval);
+  }, []);
+
   const p = player.current;
   const hull = Math.max(0, Math.round(p.hull * 100));
   const shield = Math.max(0, Math.round(p.shield * 100));
   const speed = Math.abs(p.speed).toFixed(1);
   const boost = Math.max(0, Math.round(p.boost * 100));
+  const missileReady = p.missileCooldown < 0.01;
+  const hasLock = p.lockTargetIndex >= 0;
 
   const isCritical = hull < 30;
 
-  // Segmented Bar Component
   const SegmentedBar = ({
     value,
     color,
@@ -49,25 +58,19 @@ export default function InstrumentsHUD({ player }: Props) {
 
   return (
     <div className="relative flex justify-center items-end pointer-events-none select-none">
-      {/* Central HUD Wrapper */}
       <div className="relative flex flex-col md:flex-row items-end gap-6 pb-4">
         {/* Left Wing - Shields */}
         <div className="w-[180px] bg-slate-950/80 backdrop-blur-md border-t-2 border-r-2 border-cyan-500/50 p-3 rounded-tr-xl relative overflow-hidden shadow-[10px_0_20px_rgba(6,182,212,0.1)]">
-          <div className="absolute inset-0 cockpit-noise opacity-[0.05]" />
           <div className="relative z-10 flex flex-col gap-1">
             <div className="flex justify-between items-end mb-1">
-              <span className="text-[10px] font-bold text-cyan-400 uppercase tracking-widest">
-                Deflector
-              </span>
-              <span className="text-xs text-cyan-200 font-mono tracking-wider">
-                {shield}%
-              </span>
+              <span className="text-[10px] font-bold text-cyan-400 uppercase tracking-widest">Deflector</span>
+              <span className="text-xs text-cyan-200 font-mono tracking-wider">{shield}%</span>
             </div>
             <SegmentedBar value={shield} color="#06b6d4" glow />
           </div>
         </div>
 
-        {/* Center Console - Velocity / Warnings */}
+        {/* Center Console - Velocity / Warnings / Missiles */}
         <div className="w-[240px] flex flex-col items-center gap-2">
           {/* Critical Warning Banner */}
           <div
@@ -76,26 +79,45 @@ export default function InstrumentsHUD({ player }: Props) {
             Critical Hull Integrity
           </div>
 
-          <div className="bg-slate-950/80 backdrop-blur-md border-t-2 border-cyan-500/50 px-6 py-4 rounded-t-2xl w-full flex flex-col items-center relative overflow-hidden shadow-[0_-10px_20px_rgba(6,182,212,0.1)]">
-            <div className="absolute inset-0 cockpit-noise opacity-[0.05]" />
-
-            <div className="text-[10px] text-cyan-500/80 uppercase tracking-[0.4em] mb-1">
-              Velocity
-            </div>
+          <div className="bg-slate-950/80 backdrop-blur-md border-t-2 border-cyan-500/50 px-6 py-3 rounded-t-2xl w-full flex flex-col items-center relative overflow-hidden shadow-[0_-10px_20px_rgba(6,182,212,0.1)]">
+            <div className="text-[10px] text-cyan-500/80 uppercase tracking-[0.4em] mb-1">Velocity</div>
             <div className="text-3xl font-bold text-cyan-50 tracking-widest font-mono drop-shadow-[0_0_10px_rgba(6,182,212,0.5)]">
               {speed}
             </div>
 
             <div className="w-full mt-3 flex items-center gap-2">
-              <span className="text-[9px] text-amber-500 font-bold uppercase tracking-widest">
-                ENG
-              </span>
+              <span className="text-[9px] text-amber-500 font-bold uppercase tracking-widest">ENG</span>
               <div className="flex-1 h-1.5 bg-slate-800 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-amber-600 to-amber-400 transition-all duration-100"
                   style={{ width: `${boost}%` }}
                 />
               </div>
+            </div>
+
+            {/* Target lock */}
+            <div className="w-full mt-1 flex items-center gap-2">
+              <span className={`text-[9px] font-bold uppercase tracking-widest ${hasLock ? "text-amber-400" : "text-slate-600"}`}>
+                TGT
+              </span>
+              <span className={`text-[9px] font-mono tracking-wider ${hasLock ? "text-amber-300" : "text-slate-600"}`}>
+                {hasLock ? `LOCKED #${p.lockTargetIndex + 1}` : "NO TARGET — PRESS T"}
+              </span>
+              {hasLock && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />}
+            </div>
+
+            {/* Missile status */}
+            <div className="w-full mt-1.5 flex items-center gap-2">
+              <span className="text-[9px] text-rose-400 font-bold uppercase tracking-widest">MSL</span>
+              <div className="flex-1 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                <div
+                  className={`h-full transition-all duration-150 ${missileReady ? "bg-gradient-to-r from-rose-500 to-rose-400" : "bg-gradient-to-r from-slate-600 to-slate-500"}`}
+                  style={{ width: `${Math.round((1 - p.missileCooldown) * 100)}%` }}
+                />
+              </div>
+              <span className={`text-[9px] font-bold uppercase tracking-widest ${missileReady ? "text-rose-400 animate-pulse" : "text-slate-500"}`}>
+                {missileReady ? "RDY" : "CLD"}
+              </span>
             </div>
           </div>
         </div>
@@ -104,7 +126,6 @@ export default function InstrumentsHUD({ player }: Props) {
         <div
           className={`w-[180px] bg-slate-950/80 backdrop-blur-md border-t-2 border-l-2 p-3 rounded-tl-xl relative overflow-hidden transition-colors duration-300 ${isCritical ? "border-rose-500/80 shadow-[-10px_0_20px_rgba(225,29,72,0.2)]" : "border-emerald-500/50 shadow-[-10px_0_20px_rgba(16,185,129,0.1)]"}`}
         >
-          <div className="absolute inset-0 cockpit-noise opacity-[0.05]" />
           <div className="relative z-10 flex flex-col gap-1">
             <div className="flex justify-between items-end mb-1">
               <span
@@ -120,11 +141,7 @@ export default function InstrumentsHUD({ player }: Props) {
                 Integrity
               </span>
             </div>
-            <SegmentedBar
-              value={hull}
-              color={isCritical ? "#f43f5e" : "#10b981"}
-              glow={!isCritical}
-            />
+            <SegmentedBar value={hull} color={isCritical ? "#f43f5e" : "#10b981"} glow={!isCritical} />
           </div>
         </div>
       </div>

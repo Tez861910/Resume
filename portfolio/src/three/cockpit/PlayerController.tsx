@@ -46,6 +46,7 @@ export default function PlayerController({
   const { camera, scene } = useThree();
   const lastFireTrigger = useRef(0);
   const lastMissileTrigger = useRef(0);
+  const lastTargetLockTrigger = useRef(0);
   const missileCooldown = useRef(0);
   const shipGroupRef = useRef<THREE.Group>(null);
   const { audio, recordDeath } = useCockpit();
@@ -74,12 +75,6 @@ export default function PlayerController({
     const i = input.input.current;
     const m = input.mouse.current;
     const p = player.current;
-
-    // Sync ship group to player — single source of truth, no jitter
-    if (shipGroupRef.current) {
-      shipGroupRef.current.position.copy(p.position);
-      shipGroupRef.current.quaternion.copy(p.quaternion);
-    }
 
     const raycaster = new THREE.Raycaster();
     const updateCamera = () => {
@@ -114,12 +109,41 @@ export default function PlayerController({
       }
     };
 
+    const syncGroup = () => {
+      if (shipGroupRef.current) {
+        shipGroupRef.current.position.copy(p.position);
+        shipGroupRef.current.quaternion.copy(p.quaternion);
+      }
+    };
+
     if (!enabled) {
       // damp everything to a stop
       p.velocity.multiplyScalar(0.92);
       p.position.add(p.velocity.clone().multiplyScalar(dt));
       updateCamera();
+      syncGroup();
       return;
+    }
+
+    // Handle target lock cycling
+    if (i.targetLockTrigger !== lastTargetLockTrigger.current) {
+      lastTargetLockTrigger.current = i.targetLockTrigger;
+      const enemyList = enemies?.current ?? [];
+      if (enemyList.length === 0) {
+        p.lockTargetIndex = -1;
+      } else {
+        p.lockTargetIndex = (p.lockTargetIndex + 1) % enemyList.length;
+        p.lockTargetPos.copy(enemyList[p.lockTargetIndex]);
+      }
+    }
+    // Update locked target position if still valid
+    if (p.lockTargetIndex >= 0 && enemies?.current) {
+      if (p.lockTargetIndex < enemies.current.length) {
+        p.lockTargetPos.copy(enemies.current[p.lockTargetIndex]);
+      } else {
+        // Target died, reset
+        p.lockTargetIndex = -1;
+      }
     }
 
     // Handle fire trigger
@@ -136,23 +160,30 @@ export default function PlayerController({
       lastMissileTrigger.current = i.missileTrigger;
       missileCooldown.current = 1.2;
       const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(p.quaternion);
-      const origin = p.position.clone().add(forward.clone().multiplyScalar(1.5));
-      let target: THREE.Vector3 | null = null;
-      let bestDist = Infinity;
-      if (enemies?.current) {
-        for (const ePos of enemies.current) {
-          const d = p.position.distanceToSquared(ePos);
-          if (d < bestDist) {
-            bestDist = d;
-            target = ePos;
+      const right = new THREE.Vector3(1, 0, 0).applyQuaternion(p.quaternion);
+      // Alternate left/right wing hardpoints for visibility
+      const hardpointOffset = right.clone().multiplyScalar(Math.random() > 0.5 ? 2.2 : -2.2).add(new THREE.Vector3(0, -0.3, 0).applyQuaternion(p.quaternion));
+      const origin = p.position.clone().add(hardpointOffset).add(forward.clone().multiplyScalar(0.5));
+      let target: THREE.Vector3;
+      if (p.lockTargetIndex >= 0) {
+        target = p.lockTargetPos.clone();
+      } else {
+        // Auto-target nearest
+        target = p.position.clone().add(forward.multiplyScalar(200));
+        let bestDist = Infinity;
+        if (enemies?.current) {
+          for (const ePos of enemies.current) {
+            const d = p.position.distanceToSquared(ePos);
+            if (d < bestDist) {
+              bestDist = d;
+              target = ePos;
+            }
           }
         }
       }
-      if (!target || bestDist > 300 * 300) {
-        target = p.position.clone().add(forward.multiplyScalar(200));
-      }
       onFireMissile?.(origin, target);
     }
+    p.missileCooldown = Math.max(0, missileCooldown.current) / 1.2;
 
     // Mouse pitch/yaw (accumulated) — convert to per-frame angular deltas
     const mouseYaw = m.dx * 0.0018;
@@ -262,10 +293,12 @@ export default function PlayerController({
           p.position.set(0, 0, 0);
         }
       }
+      return;
     }
 
     // Update camera with shake
     updateCamera();
+    syncGroup();
 
     if (shakeRef.current > 0) {
       camera.position.x += (Math.random() - 0.5) * shakeRef.current * 1.5;
@@ -274,7 +307,8 @@ export default function PlayerController({
   });
   return (
     <group ref={shipGroupRef}>
-      <StarfighterHull />
+      {/* Exterior hull only visible in 3rd person — in 1st person the camera is inside it and the front cap blocks the view */}
+      {cameraView === "third" && <StarfighterHull />}
       <group position={[COCKPIT_OFFSET.x, COCKPIT_OFFSET.y, COCKPIT_OFFSET.z]}>
         <CockpitInterior />
       </group>
@@ -294,16 +328,6 @@ function StarfighterHull() {
       <mesh position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
         <cylinderGeometry args={[0.48, 0.82, 4.2, 8]} />
         <meshStandardMaterial color={HULL} metalness={0.78} roughness={0.22} flatShading />
-      </mesh>
-      {/* Nose section — sharp wedge */}
-      <mesh position={[0, 0.02, -2.4]} rotation={[0.08, 0, 0]}>
-        <coneGeometry args={[0.38, 2.6, 8]} />
-        <meshStandardMaterial color="#cbd5e1" metalness={0.7} roughness={0.18} flatShading />
-      </mesh>
-      {/* Nose tip sensor */}
-      <mesh position={[0, 0.04, -3.7]}>
-        <sphereGeometry args={[0.1, 8, 8]} />
-        <meshStandardMaterial color={DARK} metalness={0.9} roughness={0.1} />
       </mesh>
 
       {/* === Cockpit canopy === */}
