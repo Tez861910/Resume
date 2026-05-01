@@ -30,7 +30,7 @@ export default function Hero() {
             </span>
 
             <h1 className="mb-5 text-4xl font-bold leading-tight tracking-tight text-app-primary sm:text-5xl lg:text-6xl xl:text-7xl">
-              I build product software across web, desktop, and mobile that
+              I build product software across web, desktop, and cross-platform that
               feels clear, fast, and ready for real workflows.
             </h1>
 
@@ -74,7 +74,7 @@ export default function Hero() {
                 },
                 {
                   label: "Platforms",
-                  value: "Web + Desktop + Mobile",
+                  value: "Web + Desktop + Cross-Platform",
                   detail: "React, Next.js, .NET, Flutter, Rust",
                 },
                 {
@@ -131,7 +131,7 @@ export default function Hero() {
           >
             <div className="mb-5 flex flex-wrap items-center gap-2">
               <span className="app-chip-cyan">Product systems</span>
-              <span className="app-chip">Web + desktop + mobile</span>
+              <span className="app-chip">Web + desktop + cross-platform</span>
             </div>
 
             <div className="space-y-4">
@@ -147,11 +147,11 @@ export default function Hero() {
 
               <div className="app-card-soft">
                 <p className="mb-1 text-[10px] uppercase tracking-[0.22em] text-slate-500">
-                  Best fit
+                  Range
                 </p>
                 <p className="text-sm leading-relaxed text-slate-100">
-                  Teams that need someone comfortable moving between product
-                  narrative, UI decisions, and implementation details.
+                  Comfortable moving between product narrative, UI decisions, and
+                  implementation details.
                 </p>
               </div>
 

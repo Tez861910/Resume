@@ -20,7 +20,7 @@ export default function Projects() {
     },
     {
       label: "Platforms",
-      value: "Web + Desktop + Mobile",
+      value: "Web + Desktop + Cross-Platform",
       detail: "React/Next sites, Windows tooling, and Flutter apps",
     },
     {
@@ -43,7 +43,7 @@ export default function Projects() {
           <h2 className="section-title">Featured projects</h2>
           <p className="section-copy">
             A grounded look at the products, company platforms, and tools I
-            have built or worked on across web, desktop, and mobile.
+            have built or worked on across web, desktop, and cross-platform.
           </p>
         </div>
 

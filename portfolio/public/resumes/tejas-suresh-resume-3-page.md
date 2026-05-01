@@ -27,7 +27,7 @@ I build product software across web, desktop, and cross-platform applications wi
 - **Frontend:** React, Next.js, TypeScript, Vite, Tailwind CSS, Framer Motion, routed SPA and app-router delivery
 - **Backend:** Node.js, Express, Prisma, REST APIs, validation, uploads, security middleware, operational scripts
 - **Desktop:** .NET 8, C#, WinUI 3, Win2D, AssimpNet, document and screenshot workflows
-- **Mobile & cross-platform:** Flutter, Dart, Rust, Flutter Rust Bridge, local-first architecture, multi-platform packaging
+- **Cross-platform:** Flutter, Dart, Rust, Flutter Rust Bridge, local-first architecture, multi-platform packaging
 - **Data & tooling:** PostgreSQL, MySQL, SQLite, Git, GitHub Actions, production-oriented repository structure
 
 ## Experience

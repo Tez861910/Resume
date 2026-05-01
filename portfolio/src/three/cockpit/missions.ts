@@ -237,7 +237,7 @@ export const DRIVE_READOUTS: Record<MissionId, DriveReadout> = {
   launch: {
     missionId: "launch",
     headline: "Tejas S",
-    subheadline: "Full-Stack Product Developer — web, desktop, and mobile",
+    subheadline: "Full-Stack Product Developer — web, desktop, and cross-platform",
     lines: [
       "Callsign: TS",
       "Base: Bengaluru, India",
@@ -251,12 +251,12 @@ export const DRIVE_READOUTS: Record<MissionId, DriveReadout> = {
     headline: "Pilot Profile",
     subheadline: "How I build and what I optimize for",
     lines: [
-      "I build product software for real workflows instead of screens that only look good in a demo.",
+      "I build product software for real workflows.",
       "Day-to-day: product systems — dashboards, company platforms, APIs, workflow-oriented UI.",
       "Desktop work: Windows 3D tooling — rendering, model analysis, reporting, manufacturing guidance.",
       "Comfortable across React, Next.js, Node, SQL-backed systems, .NET desktop, and cross-platform tooling.",
-      "Best fit: teams that want someone comfortable moving between product narrative, UI decisions, and implementation detail.",
-      "Preferred mode: practical, direct, and thorough rather than clever for its own sake.",
+      "Comfortable moving between product narrative, UI decisions, and implementation detail.",
+      "Practical, direct, and thorough.",
     ],
   },
   constellation: {
@@ -268,7 +268,7 @@ export const DRIVE_READOUTS: Record<MissionId, DriveReadout> = {
       "Frontend and UI: React, Next.js, Vite, Tailwind CSS, Material UI, Framer Motion, React Router, TanStack Router",
       "Backend and APIs: Node.js, Express, REST APIs, Prisma, Sequelize, auth and validation",
       "Desktop and 3D: .NET 8, WinUI 3, Win2D, AssimpNet, iText 7, MVVM",
-      "Mobile and local-first: Flutter, Flutter Rust Bridge, FFI, on-device processing, encrypted storage",
+      "Cross-platform and local-first: Flutter, Flutter Rust Bridge, FFI, on-device processing, encrypted storage",
       "Data and delivery: PostgreSQL, MySQL, SQLite, Git, GitHub Actions, build and release automation",
     ],
   },

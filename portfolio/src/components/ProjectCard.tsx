@@ -53,7 +53,7 @@ function inferMissionType(project: Project) {
   if (
     combined.includes("flutter") ||
     combined.includes("dart") ||
-    combined.includes("mobile")
+    combined.includes("cross-platform")
   ) {
     return "Cross-platform app";
   }

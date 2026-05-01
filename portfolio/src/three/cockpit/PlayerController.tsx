@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import type { MutableRefObject } from "react";
@@ -47,21 +47,22 @@ export default function PlayerController({
   const lastFireTrigger = useRef(0);
   const lastMissileTrigger = useRef(0);
   const missileCooldown = useRef(0);
-  const shipMeshRef = useRef<THREE.Group>(null);
+  const shipGroupRef = useRef<THREE.Group>(null);
   const { audio, recordDeath } = useCockpit();
   const shakeRef = useRef(0); // Shake intensity
   const dyingRef = useRef(false);
   const deathTimerRef = useRef(0);
   const camRayFrame = useRef(0);
 
+  const COCKPIT_OFFSET = useMemo(() => new THREE.Vector3(0, 0.22, -0.5), []);
+
   useEffect(() => {
     camera.position.set(0, 0, 0);
     camera.rotation.set(0, 0, 0);
-    // wider FOV feels speedier
     const perspective = camera as THREE.PerspectiveCamera;
     if (perspective.isPerspectiveCamera) {
-      perspective.fov = 75;
-      perspective.near = 0.1;
+      perspective.fov = 82;
+      perspective.near = 0.05;
       perspective.far = 2000;
       perspective.updateProjectionMatrix();
     }
@@ -74,22 +75,25 @@ export default function PlayerController({
     const m = input.mouse.current;
     const p = player.current;
 
+    // Sync ship group to player — single source of truth, no jitter
+    if (shipGroupRef.current) {
+      shipGroupRef.current.position.copy(p.position);
+      shipGroupRef.current.quaternion.copy(p.quaternion);
+    }
+
     const raycaster = new THREE.Raycaster();
-    // Camera positioning function
     const updateCamera = () => {
       if (cameraView === "third") {
         const desiredPos = p.position
           .clone()
           .add(new THREE.Vector3(0, 2.6, 11).applyQuaternion(p.quaternion));
 
-        // Camera collision: raycast from player to desired camera position (throttled)
         camRayFrame.current++;
         if (camRayFrame.current % 3 === 0) {
           raycaster.set(p.position, new THREE.Vector3().subVectors(desiredPos, p.position).normalize());
           raycaster.far = desiredPos.distanceTo(p.position);
           const hits = raycaster.intersectObjects(scene.children, true);
-          // Ignore the player's own ship mesh
-          const firstHit = hits.find((h) => h.object.parent !== shipMeshRef.current);
+          const firstHit = hits.find((h) => h.object.parent !== shipGroupRef.current);
           if (firstHit) {
             desiredPos.copy(firstHit.point).addScaledVector(firstHit.face?.normal ?? new THREE.Vector3(0, 0, 0), 0.5);
           }
@@ -103,12 +107,9 @@ export default function PlayerController({
           .add(p.velocity.clone().multiplyScalar(0.08));
         camera.lookAt(lookAhead);
       } else {
-        const cockpitOffset = new THREE.Vector3(
-          0,
-          0.45 + Math.sin(performance.now() * 0.0035) * 0.015,
-          0.8,
-        ).applyQuaternion(p.quaternion);
-        camera.position.copy(p.position).add(cockpitOffset);
+        // 1st person: camera sits at cockpit eye position inside the ship group
+        const eyePos = p.position.clone().add(COCKPIT_OFFSET.clone().applyQuaternion(p.quaternion));
+        camera.position.copy(eyePos);
         camera.quaternion.copy(p.quaternion);
       }
     };
@@ -263,11 +264,6 @@ export default function PlayerController({
       }
     }
 
-    if (shipMeshRef.current && cameraView === "third") {
-      shipMeshRef.current.position.copy(p.position);
-      shipMeshRef.current.quaternion.copy(p.quaternion);
-    }
-
     // Update camera with shake
     updateCamera();
 
@@ -277,78 +273,173 @@ export default function PlayerController({
     }
   });
   return (
-    <>
-      {cameraView === "third" ? (
-        <group ref={shipMeshRef}>
-          <StarfighterHull />
-        </group>
-      ) : (
+    <group ref={shipGroupRef}>
+      <StarfighterHull />
+      <group position={[COCKPIT_OFFSET.x, COCKPIT_OFFSET.y, COCKPIT_OFFSET.z]}>
         <CockpitInterior />
-      )}
-    </>
+      </group>
+    </group>
   );
 }
 
 function StarfighterHull() {
+  const HULL = "#94a3b8";
+  const DARK = "#1e293b";
+  const PANEL = "#475569";
+  const GLOW = "#38bdf8";
   return (
     <>
-      {/* Main fuselage */}
-      <mesh position={[0, 0, -0.5]} rotation={[Math.PI / 2, 0, 0]}>
-        <cylinderGeometry args={[0.55, 0.95, 5.8, 10]} />
-        <meshStandardMaterial color="#cbd5e1" metalness={0.72} roughness={0.28} />
+      {/* === Fuselage === */}
+      {/* Main body — angular hexagonal prism tapering rear-to-front */}
+      <mesh position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.48, 0.82, 4.2, 8]} />
+        <meshStandardMaterial color={HULL} metalness={0.78} roughness={0.22} flatShading />
       </mesh>
-      {/* Nose cone */}
-      <mesh position={[0, 0.15, -3.25]} rotation={[0.18, 0, 0]}>
-        <coneGeometry args={[0.58, 3.4, 12]} />
-        <meshStandardMaterial color="#e2e8f0" metalness={0.58} roughness={0.2} />
+      {/* Nose section — sharp wedge */}
+      <mesh position={[0, 0.02, -2.4]} rotation={[0.08, 0, 0]}>
+        <coneGeometry args={[0.38, 2.6, 8]} />
+        <meshStandardMaterial color="#cbd5e1" metalness={0.7} roughness={0.18} flatShading />
       </mesh>
-      {/* Cockpit canopy (on top) */}
-      <mesh position={[0, 0.52, -1.15]} rotation={[0, 0, Math.PI]}>
-        <coneGeometry args={[0.42, 1.7, 10]} />
+      {/* Nose tip sensor */}
+      <mesh position={[0, 0.04, -3.7]}>
+        <sphereGeometry args={[0.1, 8, 8]} />
+        <meshStandardMaterial color={DARK} metalness={0.9} roughness={0.1} />
+      </mesh>
+
+      {/* === Cockpit canopy === */}
+      {/* Frame rails */}
+      <mesh position={[-0.22, 0.48, -0.8]}>
+        <boxGeometry args={[0.04, 0.04, 1.6]} />
+        <meshStandardMaterial color={DARK} metalness={0.9} roughness={0.1} />
+      </mesh>
+      <mesh position={[0.22, 0.48, -0.8]}>
+        <boxGeometry args={[0.04, 0.04, 1.6]} />
+        <meshStandardMaterial color={DARK} metalness={0.9} roughness={0.1} />
+      </mesh>
+      {/* Canopy glass */}
+      <mesh position={[0, 0.52, -0.9]}>
+        <sphereGeometry args={[0.35, 12, 12]} />
         <meshStandardMaterial
-          color="#67e8f9"
-          emissive="#22d3ee"
-          emissiveIntensity={0.28}
+          color="#7dd3fc"
+          emissive="#0ea5e9"
+          emissiveIntensity={0.15}
           transparent
-          opacity={0.45}
+          opacity={0.25}
+          metalness={0.1}
+          roughness={0.05}
         />
       </mesh>
-      {/* Left wing */}
-      <mesh position={[-1.55, -0.1, -0.8]} rotation={[0, 0, 0.2]}>
-        <boxGeometry args={[2.6, 0.12, 1.25]} />
-        <meshStandardMaterial color="#64748b" metalness={0.72} roughness={0.24} />
+
+      {/* === Wings — swept delta === */}
+      {/* Left wing root */}
+      <mesh position={[-0.7, -0.08, -0.2]} rotation={[0, 0, 0.35]}>
+        <boxGeometry args={[1.8, 0.08, 1.1]} />
+        <meshStandardMaterial color={PANEL} metalness={0.8} roughness={0.2} flatShading />
       </mesh>
-      {/* Right wing */}
-      <mesh position={[1.55, -0.1, -0.8]} rotation={[0, 0, -0.2]}>
-        <boxGeometry args={[2.6, 0.12, 1.25]} />
-        <meshStandardMaterial color="#64748b" metalness={0.72} roughness={0.24} />
+      {/* Left wing tip */}
+      <mesh position={[-1.8, -0.12, 0.3]} rotation={[0, 0, 0.55]}>
+        <boxGeometry args={[1.2, 0.06, 0.7]} />
+        <meshStandardMaterial color={PANEL} metalness={0.8} roughness={0.2} flatShading />
       </mesh>
-      {/* Left engine pod */}
-      <mesh position={[-0.88, -0.18, 2.1]} rotation={[0.35, 0, 0]}>
-        <boxGeometry args={[0.42, 0.42, 2.4]} />
-        <meshStandardMaterial color="#0f172a" metalness={0.68} roughness={0.32} />
+      {/* Left wing tip light */}
+      <mesh position={[-2.5, -0.12, 0.55]}>
+        <sphereGeometry args={[0.04, 6, 6]} />
+        <meshBasicMaterial color="#ef4444" />
       </mesh>
-      {/* Right engine pod */}
-      <mesh position={[0.88, -0.18, 2.1]} rotation={[0.35, 0, 0]}>
-        <boxGeometry args={[0.42, 0.42, 2.4]} />
-        <meshStandardMaterial color="#0f172a" metalness={0.68} roughness={0.32} />
+
+      {/* Right wing root */}
+      <mesh position={[0.7, -0.08, -0.2]} rotation={[0, 0, -0.35]}>
+        <boxGeometry args={[1.8, 0.08, 1.1]} />
+        <meshStandardMaterial color={PANEL} metalness={0.8} roughness={0.2} flatShading />
       </mesh>
-      {/* Thruster glow point light */}
-      <pointLight position={[0, 0.15, 3.6]} intensity={18} distance={12} color="#38bdf8" />
-      {/* Engine exhaust cone - inner hot core */}
-      <mesh position={[0, 0.1, 3.6]} rotation={[-Math.PI / 2, 0, 0]}>
-        <coneGeometry args={[0.5, 2.5, 16]} />
-        <meshBasicMaterial color="#7dd3fc" transparent opacity={0.35} />
+      {/* Right wing tip */}
+      <mesh position={[1.8, -0.12, 0.3]} rotation={[0, 0, -0.55]}>
+        <boxGeometry args={[1.2, 0.06, 0.7]} />
+        <meshStandardMaterial color={PANEL} metalness={0.8} roughness={0.2} flatShading />
       </mesh>
-      {/* Engine exhaust cone - outer cooler glow */}
-      <mesh position={[0, 0.1, 4.8]} rotation={[-Math.PI / 2, 0, 0]}>
-        <coneGeometry args={[0.8, 1.5, 16]} />
-        <meshBasicMaterial color="#38bdf8" transparent opacity={0.15} />
+      {/* Right wing tip light */}
+      <mesh position={[2.5, -0.12, 0.55]}>
+        <sphereGeometry args={[0.04, 6, 6]} />
+        <meshBasicMaterial color="#ef4444" />
       </mesh>
-      {/* Engine base ring */}
-      <mesh position={[0, 0.1, 3.0]} rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[0.6, 0.05, 8, 16]} />
-        <meshBasicMaterial color="#38bdf8" transparent opacity={0.6} />
+
+      {/* === Tail fins === */}
+      <mesh position={[-0.35, 0.35, 1.6]} rotation={[0, 0, 0.25]}>
+        <boxGeometry args={[0.06, 0.7, 0.45]} />
+        <meshStandardMaterial color={DARK} metalness={0.85} roughness={0.18} flatShading />
+      </mesh>
+      <mesh position={[0.35, 0.35, 1.6]} rotation={[0, 0, -0.25]}>
+        <boxGeometry args={[0.06, 0.7, 0.45]} />
+        <meshStandardMaterial color={DARK} metalness={0.85} roughness={0.18} flatShading />
+      </mesh>
+
+      {/* === Engines — integrated rear === */}
+      {/* Main engine housing */}
+      <mesh position={[0, -0.05, 2.2]}>
+        <boxGeometry args={[0.9, 0.45, 0.7]} />
+        <meshStandardMaterial color={DARK} metalness={0.88} roughness={0.12} />
+      </mesh>
+      {/* Left nozzle */}
+      <mesh position={[-0.28, -0.05, 2.7]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.18, 0.26, 0.35, 8]} />
+        <meshStandardMaterial color="#334155" metalness={0.9} roughness={0.15} flatShading />
+      </mesh>
+      {/* Right nozzle */}
+      <mesh position={[0.28, -0.05, 2.7]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.18, 0.26, 0.35, 8]} />
+        <meshStandardMaterial color="#334155" metalness={0.9} roughness={0.15} flatShading />
+      </mesh>
+      {/* Center nozzle */}
+      <mesh position={[0, -0.02, 2.65]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.12, 0.18, 0.3, 8]} />
+        <meshStandardMaterial color="#334155" metalness={0.9} roughness={0.15} flatShading />
+      </mesh>
+
+      {/* === Engine glow & exhaust === */}
+      <pointLight position={[0, -0.05, 3.0]} intensity={12} distance={10} color={GLOW} />
+      {/* Inner hot cones */}
+      <mesh position={[-0.28, -0.05, 3.0]} rotation={[Math.PI / 2, 0, 0]}>
+        <coneGeometry args={[0.12, 0.9, 8]} />
+        <meshBasicMaterial color="#7dd3fc" transparent opacity={0.3} />
+      </mesh>
+      <mesh position={[0.28, -0.05, 3.0]} rotation={[Math.PI / 2, 0, 0]}>
+        <coneGeometry args={[0.12, 0.9, 8]} />
+        <meshBasicMaterial color="#7dd3fc" transparent opacity={0.3} />
+      </mesh>
+      <mesh position={[0, -0.02, 2.95]} rotation={[Math.PI / 2, 0, 0]}>
+        <coneGeometry args={[0.08, 0.7, 8]} />
+        <meshBasicMaterial color="#7dd3fc" transparent opacity={0.25} />
+      </mesh>
+      {/* Outer glow */}
+      <mesh position={[0, -0.05, 3.5]} rotation={[Math.PI / 2, 0, 0]}>
+        <coneGeometry args={[0.45, 1.4, 8]} />
+        <meshBasicMaterial color="#38bdf8" transparent opacity={0.1} />
+      </mesh>
+
+      {/* === Detail greebles === */}
+      {/* Top sensor array */}
+      <mesh position={[0, 0.52, 0.2]}>
+        <boxGeometry args={[0.15, 0.06, 0.25]} />
+        <meshStandardMaterial color={DARK} metalness={0.9} roughness={0.1} />
+      </mesh>
+      {/* Bottom intake */}
+      <mesh position={[0, -0.38, -0.3]}>
+        <boxGeometry args={[0.35, 0.04, 0.6]} />
+        <meshStandardMaterial color="#1e293b" metalness={0.85} roughness={0.2} />
+      </mesh>
+      {/* Panel lines on fuselage */}
+      <mesh position={[0, 0.36, 0.5]}>
+        <boxGeometry args={[0.6, 0.008, 0.008]} />
+        <meshStandardMaterial color="#334155" metalness={0.9} roughness={0.15} />
+      </mesh>
+      <mesh position={[0, -0.32, -1.0]}>
+        <boxGeometry args={[0.5, 0.008, 0.008]} />
+        <meshStandardMaterial color="#334155" metalness={0.9} roughness={0.15} />
+      </mesh>
+      {/* Hull accent stripe */}
+      <mesh position={[0, 0.05, -1.2]} rotation={[0.05, 0, 0]}>
+        <boxGeometry args={[0.08, 0.04, 1.4]} />
+        <meshStandardMaterial color="#f59e0b" emissive="#f59e0b" emissiveIntensity={0.4} metalness={0.8} roughness={0.2} />
       </mesh>
     </>
   );
