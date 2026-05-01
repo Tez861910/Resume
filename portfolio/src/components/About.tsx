@@ -88,7 +88,7 @@ const About = () => {
                     What I do
                   </span>
                   <span className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-300">
-                    Web + desktop + mobile
+                    Web + desktop + cross-platform
                   </span>
                 </div>
 

@@ -2,7 +2,7 @@ import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import type { MutableRefObject } from "react";
-import type { Mission, MissionId } from "./missions";
+import { MISSIONS, type Mission, type MissionId } from "./missions";
 import type { PlayerState } from "./usePlayerState";
 import { useGameAsset } from "./AssetPipeline";
 import { useCockpit } from "./CockpitModeProvider";
@@ -30,7 +30,7 @@ export default function HardDrives({
 }: Props) {
   const groupRef = useRef<THREE.Group>(null);
   const asset = useGameAsset("harddrive");
-  const { negotiated } = useCockpit();
+  const { negotiated, defeatedCommanders } = useCockpit();
 
   const entries = useMemo(
     () =>
@@ -51,9 +51,11 @@ export default function HardDrives({
       const alreadyCollected = collected.has(id);
       const remaining = enemyCounts.current[id] ?? 0;
 
-      const isNegotiated = negotiated.has(id);
+      const missionHasNegotiation = MISSIONS.find((m) => m.id === id)?.negotiation != null;
+      const isNegotiated = missionHasNegotiation ? negotiated.has(id) : true;
+      const bossDefeated = missionHasNegotiation ? defeatedCommanders.has(id) : true;
       const objectiveUnlocked = unlockStates?.[id] ?? true;
-      const ready = !alreadyCollected && isNegotiated && remaining <= 0 && objectiveUnlocked;
+      const ready = !alreadyCollected && isNegotiated && remaining <= 0 && objectiveUnlocked && bossDefeated;
       child.visible = ready;
 
       const basePos = child.userData.basePos as THREE.Vector3;

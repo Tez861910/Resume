@@ -20,7 +20,7 @@ function CockpitRouteContent() {
   const isPortraitTouch = usePortraitTouchLayout(false);
 
   useEffect(() => {
-    setGamePhase("base");
+    setGamePhase("homebase");
     setActiveStage(0);
     setCurrentDialogue(null);
     closeDrive();

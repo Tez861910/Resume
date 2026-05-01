@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState, useEffect } from "react";
+import { useMemo, useRef, useState, useEffect, useCallback } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { useGameAsset } from "./AssetPipeline";
@@ -10,14 +10,10 @@ import Missiles, { type MissilesHandle } from "./Missiles";
 import Explosions from "./Explosions";
 import PlayerController from "./PlayerController";
 import HardDrives from "./HardDrives";
-import { MISSIONS } from "./missions";
+import { MISSION_BY_ID, type MissionId } from "./missions";
 import { useCockpitRuntime } from "./CockpitRuntime";
 import { useCockpit } from "./CockpitModeProvider";
 
-/**
- * Warp Streaks Effect
- * Renders fast moving lines past the camera to simulate dropping out of hyperspace.
- */
 function WarpInEffect() {
   const meshRef = useRef<THREE.InstancedMesh>(null);
   const [active, setActive] = useState(true);
@@ -42,7 +38,7 @@ function WarpInEffect() {
   );
 
   useEffect(() => {
-    const t = setTimeout(() => setActive(false), 1500); // 1.5s warp
+    const t = setTimeout(() => setActive(false), 1500);
     return () => clearTimeout(t);
   }, []);
 
@@ -51,9 +47,7 @@ function WarpInEffect() {
 
     for (let i = 0; i < COUNT; i++) {
       zPositions[i] += speeds[i] * delta;
-
       dummy.position.set(offsets[i].x, offsets[i].y, zPositions[i]);
-      // Stretch them long
       dummy.scale.set(1, 1, 20);
       dummy.updateMatrix();
       meshRef.current.setMatrixAt(i, dummy.matrix);
@@ -76,34 +70,36 @@ function WarpInEffect() {
         COUNT,
       ]}
       frustumCulled={false}
-    ></instancedMesh>
+    />
   );
 }
 
-/**
- * Pirate Cruiser Boss Entity
- * Slowly rotates, has a custom shield that pulses until drones are defeated.
- */
 function PirateCruiser({
   position,
-  isShielded,
+  missionId,
+  hasBoss,
   enabled,
   onDestroyed,
+  accentColor,
+  scale = 2.5,
 }: {
   position: THREE.Vector3;
-  isShielded: boolean;
+  missionId: MissionId;
+  hasBoss: boolean;
   enabled: boolean;
   onDestroyed: () => void;
+  accentColor: string;
+  scale?: number;
 }) {
   const pirateAsset = useGameAsset("station");
-  const { audio } = useCockpit();
+  const { audio, collected, recordKill } = useCockpit();
   const runtime = useCockpitRuntime();
 
   const groupRef = useRef<THREE.Group>(null);
   const shieldRef = useRef<THREE.Mesh>(null);
+  const healthBarRef = useRef<THREE.Group>(null);
 
-  // Boss State
-  const [health, setHealth] = useState(1); // 0..1
+  const [health, setHealth] = useState(1);
   const [alive, setAlive] = useState(true);
   const fireCooldown = useRef(0);
   const patternTimer = useRef(0);
@@ -111,8 +107,29 @@ function PirateCruiser({
   const velocityRef = useRef(new THREE.Vector3());
 
   useFrame((state, delta) => {
-    if (!alive || !groupRef.current) return;
+    if (!hasBoss || !alive || !groupRef.current) return;
 
+    const enemyCounts = runtime.enemyCounts.current;
+    const aliveDrones = enemyCounts[missionId] ?? 0;
+    const isShielded = aliveDrones > 0 && !collected.has(missionId);
+
+    // Toggle shield mesh visibility per-frame
+    if (shieldRef.current) {
+      shieldRef.current.visible = isShielded;
+      if (isShielded) {
+        const scale = 3.8 + Math.sin(state.clock.elapsedTime * 3) * 0.15;
+        shieldRef.current.scale.setScalar(scale);
+        (shieldRef.current.material as THREE.MeshStandardMaterial).opacity =
+          0.2 + Math.sin(state.clock.elapsedTime * 6) * 0.1;
+      }
+    }
+
+    // Toggle health bar visibility per-frame (only show when unshielded)
+    if (healthBarRef.current) {
+      healthBarRef.current.visible = !isShielded;
+    }
+
+    // Movement
     const playerPos = runtime.player.current.position;
     const desiredAnchor = position
       .clone()
@@ -138,17 +155,18 @@ function PirateCruiser({
     groupRef.current.lookAt(lookTarget);
     groupRef.current.rotation.y += delta * 0.15;
 
-    // Shield animation
-    if (shieldRef.current && isShielded) {
-      const scale = 3.8 + Math.sin(state.clock.elapsedTime * 3) * 0.15;
-      shieldRef.current.scale.setScalar(scale);
-      (shieldRef.current.material as THREE.MeshStandardMaterial).opacity =
-        0.2 + Math.sin(state.clock.elapsedTime * 6) * 0.1;
+    // Collision damage when player is too close to the cruiser
+    const collisionDist = groupRef.current.position.distanceTo(playerPos);
+    if (collisionDist < 4) {
+      audio.playImpact();
+      runtime.player.current.shield = Math.max(0, runtime.player.current.shield - 0.08);
+      if (runtime.player.current.shield <= 0) {
+        runtime.player.current.hull = Math.max(0, runtime.player.current.hull - 0.04);
+      }
     }
 
     if (!enabled) return;
 
-    // Firing Logic (Only if shields are down)
     if (!isShielded) {
       fireCooldown.current -= delta;
       patternTimer.current += delta;
@@ -157,13 +175,11 @@ function PirateCruiser({
         const dist = groupRef.current.position.distanceTo(playerPos);
 
         if (dist < 150) {
-          // PATTERN 1: Aimed Barrage (Every 3 seconds)
           if (Math.sin(patternTimer.current * 0.5) > 0) {
             fireCooldown.current = 0.4;
             const dir = new THREE.Vector3()
               .subVectors(playerPos, groupRef.current.position)
               .normalize();
-            // Offset spawn point to look like it comes from the ship sides
             const sideOffset = new THREE.Vector3(5, 0, 0).applyQuaternion(
               groupRef.current.quaternion,
             );
@@ -176,9 +192,7 @@ function PirateCruiser({
               dir,
             );
             audio.playLaser(true);
-          }
-          // PATTERN 2: Defensive Spiral
-          else {
+          } else {
             fireCooldown.current = 0.15;
             const angle = patternTimer.current * 8;
             const dir = new THREE.Vector3(
@@ -193,7 +207,6 @@ function PirateCruiser({
             audio.playLaser(true);
           }
 
-          // PHASE 2: Homing Missiles (Below 50% health)
           if (health < 0.5 && Math.random() < 0.015) {
             runtime.missiles.current?.spawn(
               groupRef.current.position.clone(),
@@ -204,7 +217,6 @@ function PirateCruiser({
       }
     }
 
-    // Damage Detection (Cruiser hit by player lasers)
     if (
       !isShielded &&
       runtime.lasers.current?.consumeHit(groupRef.current.position, 6)
@@ -214,7 +226,27 @@ function PirateCruiser({
       audio.playImpact();
       if (newHealth <= 0) {
         setAlive(false);
+        recordKill();
         runtime.explosions.current?.spawn(groupRef.current.position, 100);
+        if (!destroyedRef.current) {
+          destroyedRef.current = true;
+          onDestroyed();
+        }
+      }
+    }
+
+    if (
+      !isShielded &&
+      runtime.missiles.current?.consumeHit(groupRef.current.position, 8)
+    ) {
+      const newHealth = Math.max(0, health - 0.08);
+      setHealth(newHealth);
+      audio.playImpact();
+      runtime.explosions.current?.spawn(groupRef.current.position, 50);
+      if (newHealth <= 0) {
+        setAlive(false);
+        recordKill();
+        runtime.explosions.current?.spawn(groupRef.current.position, 120);
         if (!destroyedRef.current) {
           destroyedRef.current = true;
           onDestroyed();
@@ -223,63 +255,51 @@ function PirateCruiser({
     }
   });
 
-  if (!alive) return null;
+  if (!hasBoss || !alive) return null;
 
   return (
     <group ref={groupRef} position={position}>
-      {/* The Ship */}
       <mesh
         geometry={pirateAsset.geometry}
         material={pirateAsset.material}
-        scale={2.5}
+        scale={scale}
       />
 
-      {/* Boss Health UI (Floating near ship) */}
-      {!isShielded && (
-        <group position={[0, 8, 0]}>
-          <mesh>
-            <planeGeometry args={[10, 0.5]} />
-            <meshBasicMaterial color="#000" transparent opacity={0.5} />
-          </mesh>
-          <mesh position={[(-5 * (1 - health)) / 2, 0, 0.01]}>
-            <planeGeometry args={[10 * health, 0.4]} />
-            <meshBasicMaterial color="#ef4444" />
-          </mesh>
-        </group>
-      )}
+      <group ref={healthBarRef} position={[0, 8, 0]}>
+        <mesh>
+          <planeGeometry args={[10, 0.5]} />
+          <meshBasicMaterial color="#000" transparent opacity={0.5} />
+        </mesh>
+        <mesh position={[-(5 * (1 - health)) / 2, 0, 0.01]}>
+          <planeGeometry args={[10 * health, 0.4]} />
+          <meshBasicMaterial color={accentColor} />
+        </mesh>
+      </group>
 
-      {/* Glowing Engines / Cores */}
       <pointLight
         position={[0, 0, -5]}
         intensity={100}
-        color="#ef4444"
+        color={accentColor}
         distance={50}
       />
       <mesh position={[0, 0, -4.5]}>
         <sphereGeometry args={[1, 16, 16]} />
-        <meshBasicMaterial color="#ef4444" />
+        <meshBasicMaterial color={accentColor} />
       </mesh>
 
-      {/* Forcefield (only visible if drones are alive) */}
-      {isShielded && (
-        <mesh ref={shieldRef}>
-          <icosahedronGeometry args={[1, 3]} />
-          <meshStandardMaterial
-            color="#ef4444"
-            transparent
-            opacity={0.4}
-            wireframe
-          />
-        </mesh>
-      )}
+      <mesh ref={shieldRef}>
+        <icosahedronGeometry args={[1, 3]} />
+        <meshStandardMaterial
+          color={accentColor}
+          transparent
+          opacity={0.4}
+          wireframe
+        />
+      </mesh>
     </group>
   );
 }
 
-/**
- * Stage 1: Pirate Ship Mission
- * A specific combat scene against a pirate vessel.
- */
 export default function PirateMissionScene({ enabled }: { enabled: boolean }) {
   const runtime = useCockpitRuntime();
   const {
@@ -287,25 +307,38 @@ export default function PirateMissionScene({ enabled }: { enabled: boolean }) {
     collectDrive,
     cameraView,
     currentDialogue,
-    defeatedCommanders,
     markCommanderDefeated,
     negotiated,
+    activeMissionId,
+    gamePhase,
     setActiveMissionId,
     setCurrentDialogue,
     setGamePhase,
+    audio,
   } = useCockpit();
 
-  // Mission 1 is the Pirate Mission
-  const mission = MISSIONS[1];
+  const handleCollectDrive = useCallback(
+    (id: MissionId) => {
+      audio.initContext();
+      audio.playLaser(false);
+      collectDrive(id);
+    },
+    [audio, collectDrive],
+  );
+
+  const mission = MISSION_BY_ID[activeMissionId];
   const missionId = mission.id;
+  const hasBoss = mission.enemyCount > 0;
 
   const stationPos = useMemo(
     () => new THREE.Vector3(...mission.position),
     [mission],
   );
-  const [bossDestroyed, setBossDestroyed] = useState(
-    defeatedCommanders.has(missionId),
+  const spawnPosition = useMemo(
+    () => stationPos.clone().add(new THREE.Vector3(0, 5, 80)),
+    [stationPos],
   );
+
   const asteroidCenters = useMemo(
     () => [
       stationPos,
@@ -326,28 +359,28 @@ export default function PirateMissionScene({ enabled }: { enabled: boolean }) {
     [missionId, stationPos, mission.enemyCount],
   );
 
-  // Check if drones are dead to drop shield
-  const aliveDrones =
-    runtime.enemyCounts.current[missionId] ?? mission.enemyCount;
-  const isShielded = aliveDrones > 0 && !collected.has(missionId);
-  const canRecoverDrive =
-    negotiated.has(missionId) && aliveDrones <= 0 && bossDestroyed;
-
-  // Set initial player position slightly back so they fly in
   useEffect(() => {
-    // We warp in from further back on the Z axis
-    runtime.player.current.position.set(0, 0, 50);
-    runtime.player.current.velocity.set(0, 0, -200); // Initial fast forward velocity
-  }, [runtime.player]);
+    // Spawn player 40 units behind the station (positive Z side), facing it
+    const mPos = new THREE.Vector3(...mission.position);
+    const spawnPos = mPos.clone().add(new THREE.Vector3(0, 5, 80));
+    runtime.player.current.position.copy(spawnPos);
+    // Velocity toward station
+    const dir = new THREE.Vector3(0, 0, -40);
+    runtime.player.current.velocity.copy(dir);
+  }, [runtime.player, mission]);
 
   useEffect(() => {
     setActiveMissionId(missionId);
-    if (!negotiated.has(missionId) && currentDialogue !== missionId) {
+    if (hasBoss && !negotiated.has(missionId) && currentDialogue !== missionId) {
       setCurrentDialogue(missionId);
       setGamePhase("dialogue");
+    } else if (!hasBoss && gamePhase === "dialogue") {
+      setGamePhase("space");
     }
   }, [
     currentDialogue,
+    gamePhase,
+    hasBoss,
     missionId,
     negotiated,
     setActiveMissionId,
@@ -355,48 +388,44 @@ export default function PirateMissionScene({ enabled }: { enabled: boolean }) {
     setGamePhase,
   ]);
 
+  const fogColor = mission.accent === "#fbbf24" ? "#050305" : "#0a0305";
+
   return (
     <>
-      <color attach="background" args={["#0a0305"]} />{" "}
-      {/* Deep dark red/purple tint for pirate sector */}
-      <fog attach="fog" args={["#0a0305", 20, 400]} />
+      <color attach="background" args={[fogColor]} />
+      <fog attach="fog" args={[fogColor, 20, 400]} />
       <Starfield count={3000} />
       <WarpInEffect />
-      {/* Atmospheric Sector Lighting */}
       <ambientLight intensity={0.15} />
-      <directionalLight
-        position={[-50, 50, -50]}
-        intensity={1.5}
-        color="#fb7185"
-      />{" "}
-      {/* Reddish sun */}
+      <directionalLight position={[-50, 50, -50]} intensity={1.5} color="#fb7185" />
       <pointLight
         position={[stationPos.x, stationPos.y + 50, stationPos.z]}
         intensity={2}
         color="#4c1d95"
         distance={200}
-      />{" "}
-      {/* Purple nebula glow */}
+      />
       <PirateCruiser
         position={stationPos}
-        isShielded={isShielded}
+        missionId={missionId}
+        hasBoss={hasBoss}
         enabled={enabled}
         onDestroyed={() => {
-          setBossDestroyed(true);
           markCommanderDefeated(missionId);
         }}
+        accentColor={mission.accent}
+        scale={2 + mission.enemyCount * 0.35}
       />
       <EnemyBots
         stations={stations}
         lasers={runtime.lasers}
         enemyLasers={runtime.enemyLasers}
+        missiles={runtime.missiles}
         explosions={runtime.explosions}
         enemies={runtime.enemies}
         player={runtime.player}
         counterRef={runtime.enemyCounts}
         enabled={enabled}
       />
-      {/* Thicker asteroid field for cover */}
       <Asteroids
         centers={asteroidCenters}
         perCenter={mission.asteroidCount * 2}
@@ -404,13 +433,12 @@ export default function PirateMissionScene({ enabled }: { enabled: boolean }) {
         lasers={runtime.lasers}
         enabled={enabled}
       />
-      <HardDrives
+<HardDrives
         missions={[mission]}
         collected={collected}
         enemyCounts={runtime.enemyCounts}
-        unlockStates={{ [missionId]: canRecoverDrive }}
         player={runtime.player}
-        onCollect={collectDrive}
+        onCollect={handleCollectDrive}
         enabled={enabled}
       />
       <Lasers ref={runtime.lasers as React.RefObject<LasersHandle>} />
@@ -422,17 +450,21 @@ export default function PirateMissionScene({ enabled }: { enabled: boolean }) {
         ref={runtime.missiles as React.RefObject<MissilesHandle>}
         color="#f59e0b"
       />
-      <Explosions
-        ref={runtime.explosions}
-      />
+      <Explosions ref={runtime.explosions} />
       <PlayerController
         input={runtime.input}
         player={runtime.player}
         enemyLasers={runtime.enemyLasers}
+        enemyMissiles={runtime.missiles}
+        enemies={runtime.enemies}
         enabled={enabled}
         cameraView={cameraView}
+        spawnPosition={spawnPosition}
         onFire={(origin, direction) => {
           runtime.lasers.current?.spawn(origin, direction);
+        }}
+        onFireMissile={(origin, target) => {
+          runtime.missiles.current?.spawn(origin, target);
         }}
       />
     </>

@@ -51,7 +51,7 @@ const Skills = () => {
       skills: [".NET 8", "WinUI 3", "Win2D", "AssimpNet", "MVVM", "iText 7"],
     },
     {
-      title: "Mobile & Local-First",
+      title: "Cross-Platform & Local-First",
       detail: "Cross-platform delivery and on-device processing patterns",
       icon: <FaDatabase className="text-4xl text-cyan-300" />,
       skills: [

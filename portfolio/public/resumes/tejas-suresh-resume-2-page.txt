@@ -1,0 +1,103 @@
+Tejas S
+Bengaluru, India
++91-8618904742 | tejassureshofficial@gmail.com
+tejassureshofficial.in | linkedin.com/in/tejas-s-57138816a | github.com/Tez861910
+
+Summary
+Full-stack product developer building software that has to hold up in real
+workflows, not just demos. My recent work spans web product platforms,
+content-rich company platforms, a Windows manufacturing app, and a cross-platform
+Flutter + Rust utility suite. I work best where product clarity, interface
+structure, and implementation quality need to reinforce one another.
+
+Core Capabilities
+- Product engineering: dashboard-heavy products, workflow-oriented UI, protected
+  flows, content architecture
+- Frontend & product UI: React, Next.js, TypeScript, Vite, Tailwind CSS, Framer
+  Motion, Material UI
+- Backend & APIs: Node.js, Express, Prisma, Sequelize, REST APIs, auth, validation,
+  uploads
+- Desktop & cross-platform: .NET 8, WinUI 3, Win2D, AssimpNet, Flutter, Flutter
+  Rust Bridge, multi-platform release
+- Data & delivery: PostgreSQL, MySQL, SQLite, Git, GitHub Actions, build and
+  release workflow support
+
+Experience
+Software Engineer - Product, Web & Desktop | Printalytix
+Bengaluru, India | Dec 2024 - Dec 2025
+- Worked across customer-facing and internal product surfaces, from upload-heavy
+  web flows to operations-oriented tooling.
+- Built and evolved MIND as a .NET 8 Windows desktop app for 3D model inspection,
+  manufacturing guidance, screenshot capture, and report generation.
+- Delivered React and Node-based systems with protected workflows, validation,
+  uploads, and maintainable product structure.
+- Contributed across frontend, backend, and workflow design instead of staying in
+  a single layer of the stack.
+
+Volunteer - Full-Stack Development | Old Dominion University
+Norfolk, VA, USA | Oct 2023 - Jan 2024
+- Built a university threads platform with role-based access, discussion flows,
+  and real-time messaging.
+- Delivered an examination management system covering assessment workflows,
+  submissions, and administrative coordination.
+- Worked on backend queries, caching, and application structure to keep the
+  platform responsive as features expanded.
+
+Selected Projects
+
+Pettige
+Flutter, Dart, Rust, Flutter Rust Bridge, SQLite, FFmpeg
+- Privacy-first, cross-platform utility suite with 30+ tools across PDF, image,
+  audio, video, QR, OCR, encrypted storage, and developer workflows.
+- Built around dedicated PDF Studio, Image Studio, Audio Studio, Video Studio,
+  and Dev Workbench flows.
+- Designed a split architecture where Flutter handles routing and the product
+  shell while Rust performs heavy local processing.
+- Structured SQLite-backed storage around on-device persistence, resumable
+  uploads, and AES-256-GCM file protection.
+
+Open Solar Toolkit
+React 19, Vite, TypeScript, Tailwind CSS, DnD Kit, Recharts
+- Role-based solar operations product covering 7 workstreams: administration,
+  project management, sales, supply chain, installation, maintenance, and user
+  dashboards.
+- Built as a set of specialised operational surfaces instead of one generic panel.
+- Kept responsiveness, theming, and validation tooling in scope.
+
+MIND Manufacturing Intelligence
+.NET 8, C#, WinUI 3, Win2D, AssimpNet, iText 7
+- Windows desktop workflow bringing model viewing, inspection, manufacturing
+  guidance, screenshots, and reporting into one application.
+- Worked across views, view models, rendering services, assets, and structured
+  outputs.
+- Kept diagnostics and maintainability central for heavy internal tooling.
+
+Potential Client Website
+Next.js 14, React 18, TypeScript, Tailwind CSS
+- Content-rich company platform with reusable data models for technologies,
+  concepts, awards, and knowledge content.
+- Treated content architecture as part of the product for future downloads,
+  analytics, and lead generation.
+
+Resolute Solutions Site
+React 19, Vite, TypeScript, Tailwind CSS, EmailJS, PWA
+- Live multi-vertical business site covering 4 service lines with routed inquiry
+  flows and structured catalogue content.
+- Delivered to production with multi-theme component reuse.
+
+Printalytix Platform
+React 19, Vite, Redux Toolkit, Node.js, Express, Prisma, PostgreSQL
+- Full-stack workflow product for customer intake, uploads, protected operations,
+  and internal follow-through.
+- Worked across frontend, backend, and data layers.
+
+University Threads Platform
+React, Material UI, Express, Sequelize, MySQL, JWT
+- Multi-user collaboration platform with authentication, validation, rate limiting,
+  logging, and role-aware behaviour.
+
+Education
+Bachelor of Computer Applications (BCA) - Computer Science
+Bengaluru North University | Aug 2018 - Aug 2024
+- Built a foundation in DBMS, web development, data structures, and algorithms.
+- Completed a final-year project centred on full-stack web development with MySQL.

@@ -31,8 +31,8 @@ interface CockpitCtx {
   closeDrive: () => void;
   cameraView: "first" | "third";
   toggleCameraView: () => void;
-  gamePhase: "base" | "space" | "dialogue";
-  setGamePhase: (phase: "base" | "space" | "dialogue") => void;
+  gamePhase: "homebase" | "base" | "space" | "dialogue";
+  setGamePhase: (phase: "homebase" | "base" | "space" | "dialogue") => void;
   activeStage: number;
   setActiveStage: (stage: number) => void;
   negotiated: Set<MissionId>;
@@ -44,6 +44,9 @@ interface CockpitCtx {
   clearMissionProgress: (id: MissionId) => void;
   readoutsUnlocked: boolean;
   audio: ReturnType<typeof useAudio>;
+  stats: { deaths: number; kills: number };
+  recordDeath: () => void;
+  recordKill: () => void;
 }
 
 const CockpitContext = createContext<CockpitCtx | null>(null);
@@ -76,9 +79,9 @@ export function CockpitModeProvider({ children }: { children: ReactNode }) {
   );
   const [openDriveId, setOpenDriveId] = useState<MissionId | null>(null);
   const [cameraView, setCameraView] = useState<"first" | "third">("first");
-  const [gamePhase, setGamePhase] = useState<"base" | "space" | "dialogue">(
-    "base",
-  );
+  const [gamePhase, setGamePhase] = useState<
+    "homebase" | "base" | "space" | "dialogue"
+  >("homebase");
   const [activeStage, setActiveStage] = useState<number>(0);
   const [activeMissionId, setActiveMissionId] = useState<MissionId>("launch");
   const [negotiated, setNegotiated] = useState<Set<MissionId>>(new Set());
@@ -88,13 +91,14 @@ export function CockpitModeProvider({ children }: { children: ReactNode }) {
   const [currentDialogue, setCurrentDialogue] = useState<MissionId | null>(
     null,
   );
+  const [stats, setStats] = useState({ deaths: 0, kills: 0 });
 
   const audio = useAudio();
   const { stopEngine, stopStatic } = audio;
 
   const resetRuntimeUi = useCallback(() => {
     setOpenDriveId(null);
-    setGamePhase("base");
+    setGamePhase("homebase");
     setActiveStage(0);
     setActiveMissionId("launch");
     setCurrentDialogue(null);
@@ -108,6 +112,14 @@ export function CockpitModeProvider({ children }: { children: ReactNode }) {
       next.add(id);
       return next;
     });
+  }, []);
+
+  const recordDeath = useCallback(() => {
+    setStats((prev) => ({ ...prev, deaths: prev.deaths + 1 }));
+  }, []);
+
+  const recordKill = useCallback(() => {
+    setStats((prev) => ({ ...prev, kills: prev.kills + 1 }));
   }, []);
 
   const markCommanderDefeated = useCallback((id: MissionId) => {
@@ -202,10 +214,16 @@ export function CockpitModeProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  // Auto-collect the launch drive on first visit (tutorial/intro gate)
+  useEffect(() => {
+    if (!collected.has("launch")) collectDrive("launch");
+  }, [collected, collectDrive]);
+
   const resetProgress = useCallback(() => {
     setCollected(new Set());
     setNegotiated(new Set());
     setDefeatedCommanders(new Set());
+    setStats({ deaths: 0, kills: 0 });
     resetRuntimeUi();
     stopEngine();
     stopStatic();
@@ -221,7 +239,7 @@ export function CockpitModeProvider({ children }: { children: ReactNode }) {
     [collected],
   );
   const readoutsUnlocked = useMemo(
-    () => collected.size === MISSIONS.length && gamePhase === "base",
+    () => collected.size === MISSIONS.length && gamePhase === "homebase",
     [collected, gamePhase],
   );
 
@@ -260,6 +278,9 @@ export function CockpitModeProvider({ children }: { children: ReactNode }) {
       clearMissionProgress,
       readoutsUnlocked,
       audio,
+      stats,
+      recordDeath,
+      recordKill,
     }),
     [
       isActive,
@@ -289,6 +310,9 @@ export function CockpitModeProvider({ children }: { children: ReactNode }) {
       clearMissionProgress,
       readoutsUnlocked,
       audio,
+      stats,
+      recordDeath,
+      recordKill,
     ],
   );
 

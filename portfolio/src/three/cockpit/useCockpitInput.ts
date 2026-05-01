@@ -10,6 +10,10 @@ export interface InputState {
   fire: boolean;
   /** incremented each time fire should spawn a shot (rate-limited by controller) */
   fireTrigger: number;
+  /** incremented each time a missile should fire */
+  missileTrigger: number;
+  /** incremented each time target lock should cycle */
+  targetLockTrigger: number;
   _mobileThrottle?: boolean;
   _mobileYaw?: boolean;
   _mobilePitch?: boolean;
@@ -25,6 +29,8 @@ export function createInitialInput(): InputState {
     boost: false,
     fire: false,
     fireTrigger: 0,
+    missileTrigger: 0,
+    targetLockTrigger: 0,
   };
 }
 
@@ -40,6 +46,8 @@ export function useCockpitInput(active: boolean) {
   const mouseRef = useRef({ dx: 0, dy: 0 });
   const pointerLockedRef = useRef(false);
   const lastFireRef = useRef(0);
+  const lastMissileRef = useRef(0);
+  const lastTargetLockRef = useRef(0);
 
   // Keyboard
   useEffect(() => {
@@ -53,6 +61,20 @@ export function useCockpitInput(active: boolean) {
         if (now - lastFireRef.current > 160) {
           lastFireRef.current = now;
           inputRef.current.fireTrigger++;
+        }
+      }
+      if (k === "f") {
+        const now = performance.now();
+        if (now - lastMissileRef.current > 800) {
+          lastMissileRef.current = now;
+          inputRef.current.missileTrigger++;
+        }
+      }
+      if (k === "t") {
+        const now = performance.now();
+        if (now - lastTargetLockRef.current > 300) {
+          lastTargetLockRef.current = now;
+          inputRef.current.targetLockTrigger++;
         }
       }
     };
@@ -86,6 +108,16 @@ export function useCockpitInput(active: boolean) {
           inputRef.current.fireTrigger++;
         }
       }
+      if (e.button === 2) {
+        const now = performance.now();
+        if (now - lastMissileRef.current > 800) {
+          lastMissileRef.current = now;
+          inputRef.current.missileTrigger++;
+        }
+      }
+    };
+    const onContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
     };
     const onUp = () => {
       dragging = false;
@@ -102,11 +134,13 @@ export function useCockpitInput(active: boolean) {
     window.addEventListener("mousedown", onDown);
     window.addEventListener("mouseup", onUp);
     window.addEventListener("mousemove", onMove);
+    window.addEventListener("contextmenu", onContextMenu);
     document.addEventListener("pointerlockchange", onLockChange);
     return () => {
       window.removeEventListener("mousedown", onDown);
       window.removeEventListener("mouseup", onUp);
       window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("contextmenu", onContextMenu);
       document.removeEventListener("pointerlockchange", onLockChange);
     };
   }, [active]);
@@ -164,6 +198,13 @@ export function useCockpitInput(active: boolean) {
         if (now - lastFireRef.current > 160) {
           lastFireRef.current = now;
           inputRef.current.fireTrigger++;
+        }
+      },
+      triggerMissile() {
+        const now = performance.now();
+        if (now - lastMissileRef.current > 800) {
+          lastMissileRef.current = now;
+          inputRef.current.missileTrigger++;
         }
       },
     };

@@ -1,11 +1,9 @@
 import { Canvas } from "@react-three/fiber";
-import * as THREE from "three";
 import { useCockpit } from "./CockpitModeProvider";
-import BaseScene from "./BaseScene";
+import HomeBaseWorld from "../homebase/HomeBaseWorld";
 import PirateMissionScene from "./PirateMissionScene";
 
 interface Props {
-  /** Whether gameplay input is enabled (disabled if drive modal is open) */
   enabled: boolean;
 }
 
@@ -21,14 +19,11 @@ export default function CockpitScene({ enabled }: Props) {
           2,
         ),
       ]}
-      gl={{ antialias: true, powerPreference: "high-performance" }}
+      gl={{ antialias: true, powerPreference: "high-performance", failIfMajorPerformanceCaveat: false }}
       camera={{ position: [0, 0, 0], fov: 75, near: 0.1, far: 2000 }}
-      onCreated={({ gl, scene }) => {
-        gl.setClearColor(new THREE.Color("#02030a"));
-        scene.fog = new THREE.FogExp2("#02030a", 0.0018);
-      }}
+      onCreated={({ gl }) => { gl.setClearColor("#02030a"); }}
     >
-      {activeStage === 0 && <BaseScene />}
+      {activeStage === 0 && <HomeBaseWorld />}
       {activeStage === 1 && <PirateMissionScene enabled={enabled} />}
     </Canvas>
   );

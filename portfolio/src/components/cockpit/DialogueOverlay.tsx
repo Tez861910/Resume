@@ -49,6 +49,10 @@ export default function DialogueOverlay() {
     }
   };
 
+  const handleAttack = () => {
+    setShowFailResponse(true);
+  };
+
   return (
     <div className="absolute inset-0 z-[250] flex items-center justify-center bg-slate-950/40 backdrop-blur-[2px] pointer-events-auto">
       <motion.div
@@ -78,6 +82,14 @@ export default function DialogueOverlay() {
         </div>
 
         <div className="flex justify-end gap-3">
+          {!showFailResponse && (
+            <button
+              onClick={handleAttack}
+              className="rounded-lg border border-rose-500/40 bg-rose-500/10 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-rose-200 transition-all hover:bg-rose-500/20 active:scale-95"
+            >
+              Open Fire
+            </button>
+          )}
           <button
             onClick={handleNext}
             className={`rounded-lg border px-5 py-2 text-[10px] font-bold uppercase tracking-[0.2em] transition-all active:scale-95 ${
