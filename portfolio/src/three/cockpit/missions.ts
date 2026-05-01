@@ -236,14 +236,14 @@ export interface DriveReadout {
 export const DRIVE_READOUTS: Record<MissionId, DriveReadout> = {
   launch: {
     missionId: "launch",
-    headline: "Tejas Suresh",
-    subheadline: "Full-stack product developer across web, desktop, and mobile",
+    headline: "Tejas S",
+    subheadline: "Full-Stack Product Developer — web, desktop, and mobile",
     lines: [
       "Callsign: TS",
       "Base: Bengaluru, India",
-      "Status: Open to opportunities",
+      "Status: Open to full-stack and product engineering roles",
       "Focus: product systems, workflow-heavy UI, and software that stays useful after launch",
-      "Current mix: web product platforms, a Windows manufacturing app, and a cross-platform Flutter + Rust local-first product distributed across Windows Store, Google Play, and Flathub",
+      "Current mix: React and Next.js product platforms, a .NET Windows app for 3D manufacturing workflows, and a cross-platform Flutter + Rust utility suite",
     ],
   },
   profile: {
@@ -252,8 +252,9 @@ export const DRIVE_READOUTS: Record<MissionId, DriveReadout> = {
     subheadline: "How I build and what I optimize for",
     lines: [
       "I build product software for real workflows instead of screens that only look good in a demo.",
-      "Recent work spans operational web platforms, content-rich business sites, a Windows manufacturing app, and a local-first toolbox.",
-      "I care most about clarity, maintainable architecture, and interfaces that help teams act on information faster.",
+      "Day-to-day: product systems — dashboards, company platforms, APIs, workflow-oriented UI.",
+      "Desktop work: Windows 3D tooling — rendering, model analysis, reporting, manufacturing guidance.",
+      "Comfortable across React, Next.js, Node, SQL-backed systems, .NET desktop, and cross-platform tooling.",
       "Best fit: teams that want someone comfortable moving between product narrative, UI decisions, and implementation detail.",
       "Preferred mode: practical, direct, and thorough rather than clever for its own sake.",
     ],
@@ -264,11 +265,11 @@ export const DRIVE_READOUTS: Record<MissionId, DriveReadout> = {
     subheadline: "Current stack and working surface",
     lines: [
       "Languages: TypeScript, JavaScript, C#, Dart, Rust, SQL",
-      "Frontend and UI: React, Next.js, Vite, Tailwind CSS, Material UI, Framer Motion, routing systems",
+      "Frontend and UI: React, Next.js, Vite, Tailwind CSS, Material UI, Framer Motion, React Router, TanStack Router",
       "Backend and APIs: Node.js, Express, REST APIs, Prisma, Sequelize, auth and validation",
-      "Desktop and 3D: .NET 8, WinUI 3, Win2D, AssimpNet, MVVM, document workflows",
-      "Cross-platform & local-first: Flutter, Dart, Rust, Flutter Rust Bridge, multi-platform deployment, on-device processing",
-      "Data and delivery: PostgreSQL, MySQL, SQLite, Git, GitHub Actions, build automation",
+      "Desktop and 3D: .NET 8, WinUI 3, Win2D, AssimpNet, iText 7, MVVM",
+      "Mobile and local-first: Flutter, Flutter Rust Bridge, FFI, on-device processing, encrypted storage",
+      "Data and delivery: PostgreSQL, MySQL, SQLite, Git, GitHub Actions, build and release automation",
     ],
   },
   career: {
@@ -276,11 +277,11 @@ export const DRIVE_READOUTS: Record<MissionId, DriveReadout> = {
     headline: "Career Trajectory",
     subheadline: "Experience and product ownership log",
     lines: [
-      "Software Engineer - Printalytix (Bengaluru). Worked across customer-facing and internal product surfaces.",
-      "Built and evolved MIND as a Windows app for 3D model review, manufacturing guidance, and reporting.",
+      "Software Engineer - Product, Web & Desktop at Printalytix (Bengaluru, Dec 2024 - Dec 2025). Worked across customer-facing and internal product surfaces.",
+      "Built and evolved MIND (.NET 8 Windows app) for 3D model inspection, manufacturing guidance, and report generation.",
       "Delivered React and Node-based systems with upload-heavy flows, protected operations, and maintainable structure.",
-      "Worked across frontend, backend, and workflow design instead of staying in only one layer of the stack.",
-      "Earlier full-stack academic work helped build the foundation for auth, role-aware systems, and client-server thinking.",
+      "Volunteer Full-Stack Developer at Old Dominion University (Norfolk, VA, Oct 2023 - Jan 2024). Built a university threads platform with role-based access, discussion flows, and real-time messaging.",
+      "Bachelor of Computer Applications at Bengaluru North University (Bengaluru, Aug 2018 - Aug 2024). Foundation in DBMS, web development, DSA. Final-year full-stack project with MySQL.",
     ],
   },
   "mission-ops": {
@@ -288,12 +289,14 @@ export const DRIVE_READOUTS: Record<MissionId, DriveReadout> = {
     headline: "Portfolio Hangar",
     subheadline: "Detailed project dossier",
     lines: [
-      "Pettige - local-first utility suite across PDF, image, audio, video, QR, OCR, storage, and developer workflows.",
+      "Pettige - cross-platform utility suite across PDF, image, audio, video, QR, OCR, storage, and developer workflows.",
       "Open Solar Toolkit - role-based operations platform covering sales, planning, supply chain, install, and maintenance.",
       "MIND - .NET 8 Windows software for 3D model analysis, manufacturing guidance, and reporting.",
       "Potential Client Website - Next.js company platform structured around technologies, concepts, knowledge content, and lead flow.",
       "Resolute Solutions - live multi-vertical business site with product catalogue depth and routed inquiry flows.",
       "Printalytix - full-stack workflow platform for uploads, protected operations, and ongoing internal and customer use.",
+      "University Threads Platform - academic collaboration system with role-based access, discussion flows, and real-time messaging.",
+      "Personal Portfolio and Resume - interactive 3D product showcase and technical career site.",
     ],
   },
   transmission: {
@@ -302,11 +305,11 @@ export const DRIVE_READOUTS: Record<MissionId, DriveReadout> = {
     subheadline: "Contact channels and next steps",
     lines: [
       "Email: tejassureshofficial@gmail.com",
-      "Phone: +91 8618904742",
+      "Phone: +91-8618904742",
       "Location: Bengaluru, India",
       "GitHub: github.com/Tez861910",
       "LinkedIn: linkedin.com/in/tejas-s-57138816a",
-      "Best outreach: product roles, workflow-heavy platforms, frontend or full-stack systems, and teams that value clarity in execution.",
+      "Best outreach: full-stack or frontend-heavy product roles, internal tools and operational dashboards, client platforms needing better content architecture, projects where interface, code, and narrative reinforce each other.",
     ],
     links: [
       { label: "Portfolio", href: "/" },

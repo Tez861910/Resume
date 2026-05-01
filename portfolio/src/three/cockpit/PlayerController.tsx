@@ -5,18 +5,27 @@ import type { MutableRefObject } from "react";
 import type { CockpitInputApi } from "./useCockpitInput";
 import type { PlayerState } from "./usePlayerState";
 import type { LasersHandle } from "./Lasers";
+import type { MissilesHandle } from "./Missiles";
 import { useCockpit } from "./CockpitModeProvider";
+import CockpitInterior from "./CockpitInterior";
 
 interface PlayerControllerProps {
   input: CockpitInputApi;
   player: MutableRefObject<PlayerState>;
   enemyLasers?: MutableRefObject<LasersHandle | null>;
+  enemyMissiles?: MutableRefObject<MissilesHandle | null>;
   /** Called when fireTrigger increments — pass ship pos/dir for spawning a laser */
   onFire: (origin: THREE.Vector3, direction: THREE.Vector3) => void;
+  /** Called when missileTrigger increments — pass ship pos and target pos */
+  onFireMissile?: (origin: THREE.Vector3, target: THREE.Vector3) => void;
+  /** Enemy positions for missile targeting */
+  enemies?: MutableRefObject<THREE.Vector3[]>;
   /** Whether input is allowed (blocked by e.g. drive modal open) */
   enabled: boolean;
   /** View mode for the camera */
   cameraView?: "first" | "third";
+  /** Position to respawn at on death */
+  spawnPosition?: THREE.Vector3;
 }
 
 /**
@@ -26,16 +35,24 @@ export default function PlayerController({
   input,
   player,
   enemyLasers,
+  enemyMissiles,
   onFire,
+  onFireMissile,
+  enemies,
   enabled,
   cameraView = "first",
+  spawnPosition,
 }: PlayerControllerProps) {
-  const { camera } = useThree();
+  const { camera, scene } = useThree();
   const lastFireTrigger = useRef(0);
+  const lastMissileTrigger = useRef(0);
+  const missileCooldown = useRef(0);
   const shipMeshRef = useRef<THREE.Group>(null);
-  const cockpitMeshRef = useRef<THREE.Group>(null);
-  const { audio } = useCockpit();
+  const { audio, recordDeath } = useCockpit();
   const shakeRef = useRef(0); // Shake intensity
+  const dyingRef = useRef(false);
+  const deathTimerRef = useRef(0);
+  const camRayFrame = useRef(0);
 
   useEffect(() => {
     camera.position.set(0, 0, 0);
@@ -57,12 +74,27 @@ export default function PlayerController({
     const m = input.mouse.current;
     const p = player.current;
 
+    const raycaster = new THREE.Raycaster();
     // Camera positioning function
     const updateCamera = () => {
       if (cameraView === "third") {
         const desiredPos = p.position
           .clone()
           .add(new THREE.Vector3(0, 2.6, 11).applyQuaternion(p.quaternion));
+
+        // Camera collision: raycast from player to desired camera position (throttled)
+        camRayFrame.current++;
+        if (camRayFrame.current % 3 === 0) {
+          raycaster.set(p.position, new THREE.Vector3().subVectors(desiredPos, p.position).normalize());
+          raycaster.far = desiredPos.distanceTo(p.position);
+          const hits = raycaster.intersectObjects(scene.children, true);
+          // Ignore the player's own ship mesh
+          const firstHit = hits.find((h) => h.object.parent !== shipMeshRef.current);
+          if (firstHit) {
+            desiredPos.copy(firstHit.point).addScaledVector(firstHit.face?.normal ?? new THREE.Vector3(0, 0, 0), 0.5);
+          }
+        }
+
         camera.position.lerp(desiredPos, Math.min(1, dt * 4));
 
         const lookAhead = p.position
@@ -95,6 +127,30 @@ export default function PlayerController({
       const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(p.quaternion);
       onFire(p.position.clone(), forward);
       audio.playLaser(false);
+    }
+
+    // Handle missile trigger
+    missileCooldown.current -= dt;
+    if (i.missileTrigger !== lastMissileTrigger.current && missileCooldown.current <= 0) {
+      lastMissileTrigger.current = i.missileTrigger;
+      missileCooldown.current = 1.2;
+      const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(p.quaternion);
+      const origin = p.position.clone().add(forward.clone().multiplyScalar(1.5));
+      let target: THREE.Vector3 | null = null;
+      let bestDist = Infinity;
+      if (enemies?.current) {
+        for (const ePos of enemies.current) {
+          const d = p.position.distanceToSquared(ePos);
+          if (d < bestDist) {
+            bestDist = d;
+            target = ePos;
+          }
+        }
+      }
+      if (!target || bestDist > 300 * 300) {
+        target = p.position.clone().add(forward.multiplyScalar(200));
+      }
+      onFireMissile?.(origin, target);
     }
 
     // Mouse pitch/yaw (accumulated) — convert to per-frame angular deltas
@@ -146,12 +202,21 @@ export default function PlayerController({
 
     // Enemy laser collision
     if (enabled && enemyLasers?.current?.consumeHit(p.position, 2.5)) {
-      // Flash or screen shake could be triggered here via an event or state
       audio.playImpact();
-      shakeRef.current = Math.min(1, shakeRef.current + 0.5); // Add shake
+      shakeRef.current = Math.min(1, shakeRef.current + 0.5);
       p.shield = Math.max(0, p.shield - 0.2);
       if (p.shield <= 0) {
         p.hull = Math.max(0, p.hull - 0.15);
+      }
+    }
+
+    // Enemy missile collision
+    if (enabled && enemyMissiles?.current?.consumeHit(p.position, 3.5)) {
+      audio.playImpact();
+      shakeRef.current = Math.min(1, shakeRef.current + 0.8);
+      p.shield = Math.max(0, p.shield - 0.5);
+      if (p.shield <= 0) {
+        p.hull = Math.max(0, p.hull - 0.35);
       }
     }
 
@@ -169,22 +234,38 @@ export default function PlayerController({
     }
 
     // Death / Respawn logic
-    if (p.hull <= 0) {
-      p.hull = 1;
-      p.shield = 1;
-      p.speed = 0;
+    if (p.hull <= 0 && !dyingRef.current) {
+      dyingRef.current = true;
+      deathTimerRef.current = 1.5;
+      audio.playImpact();
+      recordDeath();
       p.velocity.set(0, 0, 0);
-      // Push them back a bit or reset to 0,0,0
-      p.position.set(0, 0, 0);
+      p.speed = 0;
+    }
+
+    if (dyingRef.current) {
+      deathTimerRef.current -= dt;
+      // Blackout camera during death
+      if (cameraView === "first") {
+        camera.position.set(0, -1000, 0);
+      }
+      if (deathTimerRef.current <= 0) {
+        dyingRef.current = false;
+        p.hull = 1;
+        p.shield = 1;
+        p.speed = 0;
+        p.velocity.set(0, 0, 0);
+        if (spawnPosition) {
+          p.position.copy(spawnPosition);
+        } else {
+          p.position.set(0, 0, 0);
+        }
+      }
     }
 
     if (shipMeshRef.current && cameraView === "third") {
       shipMeshRef.current.position.copy(p.position);
       shipMeshRef.current.quaternion.copy(p.quaternion);
-    }
-    if (cockpitMeshRef.current && cameraView === "first") {
-      cockpitMeshRef.current.position.copy(p.position);
-      cockpitMeshRef.current.quaternion.copy(p.quaternion);
     }
 
     // Update camera with shake
@@ -202,9 +283,7 @@ export default function PlayerController({
           <StarfighterHull />
         </group>
       ) : (
-        <group ref={cockpitMeshRef}>
-          <CockpitShell />
-        </group>
+        <CockpitInterior />
       )}
     </>
   );
@@ -213,14 +292,17 @@ export default function PlayerController({
 function StarfighterHull() {
   return (
     <>
+      {/* Main fuselage */}
       <mesh position={[0, 0, -0.5]} rotation={[Math.PI / 2, 0, 0]}>
         <cylinderGeometry args={[0.55, 0.95, 5.8, 10]} />
         <meshStandardMaterial color="#cbd5e1" metalness={0.72} roughness={0.28} />
       </mesh>
+      {/* Nose cone */}
       <mesh position={[0, 0.15, -3.25]} rotation={[0.18, 0, 0]}>
         <coneGeometry args={[0.58, 3.4, 12]} />
         <meshStandardMaterial color="#e2e8f0" metalness={0.58} roughness={0.2} />
       </mesh>
+      {/* Cockpit canopy (on top) */}
       <mesh position={[0, 0.52, -1.15]} rotation={[0, 0, Math.PI]}>
         <coneGeometry args={[0.42, 1.7, 10]} />
         <meshStandardMaterial
@@ -231,87 +313,43 @@ function StarfighterHull() {
           opacity={0.45}
         />
       </mesh>
+      {/* Left wing */}
       <mesh position={[-1.55, -0.1, -0.8]} rotation={[0, 0, 0.2]}>
         <boxGeometry args={[2.6, 0.12, 1.25]} />
         <meshStandardMaterial color="#64748b" metalness={0.72} roughness={0.24} />
       </mesh>
+      {/* Right wing */}
       <mesh position={[1.55, -0.1, -0.8]} rotation={[0, 0, -0.2]}>
         <boxGeometry args={[2.6, 0.12, 1.25]} />
         <meshStandardMaterial color="#64748b" metalness={0.72} roughness={0.24} />
       </mesh>
+      {/* Left engine pod */}
       <mesh position={[-0.88, -0.18, 2.1]} rotation={[0.35, 0, 0]}>
         <boxGeometry args={[0.42, 0.42, 2.4]} />
         <meshStandardMaterial color="#0f172a" metalness={0.68} roughness={0.32} />
       </mesh>
+      {/* Right engine pod */}
       <mesh position={[0.88, -0.18, 2.1]} rotation={[0.35, 0, 0]}>
         <boxGeometry args={[0.42, 0.42, 2.4]} />
         <meshStandardMaterial color="#0f172a" metalness={0.68} roughness={0.32} />
       </mesh>
-      <pointLight position={[0, 0.15, 3.85]} intensity={28} distance={18} color="#38bdf8" />
-      <mesh position={[0, 0.1, 3.4]}>
-        <sphereGeometry args={[0.45, 16, 16]} />
-        <meshBasicMaterial color="#38bdf8" transparent opacity={0.82} />
+      {/* Thruster glow point light */}
+      <pointLight position={[0, 0.15, 3.6]} intensity={18} distance={12} color="#38bdf8" />
+      {/* Engine exhaust cone - inner hot core */}
+      <mesh position={[0, 0.1, 3.6]} rotation={[-Math.PI / 2, 0, 0]}>
+        <coneGeometry args={[0.5, 2.5, 16]} />
+        <meshBasicMaterial color="#7dd3fc" transparent opacity={0.35} />
       </mesh>
-      <mesh position={[0, 0.1, 4.8]}>
-        <coneGeometry args={[0.38, 3.1, 12]} />
-        <meshBasicMaterial color="#7dd3fc" transparent opacity={0.3} />
+      {/* Engine exhaust cone - outer cooler glow */}
+      <mesh position={[0, 0.1, 4.8]} rotation={[-Math.PI / 2, 0, 0]}>
+        <coneGeometry args={[0.8, 1.5, 16]} />
+        <meshBasicMaterial color="#38bdf8" transparent opacity={0.15} />
+      </mesh>
+      {/* Engine base ring */}
+      <mesh position={[0, 0.1, 3.0]} rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[0.6, 0.05, 8, 16]} />
+        <meshBasicMaterial color="#38bdf8" transparent opacity={0.6} />
       </mesh>
     </>
-  );
-}
-
-function CockpitShell() {
-  return (
-    <group position={[0, -0.45, 0.5]}>
-      <mesh position={[0, -0.62, -0.15]} rotation={[-0.48, 0, 0]}>
-        <boxGeometry args={[2.9, 0.3, 2.1]} />
-        <meshStandardMaterial color="#0f172a" metalness={0.72} roughness={0.32} />
-      </mesh>
-      <mesh position={[-1.18, 0.05, -0.65]} rotation={[0.18, 0.08, 0.18]}>
-        <boxGeometry args={[0.2, 1.45, 3.1]} />
-        <meshStandardMaterial color="#111827" metalness={0.78} roughness={0.22} />
-      </mesh>
-      <mesh position={[1.18, 0.05, -0.65]} rotation={[0.18, -0.08, -0.18]}>
-        <boxGeometry args={[0.2, 1.45, 3.1]} />
-        <meshStandardMaterial color="#111827" metalness={0.78} roughness={0.22} />
-      </mesh>
-      <mesh position={[0, 0.82, -0.85]} rotation={[0.25, 0, 0]}>
-        <torusGeometry args={[1.38, 0.05, 8, 20, Math.PI]} />
-        <meshStandardMaterial color="#334155" metalness={0.68} roughness={0.28} />
-      </mesh>
-      <mesh position={[0, 0.62, -1.1]} rotation={[0.3, 0, 0]}>
-        <sphereGeometry args={[1.18, 18, 18, 0, Math.PI]} />
-        <meshPhysicalMaterial
-          color="#7dd3fc"
-          transparent
-          opacity={0.12}
-          roughness={0.02}
-          metalness={0}
-          transmission={0.85}
-        />
-      </mesh>
-      <mesh position={[0, -0.16, -3.6]} rotation={[0.34, 0, 0]}>
-        <coneGeometry args={[0.62, 4.6, 14]} />
-        <meshStandardMaterial
-          color="#1e293b"
-          emissive="#0ea5e9"
-          emissiveIntensity={0.22}
-          metalness={0.66}
-          roughness={0.26}
-        />
-      </mesh>
-      <mesh position={[0, -0.28, -0.55]}>
-        <planeGeometry args={[1.25, 0.38]} />
-        <meshBasicMaterial color="#22d3ee" transparent opacity={0.2} />
-      </mesh>
-      <mesh position={[-0.52, -0.31, -0.22]}>
-        <planeGeometry args={[0.34, 0.12]} />
-        <meshBasicMaterial color="#fbbf24" transparent opacity={0.28} />
-      </mesh>
-      <mesh position={[0.52, -0.31, -0.22]}>
-        <planeGeometry args={[0.34, 0.12]} />
-        <meshBasicMaterial color="#34d399" transparent opacity={0.24} />
-      </mesh>
-    </group>
   );
 }

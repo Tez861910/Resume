@@ -36,7 +36,7 @@ const projects: Project[] = [
     timeline: '2025 - present',
     role: 'Product developer',
     description:
-      'Pettige is a privacy-first cross-platform utility suite where document, image, audio, video, QR, OCR, developer, and storage workflows run on-device instead of through a remote backend. Flutter handles the app shell, routing, and studio-style workspaces, while Rust handles heavy processing through Flutter Rust Bridge for PDF operations, image transforms, audio effects, video workflows, hashing, OCR, and encrypted file storage. The platform matrix is broader than a typical mobile app: Android is a primary target, Windows is release-ready, iOS and macOS are build-ready, and Linux support is already wired with experimental desktop paths.',
+      'Pettige is a privacy-first cross-platform utility suite where document, image, audio, video, QR, OCR, developer, and storage workflows run on-device instead of through a remote backend. Flutter handles the app shell, routing, and studio-style workspaces, while Rust handles heavy processing through Flutter Rust Bridge for PDF operations, image transforms, audio effects, video workflows, hashing, OCR, and encrypted file storage. The platform matrix is fully cross-platform: Android is a primary target, Windows is release-ready, iOS and macOS are build-ready, and Linux support is already wired with experimental desktop paths.',
     intent:
       'I wanted a toolbox that feels genuinely useful without asking people to upload private files to someone else\'s server. That pushed the architecture toward local-first defaults: keep the interface approachable in Flutter, move CPU-heavy work into Rust, and make privacy the normal path instead of a premium feature.',
     problem:

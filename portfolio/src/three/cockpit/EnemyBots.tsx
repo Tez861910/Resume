@@ -59,7 +59,7 @@ export default function EnemyBots({
   const botsRef = useRef<EnemyBot[]>([]);
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const asset = useGameAsset("enemy");
-  const { audio } = useCockpit();
+  const { audio, recordKill } = useCockpit();
 
   useEffect(() => {
     const arr: EnemyBot[] = [];
@@ -171,6 +171,7 @@ export default function EnemyBots({
 
       if (enabled && lasers.current?.consumeHit(b.pos, 1.8)) {
         b.alive = false;
+        recordKill();
         explosions.current?.spawn(b.pos, 15);
         continue;
       }

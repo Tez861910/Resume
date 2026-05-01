@@ -12,6 +12,8 @@ export interface Missile {
 
 export interface MissilesHandle {
   spawn: (origin: THREE.Vector3, target: THREE.Vector3) => void;
+  /** Returns true if any alive missile is within radius of pos. Consumes the missile. */
+  consumeHit: (pos: THREE.Vector3, radius: number) => boolean;
 }
 
 const MAX = 16;
@@ -60,6 +62,17 @@ const Missiles = forwardRef<MissilesHandle, { color?: string }>(function Missile
         m.velocity.set(Math.random() - 0.5, 1, Math.random() - 0.5).normalize().multiplyScalar(SPEED);
         m.target = target;
         m.ttl = TTL;
+      },
+      consumeHit(pos, radius) {
+        const r2 = radius * radius;
+        for (const m of missilesRef.current) {
+          if (!m.alive) continue;
+          if (m.pos.distanceToSquared(pos) <= r2) {
+            m.alive = false;
+            return true;
+          }
+        }
+        return false;
       },
     }),
     [],

@@ -58,18 +58,23 @@ const FALLBACKS: Record<
 
 export type AssetType = keyof typeof FALLBACKS;
 
+const assetCache = new Map<AssetType, { geometry: THREE.BufferGeometry; material: THREE.Material | THREE.Material[] }>();
+
 /**
  * A custom hook that tries to load a GLTF model for the given AssetType.
  * If the file (/models/{type}.glb) doesn't exist or fails to load, it gracefully
  * falls back to the defined placeholder primitive geometry and material.
+ * Loaded assets are cached module-level so multiple consumers share one geometry.
  */
 export function useGameAsset(type: AssetType): {
   geometry: THREE.BufferGeometry;
   material: THREE.Material | THREE.Material[];
 } {
-  const [asset, setAsset] = useState(FALLBACKS[type]);
+  const cached = assetCache.get(type);
+  const [asset, setAsset] = useState(cached ?? FALLBACKS[type]);
 
   useEffect(() => {
+    if (cached) return;
     let active = true;
     const loader = new GLTFLoader();
 
@@ -105,7 +110,9 @@ export function useGameAsset(type: AssetType): {
             g.computeBoundingSphere();
           }
 
-          setAsset({ geometry: g, material: mat });
+          const result = { geometry: g, material: mat };
+          assetCache.set(type, result);
+          setAsset(result);
         }
       },
       undefined,
@@ -118,7 +125,7 @@ export function useGameAsset(type: AssetType): {
     return () => {
       active = false;
     };
-  }, [type]);
+  }, [type, cached]);
 
   return asset;
 }
