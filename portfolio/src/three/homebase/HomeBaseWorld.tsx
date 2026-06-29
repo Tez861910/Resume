@@ -176,7 +176,7 @@ function CommandShipExterior() {
   );
 }
 
-export default function HomeBaseWorld() {
+export default function HomeBaseWorld({ lowPerf = false }: { lowPerf?: boolean }) {
   const {
     collected,
     audio,
@@ -258,7 +258,7 @@ export default function HomeBaseWorld() {
       <NavWaypoint nextMissionId={nextMissionId} vaultUnlocked={vaultUnlocked} />
       <WalkerController vaultOpen={vaultUnlocked} />
       <InteractSystem onLaunchMission={handleLaunchMission} onEnterVault={handleEnterVault} vaultUnlocked={vaultUnlocked} nextMissionId={nextMissionId} />
-      <HomeBasePost />
+      <HomeBasePost disabled={lowPerf} />
     </>
   );
 }

@@ -47,7 +47,7 @@ function PostStack() {
  * and whenever the WebGL context drops, and wrapped in an error boundary so a
  * post-processing failure can never blank the scene.
  */
-export default function HomeBasePost() {
+export default function HomeBasePost({ disabled = false }: { disabled?: boolean }) {
   const gl = useThree((s) => s.gl);
   const [contextLost, setContextLost] = useState(false);
 
@@ -75,7 +75,7 @@ export default function HomeBasePost() {
     };
   }, [gl]);
 
-  if (isMobile || contextLost) return null;
+  if (isMobile || contextLost || disabled) return null;
 
   return (
     <PostFXBoundary>
