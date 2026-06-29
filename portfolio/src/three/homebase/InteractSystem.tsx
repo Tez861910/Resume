@@ -49,6 +49,15 @@ export default function InteractSystem({ onLaunchMission, onEnterVault, vaultUnl
           };
           break;
         }
+        if (ud?.kind === "launch-console") {
+          found = {
+            kind: "launch-console",
+            missionId: "launch",
+            unlocked: false,
+            distance: hit.distance,
+          };
+          break;
+        }
         if (ud?.kind === "vault-door") {
           found = {
             kind: "vault-door",
@@ -78,6 +87,8 @@ export default function InteractSystem({ onLaunchMission, onEnterVault, vaultUnl
       const t = interactStore.get();
       if (t.kind === "resume-screen" && t.missionId && !t.unlocked && t.missionId === nextMissionId) {
         onLaunchMission(t.missionId);
+      } else if (t.kind === "launch-console" && nextMissionId === "launch") {
+        onLaunchMission("launch");
       } else if (t.kind === "vault-door" && vaultUnlocked) {
         onEnterVault?.();
       }

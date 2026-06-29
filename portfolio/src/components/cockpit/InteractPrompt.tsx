@@ -10,6 +10,9 @@ export default function InteractPrompt() {
     if (t.unlocked) return null; // unlocked screens are passive
     label = `${t.missionId?.toUpperCase() ?? ""} // SEALED`;
     action = "LAUNCH MISSION";
+  } else if (t.kind === "launch-console") {
+    label = "DEPARTURE GATE // READY";
+    action = "DEPART";
   } else if (t.kind === "vault-door") {
     if (!t.unlocked) {
       label = "VAULT // LOCKED";

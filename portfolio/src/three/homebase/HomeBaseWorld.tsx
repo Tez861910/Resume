@@ -11,6 +11,7 @@ import VaultRoom from "./VaultRoom";
 import InteractSystem from "./InteractSystem";
 import HomeBasePost from "./HomeBasePost";
 import NavWaypoint from "./NavWaypoint";
+import DepartureConsole from "./DepartureConsole";
 import { HB } from "./hbTheme";
 import { useCockpit } from "../cockpit/CockpitModeProvider";
 import { MISSIONS, type MissionId } from "../cockpit/missions";
@@ -249,6 +250,7 @@ export default function HomeBaseWorld() {
       <CommandShipExterior />
       <LandingPad />
       <Bridge />
+      <DepartureConsole active={nextMissionId === "launch"} />
       <CommandCenter collected={collected} />
       <VaultDoor unlocked={vaultUnlocked} total={total} collected={collected.size} />
       {vaultUnlocked && <VaultRoom collected={collected} stats={stats} />}

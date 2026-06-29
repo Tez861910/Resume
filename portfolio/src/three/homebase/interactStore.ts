@@ -4,7 +4,7 @@ import type { MissionId } from "../cockpit/missions";
 export interface InteractTarget {
   missionId: MissionId | null;
   unlocked: boolean;
-  kind: "resume-screen" | "vault-door" | null;
+  kind: "resume-screen" | "vault-door" | "launch-console" | null;
   /** Distance in world units from camera */
   distance: number;
 }

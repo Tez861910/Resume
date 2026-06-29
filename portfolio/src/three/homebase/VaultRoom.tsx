@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
-import { Text, MeshReflectorMaterial } from "@react-three/drei";
+import { Text } from "@react-three/drei";
 import { DRIVE_READOUTS, MISSIONS, type MissionId } from "../cockpit/missions";
 
 const W = 16;
@@ -108,22 +108,10 @@ export default function VaultRoom({ collected, stats }: Props) {
 
   return (
     <group position={[0, 0, CENTER_Z]}>
-      {/* Floor */}
+      {/* Floor — glossy standard material (no reflector readback) */}
       <mesh position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[W, D]} />
-        <MeshReflectorMaterial
-          resolution={512}
-          mixBlur={1}
-          mixStrength={2.6}
-          blur={[400, 90]}
-          mirror={0.6}
-          color="#0a1424"
-          metalness={0.85}
-          roughness={0.4}
-          depthScale={0.6}
-          minDepthThreshold={0.3}
-          maxDepthThreshold={1.2}
-        />
+        <meshStandardMaterial color="#0a1424" metalness={0.9} roughness={0.3} envMapIntensity={0.5} />
       </mesh>
       {/* Glowing center floor disc */}
       <mesh position={[0, 0.015, 0]} rotation={[-Math.PI / 2, 0, 0]}>
