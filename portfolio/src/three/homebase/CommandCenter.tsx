@@ -1,6 +1,7 @@
 import { useRef, useMemo } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
+import { MeshReflectorMaterial } from "@react-three/drei";
 import ResumeScreen from "./ResumeScreens";
 import { MISSIONS, type MissionId } from "../cockpit/missions";
 
@@ -149,10 +150,22 @@ export default function CommandCenter({ collected }: Props) {
   return (
     <group position={[0, 0, -2]}>
       {/* === FLOOR === */}
-      {/* Base floor */}
-      <mesh position={[0, -0.01, 0]} receiveShadow>
-        <boxGeometry args={[W, 0.06, D]} />
-        <meshStandardMaterial color="#080c18" metalness={0.88} roughness={0.14} />
+      {/* Polished reflective deck — reflects screens, lights, ceiling strips */}
+      <mesh position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+        <planeGeometry args={[W, D]} />
+        <MeshReflectorMaterial
+          resolution={512}
+          mixBlur={1}
+          mixStrength={2.2}
+          blur={[420, 100]}
+          mirror={0.55}
+          color="#0a1322"
+          metalness={0.85}
+          roughness={0.45}
+          depthScale={0.6}
+          minDepthThreshold={0.3}
+          maxDepthThreshold={1.2}
+        />
       </mesh>
       {/* Panel grid lines — single LineSegments instead of 20 plane meshes */}
       <FloorGrid />
