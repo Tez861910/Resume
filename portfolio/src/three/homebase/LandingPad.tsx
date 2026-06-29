@@ -16,7 +16,7 @@ function ShipModel() {
   });
 
   return (
-    <group ref={groupRef} position={[0, 0.6, 0]}>
+    <group ref={groupRef} position={[-4.5, 0.6, 1.5]}>
       <mesh geometry={ship.geometry} material={ship.material} scale={1.5} />
       {/* Replaced expensive pointLight with emissive glow mesh */}
       <mesh position={[0, 3.5, 0]}>

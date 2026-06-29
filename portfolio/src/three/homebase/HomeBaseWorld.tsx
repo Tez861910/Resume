@@ -9,6 +9,9 @@ import CommandCenter from "./CommandCenter";
 import VaultDoor from "./VaultDoor";
 import VaultRoom from "./VaultRoom";
 import InteractSystem from "./InteractSystem";
+import HomeBasePost from "./HomeBasePost";
+import NavWaypoint from "./NavWaypoint";
+import { HB } from "./hbTheme";
 import { useCockpit } from "../cockpit/CockpitModeProvider";
 import { MISSIONS, type MissionId } from "../cockpit/missions";
 
@@ -96,7 +99,7 @@ function CommandShipExterior() {
       {/* Main saucer hull */}
       <mesh geometry={saucerGeom} castShadow={false} receiveShadow={false}>
         <meshStandardMaterial
-          color="#1a2436"
+          color={HB.hull}
           metalness={0.85}
           roughness={0.32}
           flatShading={false}
@@ -107,11 +110,11 @@ function CommandShipExterior() {
       <mesh rotation={[Math.PI / 2, 0, 0]}>
         <torusGeometry args={[22.05, 0.35, 12, 96]} />
         <meshStandardMaterial
-          color="#0b1320"
+          color={HB.hullDeep}
           metalness={0.95}
           roughness={0.25}
-          emissive="#0e7490"
-          emissiveIntensity={0.15}
+          emissive={HB.cyanDeep}
+          emissiveIntensity={0.18}
         />
       </mesh>
 
@@ -122,7 +125,7 @@ function CommandShipExterior() {
           color="#0e1a2c"
           metalness={0.6}
           roughness={0.15}
-          emissive="#0891b2"
+          emissive={HB.cyanDeep}
           emissiveIntensity={0.25}
         />
       </mesh>
@@ -231,15 +234,17 @@ export default function HomeBaseWorld() {
 
   return (
     <>
-      <color attach="background" args={["#02030a"]} />
-      <fog attach="fog" args={["#02030a", 12, 90]} />
+      <color attach="background" args={[HB.ink]} />
+      <fog attach="fog" args={[HB.ink, 16, 95]} />
 
       {/* Distant starfield (open space backdrop) */}
       <StarField />
 
-      <ambientLight intensity={0.18} />
-      <hemisphereLight args={["#334155", "#020610", 0.3]} />
-      <directionalLight position={[8, 18, 22]} intensity={0.45} color="#cbd5e1" />
+      {/* Balanced key/fill: cool key from above-front, warm bounce, soft fill */}
+      <ambientLight intensity={0.22} />
+      <hemisphereLight args={["#3b4d6b", "#020610", 0.4]} />
+      <directionalLight position={[8, 18, 22]} intensity={0.55} color="#dbe7f5" />
+      <directionalLight position={[-14, 8, -18]} intensity={0.25} color={HB.amber} />
 
       <CommandShipExterior />
       <LandingPad />
@@ -248,8 +253,10 @@ export default function HomeBaseWorld() {
       <VaultDoor unlocked={vaultUnlocked} total={total} collected={collected.size} />
       {vaultUnlocked && <VaultRoom collected={collected} stats={stats} />}
 
+      <NavWaypoint nextMissionId={nextMissionId} vaultUnlocked={vaultUnlocked} />
       <WalkerController vaultOpen={vaultUnlocked} />
       <InteractSystem onLaunchMission={handleLaunchMission} onEnterVault={handleEnterVault} vaultUnlocked={vaultUnlocked} nextMissionId={nextMissionId} />
+      <HomeBasePost />
     </>
   );
 }

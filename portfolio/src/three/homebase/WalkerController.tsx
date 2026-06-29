@@ -109,7 +109,7 @@ export default function WalkerController({ vaultOpen = false }: Props) {
   }, [camera]);
 
   useEffect(() => {
-    camera.position.set(0, HEIGHT, 22);
+    camera.position.set(0, HEIGHT, 25.5);
     yaw.current = Math.PI; // face -z toward bridge
     pitch.current = 0;
   }, [camera]);

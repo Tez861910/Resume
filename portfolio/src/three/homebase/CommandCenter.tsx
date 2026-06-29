@@ -171,19 +171,17 @@ export default function CommandCenter({ collected }: Props) {
       <WallPanel position={[-W / 2, H / 2, 0]} size={[0.22, H, D]} />
       <WallPanel position={[W / 2, H / 2, 0]} size={[0.22, H, D]} />
 
-      {/* Viewport windows (between screen positions) */}
-      {/* Left wall windows — at z=-4 area */}
-      {[-4.5, -3, 10, 11.5].map((z) => (
-        <mesh key={`winL${z}`} position={[-W / 2 + 0.12, H * 0.55, z]}>
-          <planeGeometry args={[1.2, 1.8]} />
-          <meshStandardMaterial color="#061020" emissive="#183056" emissiveIntensity={0.12} side={THREE.DoubleSide} metalness={0.05} roughness={0.04} />
+      {/* Viewport windows — symmetric pairs set within the wall span (z∈[-10,10]) */}
+      {[-8, -3.5, 3.5, 8].map((z) => (
+        <mesh key={`winL${z}`} position={[-W / 2 + 0.12, H * 0.55, z]} rotation={[0, Math.PI / 2, 0]}>
+          <planeGeometry args={[1.6, 1.9]} />
+          <meshStandardMaterial color="#061020" emissive="#1d4ed8" emissiveIntensity={0.14} side={THREE.DoubleSide} metalness={0.05} roughness={0.04} />
         </mesh>
       ))}
-      {/* Right wall windows */}
-      {[-8.3, -7, 10, 11.5].map((z) => (
-        <mesh key={`winR${z}`} position={[W / 2 - 0.12, H * 0.55, z]}>
-          <planeGeometry args={[1.2, 1.8]} />
-          <meshStandardMaterial color="#061020" emissive="#183056" emissiveIntensity={0.12} side={THREE.DoubleSide} metalness={0.05} roughness={0.04} />
+      {[-8, -3.5, 3.5, 8].map((z) => (
+        <mesh key={`winR${z}`} position={[W / 2 - 0.12, H * 0.55, z]} rotation={[0, -Math.PI / 2, 0]}>
+          <planeGeometry args={[1.6, 1.9]} />
+          <meshStandardMaterial color="#061020" emissive="#1d4ed8" emissiveIntensity={0.14} side={THREE.DoubleSide} metalness={0.05} roughness={0.04} />
         </mesh>
       ))}
 
