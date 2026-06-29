@@ -28,6 +28,7 @@ export default function MissionTerminal({ enemyCounts }: Props) {
   const queueRef = useRef<Line[]>([]);
   const lastKeyRef = useRef<string>("");
   const prevCollectedRef = useRef<Set<MissionId>>(new Set());
+  const counterRef = useRef(lineIdCounter);
 
   // When mission changes or a new drive is collected, enqueue appropriate lines
   useEffect(() => {
@@ -47,13 +48,12 @@ export default function MissionTerminal({ enemyCounts }: Props) {
       const m = MISSIONS.find((x) => x.id === id);
       if (!m) continue;
       for (const t of m.debriefing) {
-        toEnqueue.push({ id: lineIdCounter++, text: t, tone: "ctrl" });
+        toEnqueue.push({ id: counterRef.current++, text: t, tone: "ctrl" });
       }
     }
-    // Then briefing of current mission (if not already all collected)
     if (collected.size < MISSIONS.length) {
       for (const t of currentMission.briefing) {
-        toEnqueue.push({ id: lineIdCounter++, text: t, tone: "ctrl" });
+        toEnqueue.push({ id: counterRef.current++, text: t, tone: "ctrl" });
       }
     }
 
@@ -137,7 +137,7 @@ export default function MissionTerminal({ enemyCounts }: Props) {
           {missionStatus}
         </span>
       </div>
-      <div className="space-y-1 text-[11px] leading-relaxed text-slate-300 max-h-[160px] overflow-hidden">
+      <div className="space-y-1 text-[11px] leading-relaxed text-slate-300 max-h-[160px] overflow-hidden" role="log" aria-live="polite" aria-label="Mission communications log">
         {lines.map((l) => (
           <div key={l.id}>
             <span className="text-cyan-300/70">▸ </span>

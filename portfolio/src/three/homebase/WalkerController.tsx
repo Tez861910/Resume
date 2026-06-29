@@ -51,7 +51,7 @@ function buildWalls(vaultOpen: boolean): Wall[] {
     walls.push({ x1: -8, z1: -26, x2: 8, z2: -26 });
   }
 
-  // --- Landing pad outer ring as straight-segment polygon (12 sides) at radius 9.5, centered (0,22) ---
+  // --- Landing pad outer ring as straight-segment polygon at radius 9.5, centered (0,22) ---
   const cx = 0;
   const cz = 22;
   const r = 9.5;
@@ -63,12 +63,16 @@ function buildWalls(vaultOpen: boolean): Wall[] {
     const z1 = cz + Math.sin(a1) * r;
     const x2 = cx + Math.cos(a2) * r;
     const z2 = cz + Math.sin(a2) * r;
-    // Skip the segment that overlaps the bridge entry (south side of pad, around angle ~-π/2 → π/2 facing -z, i.e., facing toward bridge at z<22)
+    // Skip segment where bridge connects (south-center, z<13, x near 0)
     const midZ = (z1 + z2) / 2;
     const midX = (x1 + x2) / 2;
-    if (midZ < 13 && Math.abs(midX) < 2) continue;
+    if (midZ < 13 && Math.abs(midX) < 2.5) continue;
     walls.push({ x1, z1, x2, z2 });
   }
+
+  // Extend bridge railings slightly onto the pad for a smooth transition
+  walls.push({ x1: -1.5, z1: 18, x2: -1.5, z2: 20 });
+  walls.push({ x1: 1.5, z1: 18, x2: 1.5, z2: 20 });
 
   return walls;
 }

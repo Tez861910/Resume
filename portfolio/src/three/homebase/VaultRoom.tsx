@@ -74,7 +74,7 @@ function DrivePillar({
         <ringGeometry args={[0.36, 0.42, 24]} />
         <meshBasicMaterial color={accent} transparent opacity={0.4} side={THREE.DoubleSide} />
       </mesh>
-      <pointLight position={[0, 1.5, 0]} intensity={0.6} distance={2.5} color={accent} />
+      {/* Removed per-pillar pointLight — drives are emissive enough */}
       {/* Tag */}
       <Text
         position={[0, 1.8, 0]}
@@ -92,9 +92,10 @@ function DrivePillar({
 
 interface Props {
   collected: Set<MissionId>;
+  stats?: { deaths: number; kills: number };
 }
 
-export default function VaultRoom({ collected }: Props) {
+export default function VaultRoom({ collected, stats }: Props) {
   // Build assembled resume sections
   const sections: { title: string; lines: string[]; accent: string }[] = MISSIONS.map((m) => {
     const r = DRIVE_READOUTS[m.id];
@@ -147,9 +148,8 @@ export default function VaultRoom({ collected }: Props) {
         <meshStandardMaterial color="#080d1c" metalness={0.5} roughness={0.5} />
       </mesh>
 
-      {/* Lights */}
-      <pointLight position={[0, H - 0.3, 0]} intensity={4} distance={18} color="#e0f2fe" />
-      <pointLight position={[0, 1.5, -D / 2 + 2]} intensity={2.5} distance={10} color="#22d3ee" />
+      {/* Lights — reduced from 2 to 1 main source for performance */}
+      <pointLight position={[0, H - 0.3, 0]} intensity={5} distance={22} color="#e0f2fe" decay={2} />
 
       {/* Back wall display — assembled resume */}
       <mesh position={[0, H / 2, -D / 2 + 0.13]}>
@@ -237,6 +237,20 @@ export default function VaultRoom({ collected }: Props) {
         ARCHIVE COMPLETE // ALL SYSTEMS NOMINAL
       </Text>
 
+      {/* Stats line */}
+      {stats && (
+        <Text
+          position={[0, 0.25, -D / 2 + 0.14]}
+          fontSize={0.05}
+          color="#94a3b8"
+          anchorX="center"
+          anchorY="middle"
+          letterSpacing={0.2}
+        >
+          {`MISSIONS: ${collected.size}/${MISSIONS.length} // ENEMIES NEUTRALIZED: ${stats.kills} // LOSSES: ${stats.deaths}`}
+        </Text>
+      )}
+
       {/* Drive pedestals in a circle around center */}
       {MISSIONS.map((m, i) => {
         const angle = (i / MISSIONS.length) * Math.PI * 2 - Math.PI / 2;
@@ -262,7 +276,11 @@ export default function VaultRoom({ collected }: Props) {
           roughness={0.2}
         />
       </mesh>
-      <pointLight position={[0, 2, 0]} intensity={2} distance={6} color="#22d3ee" />
+      {/* Replaced pointLight with emissive glow mesh for performance */}
+      <mesh position={[0, 2.2, 0]}>
+        <sphereGeometry args={[0.3, 8, 8]} />
+        <meshBasicMaterial color="#22d3ee" transparent opacity={0.2} />
+      </mesh>
 
       {/* Finale beam */}
       <FinaleBeam allCollected={collected.size === MISSIONS.length} />

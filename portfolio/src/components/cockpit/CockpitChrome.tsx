@@ -9,27 +9,27 @@ import MissionTerminal from "./MissionTerminal";
 import Minimap from "./Minimap";
 import InstrumentsHUD from "./InstrumentsHUD";
 import InventoryRail from "./InventoryRail";
-import DriveReadoutModal from "./DriveReadoutModal";
 import MobileControls from "./MobileControls";
 
 interface Props {
   input: CockpitInputApi;
   player: MutableRefObject<PlayerState>;
   enemyCounts: MutableRefObject<Record<MissionId, number>>;
+  isDialogue: boolean;
 }
 
 /** DOM/CSS overlay drawn "inside the cockpit" over the R3F canvas. */
-export default function CockpitChrome({ input, player, enemyCounts }: Props) {
+export default function CockpitChrome({ input, player, enemyCounts, isDialogue }: Props) {
   const {
     close,
     currentMission,
     progress,
-    openDriveId,
     cameraView,
     toggleCameraView,
     setGamePhase,
     setActiveStage,
     audio,
+    stats,
   } = useCockpit();
 
   const isMobile =
@@ -44,7 +44,7 @@ export default function CockpitChrome({ input, player, enemyCounts }: Props) {
       style={{ zIndex: 1 }}
     >
       {/* Damage overlay (1st person only) */}
-      {isFirstPerson && <DamageOverlay player={player} />}
+      {isFirstPerson && !isDialogue && <DamageOverlay player={player} />}
 
       {/* Subtle screen-edge vignette (both views) */}
       <div
@@ -56,7 +56,7 @@ export default function CockpitChrome({ input, player, enemyCounts }: Props) {
       />
 
       {/* Modern Flight Sim Crosshair (1st person only) */}
-      {isFirstPerson && (
+      {isFirstPerson && !isDialogue && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-80">
           <svg
             width="200"
@@ -98,6 +98,9 @@ export default function CockpitChrome({ input, player, enemyCounts }: Props) {
             <span>{currentMission.codename}</span>
             <span className="text-cyan-500/50">|</span>
             <span>Drives {progress.collected}/{progress.total}</span>
+            <span className="text-cyan-500/50">|</span>
+            <span className="text-emerald-400/70">K:{stats.kills}</span>
+            <span className="text-rose-400/70">D:{stats.deaths}</span>
           </div>
         </div>
         <div className="flex items-center gap-3">
@@ -106,6 +109,7 @@ export default function CockpitChrome({ input, player, enemyCounts }: Props) {
               <button
                 key={level}
                 onClick={() => audio.setOutputLevel(level)}
+                aria-label={`Audio level: ${level}`}
                 className={`rounded px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.24em] transition ${audio.outputLevel === level ? "bg-cyan-500/20 text-cyan-100" : "text-cyan-300/70 hover:text-cyan-100"}`}
               >
                 {level}
@@ -114,13 +118,14 @@ export default function CockpitChrome({ input, player, enemyCounts }: Props) {
           </div>
           <button
             onClick={toggleCameraView}
+            aria-label={`Switch to ${cameraView === "first" ? "third" : "first"} person camera`}
             className="pointer-events-auto relative overflow-hidden group rounded bg-slate-950/80 backdrop-blur-md border border-cyan-500/30 px-5 py-2 text-[10px] font-bold uppercase tracking-[0.3em] text-cyan-200 transition-all hover:border-cyan-400 hover:text-cyan-50 hover:shadow-[0_0_15px_rgba(6,182,212,0.3)] active:scale-95"
           >
             <span className="relative z-10">{cameraView === "first" ? "CAM: 3RD" : "CAM: 1ST"}</span>
             <div className="absolute inset-0 bg-cyan-500/10 translate-y-full group-hover:translate-y-0 transition-transform" />
           </button>
           <button
-            onClick={() => { setActiveStage(0); setGamePhase("homebase"); }}
+            onClick={() => { audio.stopEngine(); audio.stopMusic(); setActiveStage(0); setGamePhase("homebase"); }}
             className="pointer-events-auto relative overflow-hidden group rounded bg-slate-950/80 backdrop-blur-md border border-amber-500/30 px-5 py-2 text-[10px] font-bold uppercase tracking-[0.3em] text-amber-200 transition-all hover:border-amber-400 hover:text-amber-50 hover:shadow-[0_0_15px_rgba(245,158,11,0.3)] active:scale-95"
           >
             <span className="relative z-10">Return to Base</span>
@@ -128,6 +133,7 @@ export default function CockpitChrome({ input, player, enemyCounts }: Props) {
           </button>
           <button
             onClick={close}
+            aria-label="Abort mission and exit"
             className="pointer-events-auto relative overflow-hidden group rounded bg-slate-950/80 backdrop-blur-md border border-rose-500/30 px-5 py-2 text-[10px] font-bold uppercase tracking-[0.3em] text-rose-200 transition-all hover:border-rose-400 hover:text-rose-50 hover:shadow-[0_0_15px_rgba(244,63,94,0.3)] active:scale-95"
           >
             <span className="relative z-10">Abort</span>
@@ -137,37 +143,38 @@ export default function CockpitChrome({ input, player, enemyCounts }: Props) {
       </div>
 
       {/* Radar (top-center) - 1st person only */}
-      {isFirstPerson && (
+      {isFirstPerson && !isDialogue && (
         <div className="absolute top-16 sm:top-20 left-1/2 -translate-x-1/2 pointer-events-none scale-90 sm:scale-100">
           <Minimap />
         </div>
       )}
 
       {/* Instruments (bottom dashboard center) — both views */}
+      {!isDialogue && (
       <div className="absolute bottom-3 sm:bottom-5 left-1/2 -translate-x-1/2 pointer-events-none w-[min(560px,94vw)]">
         <InstrumentsHUD player={player} />
       </div>
+      )}
 
       {/* Mission terminal (bottom-left) */}
+      {!isDialogue && (
       <div className="absolute left-3 sm:left-6 bottom-[160px] sm:bottom-[150px] max-w-[min(360px,70vw)] pointer-events-auto">
         <MissionTerminal enemyCounts={enemyCounts} />
       </div>
+      )}
 
       {/* Inventory rail (right side) */}
+      {!isDialogue && (
       <div className="absolute right-3 sm:right-6 top-20 sm:top-28 pointer-events-auto">
         <InventoryRail />
       </div>
+      )}
 
       {/* Mobile controls (touch) */}
       {isMobile && <MobileControls input={input} />}
 
       {/* Keyboard hint (desktop only, first few seconds) */}
       {!isMobile && <KbdHint />}
-
-      {/* Drive readout modal */}
-      <AnimatePresence>
-        {openDriveId && <DriveReadoutModal missionId={openDriveId} />}
-      </AnimatePresence>
     </div>
   );
 }

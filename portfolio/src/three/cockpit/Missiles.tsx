@@ -8,6 +8,7 @@ export interface Missile {
   velocity: THREE.Vector3;
   target: THREE.Vector3 | null;
   ttl: number;
+  age: number; // seconds alive — used for spawn invulnerability
 }
 
 export interface MissilesHandle {
@@ -17,42 +18,44 @@ export interface MissilesHandle {
 }
 
 const MAX = 16;
-const SPEED = 60;
-const TURN_RATE = 2.5;
+const SPEED = 55;
+const TURN_RATE = 2.8;
 const TTL = 5.0;
+const SPAWN_SAFE_TIME = 0.18; // seconds before missile can collide
 
 const Missiles = forwardRef<MissilesHandle, { color?: string }>(function Missiles(
-  { color = "#f59e0b" },
+  _props,
   ref,
 ) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
   const glowRef = useRef<THREE.InstancedMesh>(null);
   const missilesRef = useRef<Missile[]>([]);
   const dummy = useMemo(() => new THREE.Object3D(), []);
+  const lightRef = useRef<THREE.PointLight>(null);
 
+  // Main missile body — bright, visible
   const mat = useMemo(
     () =>
       new THREE.MeshBasicMaterial({
-        color,
-        transparent: true,
-        opacity: 0.95,
+        color: "#ff7700",
       }),
-    [color],
+    [],
   );
-  const geo = useMemo(() => new THREE.CylinderGeometry(0.15, 0.08, 1.2, 6), []);
+  const geo = useMemo(() => new THREE.CylinderGeometry(0.22, 0.14, 1.6, 6), []);
 
+  // Engine exhaust glow — long, additive
   const glowMat = useMemo(
     () =>
       new THREE.MeshBasicMaterial({
-        color,
+        color: "#ffaa33",
         transparent: true,
-        opacity: 0.4,
+        opacity: 0.55,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
       }),
-    [color],
+    [],
   );
-  const glowGeo = useMemo(() => new THREE.ConeGeometry(0.2, 1.8, 6), []);
+  const glowGeo = useMemo(() => new THREE.ConeGeometry(0.35, 2.4, 6), []);
 
   useEffect(() => {
     missilesRef.current = Array.from({ length: MAX }, () => ({
@@ -61,6 +64,7 @@ const Missiles = forwardRef<MissilesHandle, { color?: string }>(function Missile
       velocity: new THREE.Vector3(),
       target: null,
       ttl: 0,
+      age: 0,
     }));
   }, []);
 
@@ -72,20 +76,16 @@ const Missiles = forwardRef<MissilesHandle, { color?: string }>(function Missile
         if (!m) return;
         m.alive = true;
         m.pos.copy(origin);
-        // Initial direction: toward target with slight variance
         const dir = new THREE.Vector3().subVectors(target, origin).normalize();
-        dir.x += (Math.random() - 0.5) * 0.15;
-        dir.y += (Math.random() - 0.5) * 0.15;
-        dir.z += (Math.random() - 0.5) * 0.15;
-        dir.normalize();
         m.velocity.copy(dir).multiplyScalar(SPEED);
         m.target = target;
         m.ttl = TTL;
+        m.age = 0;
       },
       consumeHit(pos, radius) {
         const r2 = radius * radius;
         for (const m of missilesRef.current) {
-          if (!m.alive) continue;
+          if (!m.alive || m.age < SPAWN_SAFE_TIME) continue;
           if (m.pos.distanceToSquared(pos) <= r2) {
             m.alive = false;
             return true;
@@ -104,11 +104,14 @@ const Missiles = forwardRef<MissilesHandle, { color?: string }>(function Missile
     if (!mesh) return;
 
     let idx = 0;
+    let nearestAlive: Missile | null = null;
+    let nearestDist = Infinity;
     const cylAxis = new THREE.Vector3(0, 1, 0);
 
     for (const m of missilesRef.current) {
       if (!m.alive) continue;
 
+      m.age += dt;
       m.ttl -= dt;
       if (m.ttl <= 0) {
         m.alive = false;
@@ -119,8 +122,6 @@ const Missiles = forwardRef<MissilesHandle, { color?: string }>(function Missile
       if (m.target) {
         const desiredDir = new THREE.Vector3().subVectors(m.target, m.pos).normalize();
         const currentDir = m.velocity.clone().normalize();
-
-        // Lerp direction for "turning" effect
         currentDir.lerp(desiredDir, dt * TURN_RATE);
         m.velocity.copy(currentDir).multiplyScalar(SPEED);
       }
@@ -133,11 +134,18 @@ const Missiles = forwardRef<MissilesHandle, { color?: string }>(function Missile
       dummy.updateMatrix();
       mesh.setMatrixAt(idx, dummy.matrix);
 
-      // Glow trail — positioned behind missile, pointing backward
+      // Glow trail — positioned behind missile
       if (glowMesh) {
-        dummy.position.copy(m.pos).addScaledVector(velDir, -0.9);
+        dummy.position.copy(m.pos).addScaledVector(velDir, -1.2);
         dummy.quaternion.setFromUnitVectors(cylAxis, velDir.clone().negate());
         glowMesh.setMatrixAt(idx, dummy.matrix);
+      }
+
+      // Track nearest alive missile for point light
+      const d = m.pos.lengthSq();
+      if (d < nearestDist) {
+        nearestDist = d;
+        nearestAlive = m;
       }
 
       idx++;
@@ -147,6 +155,17 @@ const Missiles = forwardRef<MissilesHandle, { color?: string }>(function Missile
     if (glowMesh) {
       glowMesh.count = idx;
       glowMesh.instanceMatrix.needsUpdate = true;
+    }
+
+    // Move point light to nearest alive missile
+    if (lightRef.current) {
+      if (nearestAlive) {
+        lightRef.current.position.copy(nearestAlive.pos);
+        lightRef.current.intensity = 8;
+        lightRef.current.visible = true;
+      } else {
+        lightRef.current.visible = false;
+      }
     }
   });
 
@@ -163,6 +182,14 @@ const Missiles = forwardRef<MissilesHandle, { color?: string }>(function Missile
         args={[glowGeo, glowMat, MAX]}
         frustumCulled={false}
         count={0}
+      />
+      <pointLight
+        ref={lightRef}
+        color="#ff8800"
+        intensity={0}
+        distance={25}
+        decay={2}
+        visible={false}
       />
     </>
   );

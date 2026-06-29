@@ -12,6 +12,7 @@ import { MISSIONS, type Mission, type MissionId } from "./missions";
 import { useAudio } from "./useAudio";
 
 const STORAGE_KEY = "resume-cockpit-drives-v1";
+const STORAGE_KEY_STATE = "resume-cockpit-state-v1";
 
 interface CockpitCtx {
   isActive: boolean;
@@ -31,8 +32,8 @@ interface CockpitCtx {
   closeDrive: () => void;
   cameraView: "first" | "third";
   toggleCameraView: () => void;
-  gamePhase: "homebase" | "base" | "space" | "dialogue";
-  setGamePhase: (phase: "homebase" | "base" | "space" | "dialogue") => void;
+  gamePhase: "homebase" | "space" | "dialogue";
+  setGamePhase: (phase: "homebase" | "space" | "dialogue") => void;
   activeStage: number;
   setActiveStage: (stage: number) => void;
   negotiated: Set<MissionId>;
@@ -47,6 +48,10 @@ interface CockpitCtx {
   stats: { deaths: number; kills: number };
   recordDeath: () => void;
   recordKill: () => void;
+  lastCollectedDrive: MissionId | null;
+  clearLastCollectedDrive: () => void;
+  peacefulResolutions: Set<MissionId>;
+  markPeaceful: (id: MissionId) => void;
 }
 
 const CockpitContext = createContext<CockpitCtx | null>(null);
@@ -72,26 +77,53 @@ function saveCollected(set: Set<MissionId>) {
   }
 }
 
+function loadMissionState(): { negotiated: MissionId[]; defeated: MissionId[]; peaceful: MissionId[] } {
+  if (typeof window === "undefined") return { negotiated: [], defeated: [], peaceful: [] };
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY_STATE);
+    if (!raw) return { negotiated: [], defeated: [], peaceful: [] };
+    return JSON.parse(raw);
+  } catch {
+    return { negotiated: [], defeated: [], peaceful: [] };
+  }
+}
+
+function saveMissionState(negotiated: Set<MissionId>, defeated: Set<MissionId>, peaceful: Set<MissionId>) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(STORAGE_KEY_STATE, JSON.stringify({
+      negotiated: [...negotiated],
+      defeated: [...defeated],
+      peaceful: [...peaceful],
+    }));
+  } catch {
+    // ignore
+  }
+}
+
 export function CockpitModeProvider({ children }: { children: ReactNode }) {
   const [isActive, setIsActive] = useState(false);
   const [collected, setCollected] = useState<Set<MissionId>>(() =>
     loadCollected(),
   );
+  const savedState = useMemo(() => loadMissionState(), []);
   const [openDriveId, setOpenDriveId] = useState<MissionId | null>(null);
   const [cameraView, setCameraView] = useState<"first" | "third">("first");
   const [gamePhase, setGamePhase] = useState<
-    "homebase" | "base" | "space" | "dialogue"
+    "homebase" | "space" | "dialogue"
   >("homebase");
   const [activeStage, setActiveStage] = useState<number>(0);
   const [activeMissionId, setActiveMissionId] = useState<MissionId>("launch");
-  const [negotiated, setNegotiated] = useState<Set<MissionId>>(new Set());
+  const [negotiated, setNegotiated] = useState<Set<MissionId>>(() => new Set(savedState.negotiated));
   const [defeatedCommanders, setDefeatedCommanders] = useState<Set<MissionId>>(
-    new Set(),
+    () => new Set(savedState.defeated),
   );
   const [currentDialogue, setCurrentDialogue] = useState<MissionId | null>(
     null,
   );
   const [stats, setStats] = useState({ deaths: 0, kills: 0 });
+  const [lastCollectedDrive, setLastCollectedDrive] = useState<MissionId | null>(null);
+  const [peacefulResolutions, setPeacefulResolutions] = useState<Set<MissionId>>(new Set());
 
   const audio = useAudio();
   const { stopEngine, stopStatic } = audio;
@@ -153,6 +185,10 @@ export function CockpitModeProvider({ children }: { children: ReactNode }) {
     saveCollected(collected);
   }, [collected]);
 
+  useEffect(() => {
+    saveMissionState(negotiated, defeatedCommanders, peacefulResolutions);
+  }, [negotiated, defeatedCommanders, peacefulResolutions]);
+
   const open = useCallback(() => setIsActive(true), []);
   const close = useCallback(() => {
     setIsActive(false);
@@ -212,17 +248,27 @@ export function CockpitModeProvider({ children }: { children: ReactNode }) {
       next.add(id);
       return next;
     });
+    setLastCollectedDrive(id);
   }, []);
 
-  // Auto-collect the launch drive on first visit (tutorial/intro gate)
-  useEffect(() => {
-    if (!collected.has("launch")) collectDrive("launch");
-  }, [collected, collectDrive]);
+  const clearLastCollectedDrive = useCallback(() => {
+    setLastCollectedDrive(null);
+  }, []);
+
+  const markPeaceful = useCallback((id: MissionId) => {
+    setPeacefulResolutions((prev) => {
+      if (prev.has(id)) return prev;
+      const next = new Set(prev);
+      next.add(id);
+      return next;
+    });
+  }, []);
 
   const resetProgress = useCallback(() => {
     setCollected(new Set());
     setNegotiated(new Set());
     setDefeatedCommanders(new Set());
+    setPeacefulResolutions(new Set());
     setStats({ deaths: 0, kills: 0 });
     resetRuntimeUi();
     stopEngine();
@@ -281,6 +327,10 @@ export function CockpitModeProvider({ children }: { children: ReactNode }) {
       stats,
       recordDeath,
       recordKill,
+      lastCollectedDrive,
+      clearLastCollectedDrive,
+      peacefulResolutions,
+      markPeaceful,
     }),
     [
       isActive,
@@ -313,6 +363,10 @@ export function CockpitModeProvider({ children }: { children: ReactNode }) {
       stats,
       recordDeath,
       recordKill,
+      lastCollectedDrive,
+      clearLastCollectedDrive,
+      peacefulResolutions,
+      markPeaceful,
     ],
   );
 

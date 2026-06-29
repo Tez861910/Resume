@@ -9,6 +9,7 @@ import Lasers, { type LasersHandle } from "./Lasers";
 import Missiles, { type MissilesHandle } from "./Missiles";
 import Explosions from "./Explosions";
 import PlayerController from "./PlayerController";
+import TargetLockBeam from "./TargetLockBeam";
 import HardDrives from "./HardDrives";
 import { MISSION_BY_ID, type MissionId } from "./missions";
 import { useCockpitRuntime } from "./CockpitRuntime";
@@ -317,10 +318,17 @@ export default function PirateMissionScene({ enabled }: { enabled: boolean }) {
     audio,
   } = useCockpit();
 
+  useEffect(() => {
+    audio.startMusic();
+    return () => {
+      audio.stopMusic();
+    };
+  }, [audio]);
+
   const handleCollectDrive = useCallback(
     (id: MissionId) => {
       audio.initContext();
-      audio.playLaser(false);
+      audio.playDriveCollect();
       collectDrive(id);
     },
     [audio, collectDrive],
@@ -360,13 +368,15 @@ export default function PirateMissionScene({ enabled }: { enabled: boolean }) {
   );
 
   useEffect(() => {
-    // Spawn player 40 units behind the station (positive Z side), facing it
+    // Spawn player well behind the station so enemies stay in front
     const mPos = new THREE.Vector3(...mission.position);
-    const spawnPos = mPos.clone().add(new THREE.Vector3(0, 5, 80));
+    const spawnPos = mPos.clone().add(new THREE.Vector3(0, 5, 150));
     runtime.player.current.position.copy(spawnPos);
-    // Velocity toward station
-    const dir = new THREE.Vector3(0, 0, -40);
+    // Initial velocity toward station — high enough to close distance fast
+    const dir = new THREE.Vector3(0, 0, -60);
     runtime.player.current.velocity.copy(dir);
+    // Set initial speed so engine sound starts correctly
+    runtime.player.current.speed = 22;
   }, [runtime.player, mission]);
 
   useEffect(() => {
@@ -394,7 +404,7 @@ export default function PirateMissionScene({ enabled }: { enabled: boolean }) {
     <>
       <color attach="background" args={[fogColor]} />
       <fog attach="fog" args={[fogColor, 20, 400]} />
-      <Starfield count={3000} />
+      <Starfield count={1500} />
       <WarpInEffect />
       <ambientLight intensity={0.15} />
       <directionalLight position={[-50, 50, -50]} intensity={1.5} color="#fb7185" />
@@ -451,6 +461,7 @@ export default function PirateMissionScene({ enabled }: { enabled: boolean }) {
         color="#f59e0b"
       />
       <Explosions ref={runtime.explosions} />
+      <TargetLockBeam player={runtime.player} />
       <PlayerController
         input={runtime.input}
         player={runtime.player}

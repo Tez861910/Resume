@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useMemo } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import ResumeScreen from "./ResumeScreens";
@@ -88,7 +88,7 @@ function WallPanel({ position, size }: { position: [number, number, number]; siz
   return (
     <mesh position={position}>
       <boxGeometry args={size} />
-      <meshStandardMaterial color="#0c1425" metalness={0.8} roughness={0.25} />
+      <meshStandardMaterial color="#0c1425" metalness={0.8} roughness={0.25} side={THREE.DoubleSide} />
     </mesh>
   );
 }
@@ -103,11 +103,11 @@ interface ScreenSpec {
 }
 
 const SCREENS: ScreenSpec[] = [
-  { id: "profile", label: "Builder Archive", position: [-7.85, 1.5, 6], rotation: [0, Math.PI / 2, 0], width: 3.2, height: 2.4 },
-  { id: "constellation", label: "Skill Constellation", position: [-7.85, 1.5, 1], rotation: [0, Math.PI / 2, 0], width: 3.2, height: 2.4 },
-  { id: "career", label: "Career Trajectory", position: [7.85, 1.5, 6], rotation: [0, -Math.PI / 2, 0], width: 3.2, height: 2.4 },
-  { id: "mission-ops", label: "Mission Ops", position: [7.85, 1.5, 1], rotation: [0, -Math.PI / 2, 0], width: 3.2, height: 2.4 },
-  { id: "transmission", label: "Transmission Array", position: [7.85, 1.5, -4], rotation: [0, -Math.PI / 2, 0], width: 3.2, height: 2.4 },
+  { id: "profile", label: "Builder Archive", position: [-7.68, 1.5, 6], rotation: [0, Math.PI / 2, 0], width: 3.2, height: 2.4 },
+  { id: "constellation", label: "Skill Constellation", position: [-7.68, 1.5, 1], rotation: [0, Math.PI / 2, 0], width: 3.2, height: 2.4 },
+  { id: "career", label: "Career Trajectory", position: [7.68, 1.5, 6], rotation: [0, -Math.PI / 2, 0], width: 3.2, height: 2.4 },
+  { id: "mission-ops", label: "Mission Ops", position: [7.68, 1.5, 1], rotation: [0, -Math.PI / 2, 0], width: 3.2, height: 2.4 },
+  { id: "transmission", label: "Transmission Array", position: [7.68, 1.5, -4], rotation: [0, -Math.PI / 2, 0], width: 3.2, height: 2.4 },
 ];
 
 const W = 16;
@@ -119,6 +119,32 @@ interface Props {
   collected: Set<MissionId>;
 }
 
+function FloorGrid() {
+  const lineGeo = useMemo(() => {
+    const points: THREE.Vector3[] = [];
+    // X lines
+    for (let i = 0; i <= 8; i++) {
+      const x = -W / 2 + i * (W / 8);
+      points.push(new THREE.Vector3(x, 0.02, -D / 2 + 0.15));
+      points.push(new THREE.Vector3(x, 0.02, D / 2 - 0.15));
+    }
+    // Z lines
+    for (let i = 0; i <= 10; i++) {
+      const z = -D / 2 + i * (D / 10);
+      points.push(new THREE.Vector3(-W / 2 + 0.15, 0.02, z));
+      points.push(new THREE.Vector3(W / 2 - 0.15, 0.02, z));
+    }
+    const geo = new THREE.BufferGeometry().setFromPoints(points);
+    return geo;
+  }, []);
+
+  return (
+    <lineSegments geometry={lineGeo}>
+      <lineBasicMaterial color="#1e3a5f" transparent opacity={0.12} />
+    </lineSegments>
+  );
+}
+
 export default function CommandCenter({ collected }: Props) {
   return (
     <group position={[0, 0, -2]}>
@@ -128,19 +154,8 @@ export default function CommandCenter({ collected }: Props) {
         <boxGeometry args={[W, 0.06, D]} />
         <meshStandardMaterial color="#080c18" metalness={0.88} roughness={0.14} />
       </mesh>
-      {/* Panel grid lines */}
-      {Array.from({ length: 9 }).map((_, i) => (
-        <mesh key={`fx${i}`} position={[-W / 2 + 0.02 + i * (W / 8), 0.02, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <planeGeometry args={[0.015, D - 0.3]} />
-          <meshBasicMaterial color="#1e3a5f" transparent opacity={0.12} />
-        </mesh>
-      ))}
-      {Array.from({ length: 11 }).map((_, i) => (
-        <mesh key={`fz${i}`} position={[0, 0.02, -D / 2 + 0.02 + i * (D / 10)]} rotation={[-Math.PI / 2, 0, 0]}>
-          <planeGeometry args={[W - 0.3, 0.015]} />
-          <meshBasicMaterial color="#1e3a5f" transparent opacity={0.12} />
-        </mesh>
-      ))}
+      {/* Panel grid lines — single LineSegments instead of 20 plane meshes */}
+      <FloorGrid />
       {/* Floor edge glow strips */}
       <mesh position={[-W / 2 + 0.02, 0.025, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[0.04, D]} />
@@ -156,12 +171,28 @@ export default function CommandCenter({ collected }: Props) {
       <WallPanel position={[-W / 2, H / 2, 0]} size={[0.22, H, D]} />
       <WallPanel position={[W / 2, H / 2, 0]} size={[0.22, H, D]} />
 
+      {/* Viewport windows (between screen positions) */}
+      {/* Left wall windows — at z=-4 area */}
+      {[-4.5, -3, 10, 11.5].map((z) => (
+        <mesh key={`winL${z}`} position={[-W / 2 + 0.12, H * 0.55, z]}>
+          <planeGeometry args={[1.2, 1.8]} />
+          <meshStandardMaterial color="#061020" emissive="#183056" emissiveIntensity={0.12} side={THREE.DoubleSide} metalness={0.05} roughness={0.04} />
+        </mesh>
+      ))}
+      {/* Right wall windows */}
+      {[-8.3, -7, 10, 11.5].map((z) => (
+        <mesh key={`winR${z}`} position={[W / 2 - 0.12, H * 0.55, z]}>
+          <planeGeometry args={[1.2, 1.8]} />
+          <meshStandardMaterial color="#061020" emissive="#183056" emissiveIntensity={0.12} side={THREE.DoubleSide} metalness={0.05} roughness={0.04} />
+        </mesh>
+      ))}
+
       {/* Wall ribs (vertical) */}
       {Array.from({ length: 5 }).map((_, i) => (
         <group key={`ribl${i}`}>
           <mesh position={[-W / 2 + 0.12, H / 2, -D / 2 + 2 + i * 4]}>
             <boxGeometry args={[0.06, H, 0.08]} />
-            <meshStandardMaterial color="#0a101e" metalness={0.9} roughness={0.12} />
+            <meshStandardMaterial color="#0a101e" metalness={0.9} roughness={0.12} side={THREE.DoubleSide} />
           </mesh>
         </group>
       ))}
@@ -169,7 +200,7 @@ export default function CommandCenter({ collected }: Props) {
         <group key={`ribr${i}`}>
           <mesh position={[W / 2 - 0.12, H / 2, -D / 2 + 2 + i * 4]}>
             <boxGeometry args={[0.06, H, 0.08]} />
-            <meshStandardMaterial color="#0a101e" metalness={0.9} roughness={0.12} />
+            <meshStandardMaterial color="#0a101e" metalness={0.9} roughness={0.12} side={THREE.DoubleSide} />
           </mesh>
         </group>
       ))}
@@ -204,7 +235,7 @@ export default function CommandCenter({ collected }: Props) {
       {/* === CEILING === */}
       <mesh position={[0, H, 0]}>
         <boxGeometry args={[W + 0.22, 0.1, D + 0.22]} />
-        <meshStandardMaterial color="#060a14" metalness={0.5} roughness={0.5} />
+        <meshStandardMaterial color="#0a1220" metalness={0.5} roughness={0.5} side={THREE.DoubleSide} />
       </mesh>
       {/* Ceiling light strips — emissive instead of point lights */}
       {[-5, 0, 5].map((z) => (
@@ -242,9 +273,25 @@ export default function CommandCenter({ collected }: Props) {
       ))}
 
       {/* === LIGHTING === */}
-      {/* Single soft ambient fill + screen glow does the rest */}
-      <pointLight position={[0, H - 0.8, 0]} intensity={2} distance={18} color="#e0f2fe" />
-      <pointLight position={[0, 0.5, D / 2 - 2]} intensity={1} distance={8} color="#f59e0b" />
+      {/* Reduced from 7 to 3 strategic point lights */}
+      <ambientLight intensity={0.35} />
+      <pointLight position={[0, H - 0.8, 0]} intensity={4} distance={24} color="#d0e8ff" decay={2} />
+      <pointLight position={[0, 0.5, D / 2 - 2]} intensity={1.5} distance={10} color="#22d3ee" decay={2} />
+
+      {/* === ROOF — antenna + beacon only === */}
+      <mesh position={[0, H + 1.6, 0]}>
+        <cylinderGeometry args={[0.06, 0.1, 2.8, 8]} />
+        <meshStandardMaterial color="#334155" metalness={0.9} roughness={0.15} />
+      </mesh>
+      <mesh position={[0, H + 3.2, 0]}>
+        <sphereGeometry args={[0.2, 8, 8]} />
+        <meshBasicMaterial color="#ffffff" />
+      </mesh>
+      <pointLight position={[0, H + 3.2, 0]} intensity={3} distance={10} color="#ffffff" decay={2} />
+      <mesh position={[0, H + 3.0, 0]}>
+        <sphereGeometry args={[0.1, 6, 6]} />
+        <meshBasicMaterial color="#fbbf24" />
+      </mesh>
 
       {/* === SCREENS === */}
       {SCREENS.map((s) => {

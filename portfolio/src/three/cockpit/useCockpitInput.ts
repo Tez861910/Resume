@@ -207,6 +207,13 @@ export function useCockpitInput(active: boolean) {
           inputRef.current.missileTrigger++;
         }
       },
+      triggerTargetLock() {
+        const now = performance.now();
+        if (now - lastTargetLockRef.current > 300) {
+          lastTargetLockRef.current = now;
+          inputRef.current.targetLockTrigger++;
+        }
+      },
     };
   }, []);
 

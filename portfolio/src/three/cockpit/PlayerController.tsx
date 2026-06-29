@@ -160,10 +160,9 @@ export default function PlayerController({
       lastMissileTrigger.current = i.missileTrigger;
       missileCooldown.current = 1.2;
       const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(p.quaternion);
-      const right = new THREE.Vector3(1, 0, 0).applyQuaternion(p.quaternion);
-      // Alternate left/right wing hardpoints for visibility
-      const hardpointOffset = right.clone().multiplyScalar(Math.random() > 0.5 ? 2.2 : -2.2).add(new THREE.Vector3(0, -0.3, 0).applyQuaternion(p.quaternion));
-      const origin = p.position.clone().add(hardpointOffset).add(forward.clone().multiplyScalar(0.5));
+      const up = new THREE.Vector3(0, 1, 0).applyQuaternion(p.quaternion);
+      // Spawn from just below nose — visible in both 1st/3rd person, outside collision radius
+      const origin = p.position.clone().add(forward.clone().multiplyScalar(1.2)).add(up.clone().multiplyScalar(-0.35));
       let target: THREE.Vector3;
       if (p.lockTargetIndex >= 0) {
         target = p.lockTargetPos.clone();
@@ -182,6 +181,7 @@ export default function PlayerController({
         }
       }
       onFireMissile?.(origin, target);
+      audio.playMissile();
     }
     p.missileCooldown = Math.max(0, missileCooldown.current) / 1.2;
 
@@ -420,7 +420,11 @@ function StarfighterHull() {
       </mesh>
 
       {/* === Engine glow & exhaust === */}
-      <pointLight position={[0, -0.05, 3.0]} intensity={12} distance={10} color={GLOW} />
+      {/* Replaced pointLight with emissive glow mesh for performance */}
+      <mesh position={[0, -0.05, 3.2]}>
+        <sphereGeometry args={[0.35, 8, 8]} />
+        <meshBasicMaterial color={GLOW} transparent opacity={0.12} />
+      </mesh>
       {/* Inner hot cones */}
       <mesh position={[-0.28, -0.05, 3.0]} rotation={[Math.PI / 2, 0, 0]}>
         <coneGeometry args={[0.12, 0.9, 8]} />

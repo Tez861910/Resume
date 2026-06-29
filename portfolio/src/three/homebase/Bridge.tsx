@@ -1,47 +1,72 @@
-import { useRef } from "react";
+import { useRef, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
 const BRIDGE_W = 3;
-const BRIDGE_LEN = 10;
-const BRIDGE_Z_START = 18;
+const BRIDGE_LEN = 12;
+const BRIDGE_Z_START = 20;
 const BRIDGE_Z_END = 8;
 const BRIDGE_Z_MID = (BRIDGE_Z_START + BRIDGE_Z_END) / 2;
 
 function BridgeParticles() {
-  const ref = useRef<THREE.Group>(null);
-  const particles = useRef(
-    Array.from({ length: 12 }, (_, i) => ({
+  const pointsRef = useRef<THREE.Points>(null);
+  const PARTICLE_COUNT = 12;
+
+  const { geometry, particles } = useMemo(() => {
+    const g = new THREE.BufferGeometry();
+    const positions = new Float32Array(PARTICLE_COUNT * 3);
+    const colors = new Float32Array(PARTICLE_COUNT * 3);
+    const particleData = Array.from({ length: PARTICLE_COUNT }, (_, i) => ({
       x: (Math.random() - 0.5) * (BRIDGE_W - 0.6),
       z: BRIDGE_Z_END + (i / 11) * BRIDGE_LEN + (Math.random() - 0.5) * 0.5,
       y: 0.2 + Math.random() * 0.6,
       speed: 0.2 + Math.random() * 0.3,
       phase: Math.random() * Math.PI * 2,
-    })),
-  );
+    }));
+
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      positions[i * 3] = particleData[i].x;
+      positions[i * 3 + 1] = particleData[i].y;
+      positions[i * 3 + 2] = particleData[i].z;
+      colors[i * 3] = 0.13;
+      colors[i * 3 + 1] = 0.83;
+      colors[i * 3 + 2] = 0.93;
+    }
+
+    g.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    g.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+
+    return { geometry: g, particles: particleData };
+  }, []);
 
   useFrame(({ clock }) => {
     const t = clock.elapsedTime;
-    if (!ref.current) return;
-    const children = ref.current.children;
-    for (let i = 0; i < children.length; i++) {
-      const p = particles.current[i];
-      const mesh = children[i] as THREE.Mesh;
-      mesh.position.x = p.x + Math.sin(t * p.speed + p.phase) * 0.15;
-      mesh.position.y = p.y + Math.sin(t * p.speed * 0.7 + p.phase) * 0.08;
-      mesh.position.z = p.z + Math.cos(t * p.speed * 0.5 + p.phase) * 0.1;
+    const posAttr = pointsRef.current?.geometry.attributes.position;
+    if (!posAttr) return;
+
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      const p = particles[i];
+      posAttr.setXYZ(
+        i,
+        p.x + Math.sin(t * p.speed + p.phase) * 0.15,
+        p.y + Math.sin(t * p.speed * 0.7 + p.phase) * 0.08,
+        p.z + Math.cos(t * p.speed * 0.5 + p.phase) * 0.1,
+      );
     }
+    posAttr.needsUpdate = true;
   });
 
   return (
-    <group ref={ref}>
-      {particles.current.map((p, i) => (
-        <mesh key={i} position={[p.x, p.y, p.z]}>
-          <sphereGeometry args={[0.015 + Math.random() * 0.01, 4, 4]} />
-          <meshBasicMaterial color="#22d3ee" transparent opacity={0.35 + Math.random() * 0.25} />
-        </mesh>
-      ))}
-    </group>
+    <points ref={pointsRef} geometry={geometry} frustumCulled={false}>
+      <pointsMaterial
+        size={0.04}
+        vertexColors
+        transparent
+        opacity={0.5}
+        depthWrite={false}
+        sizeAttenuation
+      />
+    </points>
   );
 }
 
