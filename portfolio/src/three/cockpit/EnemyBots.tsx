@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import type { MutableRefObject } from "react";
@@ -7,8 +7,8 @@ import type { LasersHandle } from "./Lasers";
 import type { MissilesHandle } from "./Missiles";
 import type { ExplosionsHandle } from "./Explosions";
 import type { PlayerState } from "./usePlayerState";
-import { useGameAsset } from "./AssetPipeline";
 import { useCockpit } from "./CockpitModeProvider";
+import EnemyDrone from "./EnemyDrone";
 
 interface EnemyBot {
   alive: boolean;
@@ -58,11 +58,10 @@ export default function EnemyBots({
   counterRef,
   enabled,
 }: Props) {
-  const meshRef = useRef<THREE.InstancedMesh>(null);
   const botsRef = useRef<EnemyBot[]>([]);
-  const dummy = useMemo(() => new THREE.Object3D(), []);
-  const asset = useGameAsset("enemy");
   const { audio, recordKill } = useCockpit();
+  const tClockRef = useRef(0);
+  const [, setTick] = useState(0);
 
   useEffect(() => {
     const arr: EnemyBot[] = [];
@@ -73,7 +72,7 @@ export default function EnemyBots({
           missionId: s.id,
           basePos: s.position.clone(),
           orbitPhase: (i / Math.max(1, s.enemyCount)) * Math.PI * 2,
-          orbitRadius: 8 + Math.random() * 5,
+          orbitRadius: 10 + Math.random() * 6,
           orbitAxis: new THREE.Vector3(
             Math.random() - 0.5,
             1,
@@ -89,23 +88,19 @@ export default function EnemyBots({
       }
     }
     botsRef.current = arr;
-    // seed counter
     const counts: Partial<Record<MissionId, number>> = {};
     for (const s of stations) {
       counts[s.id] = s.enemyCount;
     }
     counterRef.current = counts as Record<MissionId, number>;
+    setTick((t) => t + 1);
   }, [stations, counterRef]);
-
-  const tClockRef = useRef(0);
 
   useFrame((_, delta) => {
     const dt = Math.min(delta, 0.05);
     tClockRef.current += dt;
     const t = tClockRef.current;
-    const mesh = meshRef.current;
     const bots = botsRef.current;
-    if (!mesh) return;
 
     const counts: Partial<Record<MissionId, number>> = {};
     for (const station of stations) {
@@ -113,7 +108,6 @@ export default function EnemyBots({
     }
     const activePositions: THREE.Vector3[] = [];
 
-    let idx = 0;
     for (const b of bots) {
       if (!b.alive) continue;
       const toPlayer = new THREE.Vector3().subVectors(
@@ -123,14 +117,12 @@ export default function EnemyBots({
       const distanceToPlayer = Math.max(0.001, toPlayer.length());
       const toPlayerDir = toPlayer.clone().divideScalar(distanceToPlayer);
 
-      // Local orbit plane basis
       const right = new THREE.Vector3(1, 0, 0).cross(b.orbitAxis).normalize();
       if (right.lengthSq() < 0.01) right.set(0, 0, 1);
       const up = new THREE.Vector3()
         .crossVectors(b.orbitAxis, right)
         .normalize();
 
-      // Keep them anchored to their encounter zone, but allow much more aggression.
       const angle = b.orbitPhase + t * 0.85;
       const orbitTarget = new THREE.Vector3()
         .copy(b.basePos)
@@ -192,12 +184,10 @@ export default function EnemyBots({
         if (b.cooldown <= 0) {
           const distSq = b.pos.distanceToSquared(player.current.position);
           if (distSq < 1600) {
-            // ~40 units range
             b.cooldown = 0.65 + Math.random() * 0.9;
             const dir = new THREE.Vector3()
               .subVectors(player.current.position, b.pos)
               .normalize();
-            // Add a little inaccuracy
             dir.x += (Math.random() - 0.5) * 0.05;
             dir.y += (Math.random() - 0.5) * 0.05;
             dir.z += (Math.random() - 0.5) * 0.05;
@@ -208,40 +198,22 @@ export default function EnemyBots({
             );
             audio.playLaser(true);
           } else {
-            b.cooldown = 0.5; // check again soon
+            b.cooldown = 0.5;
           }
         }
       }
 
       activePositions.push(b.pos.clone());
       counts[b.missionId] = (counts[b.missionId] ?? 0) + 1;
-      dummy.position.copy(b.pos);
-      dummy.lookAt(player.current.position);
-      dummy.rotateX(Math.PI / 2);
-      dummy.updateMatrix();
-      mesh.setMatrixAt(idx, dummy.matrix);
-      idx++;
     }
-    mesh.count = idx;
-    mesh.instanceMatrix.needsUpdate = true;
     enemies.current = activePositions;
     counterRef.current = counts as Record<MissionId, number>;
   });
 
-  const capacity = useMemo(
-    () => stations.reduce((a, s) => a + s.enemyCount, 0),
-    [stations],
-  );
-
   return (
-    <instancedMesh
-      ref={meshRef}
-      // @ts-expect-error - React-Three-Fiber args type is too strict
-      args={[null, null, Math.max(1, capacity)]}
-      geometry={asset.geometry}
-      material={asset.material}
-      count={0}
-      frustumCulled={false}
+    <EnemyDrone
+      botsRef={botsRef}
+      playerPosRef={player}
     />
   );
 }

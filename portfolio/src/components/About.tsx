@@ -1,191 +1,146 @@
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 
-const About = () => {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
+const currentFocus = [
+  "Projects with enough scope to show architecture, workflow, and delivery decisions.",
+  "Interfaces that make dense information easier to use, not just prettier to look at.",
+  "Systems where frontend, backend, and content structure reinforce one another.",
+  "Work that benefits from a practical handoff between product thinking and code.",
+];
 
-  const profilePanels = [
-    {
-      label: "Day-to-day",
-      value: "Product systems",
-      detail: "Dashboards, company platforms, APIs, and workflow-oriented UI",
-    },
-    {
-      label: "Desktop work",
-      value: "Windows 3D tooling",
-      detail: "Rendering, model analysis, reporting, and manufacturing workflows",
-    },
-    {
-      label: "How I work",
-      value: "Practical and thorough",
-      detail:
-        "Understand the domain, keep the UX readable, and ship maintainable code",
-    },
-    {
-      label: "Right now",
-      value: "Current product mix",
-      detail:
-        "Solar ops, biotech platforms, local-first tools, and manufacturing apps",
-    },
-  ];
+const recentCoverage = [
+  {
+    index: "01",
+    title: "Operational products",
+    detail: "Role-aware dashboards, uploads, protected flows, and admin tooling.",
+  },
+  {
+    index: "02",
+    title: "Company platforms",
+    detail: "Content-rich sites with stronger information architecture.",
+  },
+  {
+    index: "03",
+    title: "Desktop workflows",
+    detail: "Windows 3D inspection, manufacturing guidance, and reporting.",
+  },
+  {
+    index: "04",
+    title: "Local-first tools",
+    detail: "Flutter + Rust utility suite with on-device processing.",
+  },
+];
 
-  const currentFocus = [
-    "Projects with enough scope to show architecture, workflow, and delivery decisions",
-    "Interfaces that make dense information easier to use instead of simply prettier to look at",
-    "Systems where frontend, backend, and content structure need to reinforce one another",
-    "Projects that benefit from a practical handoff between product thinking and implementation",
-  ];
+const glance = [
+  { label: "Day-to-day", value: "Product systems" },
+  { label: "Desktop", value: "Windows 3D tooling" },
+  { label: "How I work", value: "Practical, thorough" },
+  { label: "Right now", value: "Solar · biotech · tooling" },
+];
 
-  const recentCoverage = [
-    {
-      title: "Operational products",
-      detail: "Role-aware dashboards, uploads, protected flows, and admin tooling",
-    },
-    {
-      title: "Company platforms",
-      detail: "Content-rich sites with stronger information architecture and inquiry paths",
-    },
-    {
-      title: "Desktop workflows",
-      detail: "Windows 3D inspection, manufacturing guidance, and reporting",
-    },
-    {
-      title: "Local-first tools",
-      detail: "Flutter + Rust utility suite with on-device PDF, media, and storage workflows",
-    },
-  ];
+export default function About() {
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
   return (
     <section id="about" className="section-container">
       <motion.div
         ref={ref}
-        initial={{ opacity: 0, y: 50 }}
+        initial={{ opacity: 0, y: 24 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.6 }}
       >
-        <div className="mb-10 text-center">
-          <p className="section-eyebrow">Profile</p>
-          <h2 className="section-title">About me</h2>
-          <p className="section-copy">
-            A quick overview of how I work, what I focus on, and the kind of
-            software I like building.
+        <header className="max-w-3xl">
+          <p className="section-kicker">
+            <span className="font-mono text-faint">01</span> Profile
           </p>
+          <h2 className="section-title">
+            Software that earns its place in real workflows.
+          </h2>
+        </header>
+
+        <div className="mt-12 grid gap-10 border-t border-rule pt-10 lg:grid-cols-12 lg:gap-0">
+          <div className="lg:col-span-7 lg:pr-12">
+            <p className="font-display text-2xl leading-snug text-ink sm:text-[1.75rem]">
+              I&apos;m a full-stack developer focused on building software that
+              feels useful in practice — not just polished in a demo.
+            </p>
+            <div className="mt-6 space-y-4 text-[1.0625rem] leading-relaxed text-soft">
+              <p>
+                My recent work spans operational web platforms, multi-page
+                company sites with real content depth, a Windows manufacturing
+                app, and a cross-platform Flutter + Rust utility product.
+              </p>
+              <p>
+                That mix keeps me comfortable across React, Next.js, Node,
+                SQL-backed systems, .NET desktop work, and newer cross-platform
+                tooling when the product calls for it.
+              </p>
+              <p>
+                I&apos;m especially interested in product clarity, workflow
+                design, maintainable architecture, and the parts of engineering
+                that make software easier to live with over time.
+              </p>
+            </div>
+          </div>
+
+          <div className="lg:col-span-5 lg:border-l lg:border-rule lg:pl-12">
+            <p className="mono-label">Currently leaning into</p>
+            <ul className="mt-5 divide-y divide-[var(--rule)]">
+              {currentFocus.map((item, i) => (
+                <li
+                  key={item}
+                  className="flex gap-4 py-4 text-[0.95rem] leading-relaxed text-soft"
+                >
+                  <span className="num-index pt-0.5 text-sm">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
-        <div className="app-panel relative">
-          <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(180deg,rgba(255,255,255,0.06)_0%,rgba(255,255,255,0.015)_38%,rgba(255,255,255,0)_100%)]" />
-          <div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-cyan-300 via-amber-300 to-emerald-300" />
-
-          <div className="relative grid gap-6 p-6 sm:p-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(320px,0.92fr)] lg:items-start lg:gap-6 lg:p-10">
-            <div className="space-y-4">
-              <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 sm:p-6">
-                <div className="mb-6 flex flex-wrap items-center gap-3">
-                  <span className="inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-200">
-                    <span className="h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.8)]" />
-                    What I do
-                  </span>
-                  <span className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-300">
-                    Web + desktop + cross-platform
-                  </span>
-                </div>
-
-                <div className="space-y-4 text-base leading-relaxed text-slate-200/90 sm:text-lg">
-                  <p>
-                    I&apos;m a full-stack developer focused on building software that
-                    feels useful in real workflows, not just polished in a demo.
-                  </p>
-                  <p>
-                    My recent work spans operational web platforms, multi-page
-                    company sites with real content depth, a Windows
-                    manufacturing app, and a cross-platform Flutter + Rust utility
-                    product.
-                  </p>
-                  <p>
-                    That mix keeps me comfortable across React, Next.js, Node,
-                    SQL-backed systems, .NET desktop work, and newer
-                    cross-platform tooling when the product calls for it.
-                  </p>
-                  <p>
-                    I&apos;m especially interested in product clarity, workflow
-                    design, maintainable architecture, and the parts of
-                    engineering that make software easier to live with over time.
-                  </p>
-                </div>
-              </div>
-
-              <div className="rounded-2xl border border-cyan-300/20 bg-cyan-300/8 p-4 sm:p-5">
-                <p className="mb-3 text-[10px] uppercase tracking-[0.22em] text-cyan-200/80">
-                  What I am leaning into
+        {/* Recent coverage */}
+        <div className="mt-14">
+          <div className="flex items-end justify-between border-b border-rule pb-3">
+            <p className="mono-label">Recent coverage</p>
+            <p className="mono-label">Web · Desktop · Cross-platform</p>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4">
+            {recentCoverage.map((item, index) => (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 14 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.45, delay: index * 0.07 }}
+                className="border-b border-rule py-6 sm:[&:nth-child(odd)]:pr-6 lg:px-6 lg:[&:not(:first-child)]:border-l lg:[&:nth-child(odd)]:pr-6"
+              >
+                <span className="num-index text-base">{item.index}</span>
+                <h3 className="mt-3 font-display text-lg text-ink">
+                  {item.title}
+                </h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-faint">
+                  {item.detail}
                 </p>
-                <ul className="space-y-2">
-                  {currentFocus.map((item) => (
-                    <li
-                      key={item}
-                      className="flex items-start gap-3 text-xs leading-relaxed text-slate-200/85 sm:text-sm"
-                    >
-                      <span className="mt-1 text-cyan-200">▸</span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+              </motion.div>
+            ))}
+          </div>
 
-            <div className="space-y-4">
-              <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 sm:p-5">
-                <p className="mb-3 text-[10px] uppercase tracking-[0.24em] text-slate-500">
-                  Recent coverage
-                </p>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {recentCoverage.map((item, index) => (
-                    <motion.div
-                      key={item.title}
-                      className="rounded-2xl border border-white/10 bg-slate-900/70 p-4"
-                      initial={{ opacity: 0, scale: 0.96 }}
-                      animate={inView ? { opacity: 1, scale: 1 } : {}}
-                      transition={{ duration: 0.45, delay: index * 0.08 }}
-                    >
-                      <div className="mb-1 text-sm font-semibold text-slate-100 sm:text-base">
-                        {item.title}
-                      </div>
-                      <div className="text-xs leading-relaxed text-slate-300/80 sm:text-sm">
-                        {item.detail}
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
+          {/* At a glance */}
+          <div className="grid gap-x-8 gap-y-3 pt-6 sm:grid-cols-2 lg:grid-cols-4">
+            {glance.map((g) => (
+              <div
+                key={g.label}
+                className="flex items-baseline justify-between gap-3 border-b border-rule pb-2"
+              >
+                <span className="mono-label">{g.label}</span>
+                <span className="text-sm font-medium text-ink">{g.value}</span>
               </div>
-
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-                {profilePanels.map((panel, index) => (
-                  <motion.div
-                    key={panel.label}
-                    className="rounded-2xl border border-white/10 bg-white/[0.04] p-4"
-                    initial={{ opacity: 0, x: 18 }}
-                    animate={inView ? { opacity: 1, x: 0 } : {}}
-                    transition={{ duration: 0.4, delay: 0.15 + index * 0.08 }}
-                  >
-                    <div className="mb-1 text-[10px] uppercase tracking-[0.22em] text-slate-500">
-                      {panel.label}
-                    </div>
-                    <div className="mb-1 text-sm font-semibold text-slate-100 sm:text-base">
-                      {panel.value}
-                    </div>
-                    <p className="text-xs leading-relaxed text-slate-300/75 sm:text-sm">
-                      {panel.detail}
-                    </p>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </motion.div>
     </section>
   );
-};
-
-export default About;
+}

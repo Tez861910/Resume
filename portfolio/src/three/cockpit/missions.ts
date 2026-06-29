@@ -41,9 +41,21 @@ export interface Mission {
   /** Narrative negotiation before combat */
   negotiation?: {
     speaker: string;
-    lines: string[];
+    faction: string;
+    rounds: NegotiationRound[];
+    peacefulThreshold: number;
+    peacefulResponse: string;
     failResponse: string;
   };
+}
+
+export interface NegotiationRound {
+  npcLine: string;
+  choices: {
+    text: string;
+    persuasion: number;
+    npcResponse: string;
+  }[];
 }
 
 export const MISSIONS: Mission[] = [
@@ -58,13 +70,13 @@ export const MISSIONS: Mission[] = [
     enemyCount: 0,
     asteroidCount: 5,
     briefing: [
-      "[CTRL] Pilot, this route mirrors the main portfolio as a recoverable drive run.",
-      "[CTRL] Throttle up with W, yaw with A/D, pitch with mouse.",
-      "[CTRL] Fly to the launch beacon and secure the identity drive to begin the dossier.",
+      "[AEGIS CTRL] Pilot, this route mirrors the main portfolio as a recoverable drive run.",
+      "[AEGIS CTRL] Throttle up with W, yaw with A/D, pitch with mouse.",
+      "[AEGIS CTRL] Fly to the launch beacon and secure the identity drive to begin the dossier.",
     ],
     debriefing: [
-      "[CTRL] Identity drive secured. Base profile is now online.",
-      "[CTRL] Next mission target has appeared on your compass.",
+      "[AEGIS CTRL] Identity drive secured. Base profile is now online.",
+      "[AEGIS CTRL] Next mission target has appeared on your compass.",
     ],
     driveTitle: "Identity Drive",
     driveTagline: "Callsign, role, and current focus",
@@ -80,22 +92,43 @@ export const MISSIONS: Mission[] = [
     enemyCount: 2,
     asteroidCount: 8,
     briefing: [
-      "[CTRL] Builder archive ahead - two rogue drones are holding position near the profile cache.",
-      "[CTRL] Clear the drones, then recover the archive drive.",
+      "[AEGIS CTRL] Builder archive ahead — two rogue drones are holding position near the profile cache.",
+      "[AEGIS CTRL] Clear the drones, then recover the archive drive.",
     ],
     debriefing: [
-      "[CTRL] Archive secured. Builder profile and working style are now on record.",
+      "[AEGIS CTRL] Archive secured. Builder profile and working style are now on record.",
     ],
     driveTitle: "Builder Drive",
     driveTagline: "How you work and what you optimize for",
     negotiation: {
       speaker: "Sector Pirate",
-      lines: [
-        "L7-Pirate: This archive sector is under our salvage jurisdiction, pilot.",
-        "Pilot: I am only here for the builder record. Hand over the drive.",
-        "L7-Pirate: Every data crate in this field belongs to us. Including your ship if you insist.",
+      faction: "SALVAGE-CORP",
+      peacefulThreshold: 60,
+      peacefulResponse: "SALVAGE-CORP: Fair enough, pilot. Take your drive and go. We have bigger fish to fry.",
+      failResponse: "SALVAGE-CORP: Engaging thrusters. Prepare to be salvaged!",
+      rounds: [
+        {
+          npcLine: "SALVAGE-CORP: This archive sector is under our salvage jurisdiction, pilot.",
+          choices: [
+            { text: "I respect salvage rights. What is your claim fee?", persuasion: 35, npcResponse: "SALVAGE-CORP: Interesting. You know the codes. The fee is your ship's cargo bay." },
+            { text: "Your jurisdiction does not extend to data recovery.", persuasion: 10, npcResponse: "SALVAGE-CORP: Bold words from someone outnumbered." },
+          ],
+        },
+        {
+          npcLine: "SALVAGE-CORP: We have three ships on your position. You have one.",
+          choices: [
+            { text: "I can offer something better — access to the next sector's trade routes.", persuasion: 40, npcResponse: "SALVAGE-CORP: Trade routes? Now you are speaking my language." },
+            { text: "Three ships. Three targets. My aim is not the problem here.", persuasion: 5, npcResponse: "SALVAGE-CORP: Confidence or stupidity. Hard to tell from here." },
+          ],
+        },
+        {
+          npcLine: "SALVAGE-CORP: Last chance, pilot. Stand down or be boarded.",
+          choices: [
+            { text: "Let us both walk away. I take the drive, you keep the sector.", persuasion: 30, npcResponse: "SALVAGE-CORP: Hmm. A clean split. I can work with that." },
+            { text: "Come and take it.", persuasion: -10, npcResponse: "SALVAGE-CORP: Your funeral." },
+          ],
+        },
       ],
-      failResponse: "L7-Pirate: Engaging thrusters. Prepare to be salvaged!",
     },
   },
   {
@@ -109,22 +142,43 @@ export const MISSIONS: Mission[] = [
     enemyCount: 3,
     asteroidCount: 10,
     briefing: [
-      "[CTRL] Dense asteroid cluster ahead - the capability map is buried inside.",
-      "[CTRL] Weave through debris and clear the sentry drones guarding the stack drive.",
+      "[AEGIS CTRL] Dense asteroid cluster ahead — the capability map is buried inside.",
+      "[AEGIS CTRL] Weave through debris and clear the sentry drones guarding the stack drive.",
     ],
     debriefing: [
-      "[CTRL] Capability drive retrieved. Skill clusters are now available in the drive bay.",
+      "[AEGIS CTRL] Capability drive retrieved. Skill clusters are now available in the drive bay.",
     ],
     driveTitle: "Capability Drive",
     driveTagline: "Stack, tools, and working surface",
     negotiation: {
       speaker: "AI Sentry",
-      lines: [
-        "AI-SENTRY: Unauthorized access detected in the capability constellation.",
-        "Pilot: Requesting decryption key for the stack record.",
-        "AI-SENTRY: Verification failed. Defensive protocol 9-B initiated.",
-      ],
+      faction: "AI-SENTRY",
+      peacefulThreshold: 60,
+      peacefulResponse: "AI-SENTRY: Access credentials verified. Decryption key transmitted. Proceed, operative.",
       failResponse: "AI-SENTRY: Lethal force authorized.",
+      rounds: [
+        {
+          npcLine: "AI-SENTRY: Unauthorized access detected in the capability constellation.",
+          choices: [
+            { text: "Requesting decryption key for the stack record. Authorization code AEGIS-7.", persuasion: 35, npcResponse: "AI-SENTRY: Authorization code not recognized. However, AEGIS prefix logged. Explain further." },
+            { text: "I am here for the capability data. Step aside.", persuasion: 10, npcResponse: "AI-SENTRY: Directive 4: All data requests require verification. You have provided none." },
+          ],
+        },
+        {
+          npcLine: "AI-SENTRY: Your vessel signature matches no registered faction. Identify your purpose.",
+          choices: [
+            { text: "Recovery operative. The data belongs to a civilian developer, not a military target.", persuasion: 40, npcResponse: "AI-SENTRY: Civilian data classification... confirmed. This changes the threat assessment." },
+            { text: "My purpose is none of your concern. Hand over the drive.", persuasion: 5, npcResponse: "AI-SENTRY: Non-compliance logged. Defensive posture escalating." },
+          ],
+        },
+        {
+          npcLine: "AI-SENTRY: Final verification required. State your relationship to the data owner.",
+          choices: [
+            { text: "I am recovering their career archive. They need this data to continue their work.", persuasion: 30, npcResponse: "AI-SENTRY: Altruistic motive detected. Cross-referencing with civilian protection protocols..." },
+            { text: "I was hired to get it. That is all you need to know.", persuasion: -10, npcResponse: "AI-SENTRY: Mercenary classification assigned. Threat level: maximum." },
+          ],
+        },
+      ],
     },
   },
   {
@@ -138,22 +192,43 @@ export const MISSIONS: Mission[] = [
     enemyCount: 3,
     asteroidCount: 12,
     briefing: [
-      "[CTRL] Follow the trajectory waypoints - this leg tracks roles, products, and delivery history.",
-      "[CTRL] Expect hostile interference near the experience log station.",
+      "[AEGIS CTRL] Follow the trajectory waypoints — this leg tracks roles, products, and delivery history.",
+      "[AEGIS CTRL] Expect hostile interference near the experience log station.",
     ],
     debriefing: [
-      "[CTRL] Experience log acquired. Career trajectory recorded.",
+      "[AEGIS CTRL] Experience log acquired. Career trajectory recorded.",
     ],
     driveTitle: "Trajectory Drive",
     driveTagline: "Experience, scope, and product ownership",
     negotiation: {
       speaker: "Trade Corp Enforcer",
-      lines: [
-        "ENFORCER: You are trespassing on corporate logistics lanes.",
-        "Pilot: I am tracking an experience log connected to the pilot record.",
-        "ENFORCER: That log is now classified logistics property.",
+      faction: "TRADE-ENFORCER",
+      peacefulThreshold: 60,
+      peacefulResponse: "TRADE-ENFORCER: Corporate override accepted. The log is declassified. Take it and leave our lanes.",
+      failResponse: "TRADE-ENFORCER: Deploying interceptors to seize your vessel.",
+      rounds: [
+        {
+          npcLine: "TRADE-ENFORCER: You are trespassing on corporate logistics lanes.",
+          choices: [
+            { text: "I was not aware these lanes were reclassified. Can we resolve this diplomatically?", persuasion: 30, npcResponse: "TRADE-ENFORCER: Reclassification was recent. Your ignorance may be genuine. State your cargo." },
+            { text: "I am tracking an experience log connected to a civilian pilot record.", persuasion: 15, npcResponse: "TRADE-ENFORCER: That log is now classified logistics property. But civilian claims have precedence in arbitration." },
+          ],
+        },
+        {
+          npcLine: "TRADE-ENFORCER: Corporate policy requires all unregistered vessels to submit for inspection.",
+          choices: [
+            { text: "I will submit a formal claim through your arbitration channel. What is the process?", persuasion: 40, npcResponse: "TRADE-ENFORCER: Formal claim... that would take weeks. But it shows you understand procedure." },
+            { text: "My ship is not subject to corporate jurisdiction. I am passing through.", persuasion: 5, npcResponse: "TRADE-ENFORCER: All vessels in these lanes are subject to corporate jurisdiction. Ignorance is not a defense." },
+          ],
+        },
+        {
+          npcLine: "TRADE-ENFORCER: Final warning. Comply or be intercepted.",
+          choices: [
+            { text: "The data I need is a personal career log. It has no commercial value to you.", persuasion: 30, npcResponse: "TRADE-ENFORCER: No commercial value... confirmed by scan. Corporate interest in this data is minimal." },
+            { text: "I have authorization from Aegis Command. Stand down.", persuasion: -10, npcResponse: "TRADE-ENFORCER: Aegis Command has no authority in corporate space. That was the wrong card to play." },
+          ],
+        },
       ],
-      failResponse: "ENFORCER: Deploying interceptors to seize your vessel.",
     },
   },
   {
@@ -167,22 +242,43 @@ export const MISSIONS: Mission[] = [
     enemyCount: 4,
     asteroidCount: 12,
     briefing: [
-      "[CTRL] Portfolio hangar ahead - this sector contains the densest project record set.",
-      "[CTRL] Recover the project dossier once the hostiles are cleared.",
+      "[AEGIS CTRL] Portfolio hangar ahead — this sector contains the densest project record set.",
+      "[AEGIS CTRL] Recover the project dossier once the hostiles are cleared.",
     ],
     debriefing: [
-      "[CTRL] Project dossier secured. Portfolio record updated.",
+      "[AEGIS CTRL] Project dossier secured. Portfolio record updated.",
     ],
     driveTitle: "Project Drive",
     driveTagline: "Detailed project dossiers",
     negotiation: {
       speaker: "Mercenary Captain",
-      lines: [
-        "CAPTAIN: We already scavenged the project dossier from this hangar.",
-        "Pilot: Name your price, Captain.",
-        "CAPTAIN: Your ship's scrap value is higher than any offer you can make.",
+      faction: "MERC-CAPTAIN",
+      peacefulThreshold: 60,
+      peacefulResponse: "MERC-CAPTAIN: You have got guts, pilot. Take the dossier. Consider it a professional courtesy.",
+      failResponse: "MERC-CAPTAIN: All hands to battle stations!",
+      rounds: [
+        {
+          npcLine: "MERC-CAPTAIN: We already scavenged the project dossier from this hangar.",
+          choices: [
+            { text: "Name your price, Captain. I am sure we can find an arrangement.", persuasion: 30, npcResponse: "MERC-CAPTAIN: An arrangement? Most people who say that end up trying to shoot me. Refreshing." },
+            { text: "That dossier belongs to a civilian developer. It is not military intel.", persuasion: 15, npcResponse: "MERC-CAPTAIN: Civilian or not, data is data. And data pays my crew." },
+          ],
+        },
+        {
+          npcLine: "MERC-CAPTAIN: My crew risked their ships for that hangar run. What makes your claim stronger?",
+          choices: [
+            { text: "I can offer you the location of a Trade Corp supply cache I passed through. Worth more than one dossier.", persuasion: 40, npcResponse: "MERC-CAPTAIN: A supply cache location? Now that is something my quartermaster would appreciate." },
+            { text: "My ship's scrap value is all I have. Take it or leave it.", persuasion: 5, npcResponse: "MERC-CAPTAIN: Your ship is not worth much stripped. But the offer shows you are serious." },
+          ],
+        },
+        {
+          npcLine: "MERC-CAPTAIN: Last offer, pilot. Make it worth my while or we settle this the hard way.",
+          choices: [
+            { text: "I will owe you a favor. A recovery operative's favor is worth more than credits in these sectors.", persuasion: 30, npcResponse: "MERC-CAPTAIN: A favor from Aegis recovery... that could be useful down the line." },
+            { text: "The hard way it is.", persuasion: -10, npcResponse: "MERC-CAPTAIN: Your choice. But you will regret it." },
+          ],
+        },
       ],
-      failResponse: "CAPTAIN: All hands to battle stations!",
     },
   },
   {
@@ -196,23 +292,44 @@ export const MISSIONS: Mission[] = [
     enemyCount: 2,
     asteroidCount: 6,
     briefing: [
-      "[CTRL] Final target: the transmission array.",
-      "[CTRL] Recover the contact drive to complete the full dossier run.",
+      "[AEGIS CTRL] Final target: the transmission array.",
+      "[AEGIS CTRL] Recover the contact drive to complete the full dossier run.",
     ],
     debriefing: [
-      "[CTRL] Full drive set recovered. Mission complete, pilot.",
-      "[CTRL] Click any drive to read its contents.",
+      "[AEGIS CTRL] Full drive set recovered. Mission complete, pilot.",
+      "[AEGIS CTRL] Click any drive to read its contents.",
     ],
     driveTitle: "Contact Drive",
     driveTagline: "Contact channels and next-step paths",
     negotiation: {
       speaker: "Defense Array AI",
-      lines: [
-        "ARRAY-AI: Final transmission security lock engaged.",
-        "Pilot: Disengage the array. The dossier is almost complete.",
-        "ARRAY-AI: My primary directive is to prevent outbound data recovery.",
-      ],
+      faction: "ARRAY-AI",
+      peacefulThreshold: 60,
+      peacefulResponse: "ARRAY-AI: Directive conflict resolved. Outbound data recovery authorized. Transmission lock disengaged.",
       failResponse: "ARRAY-AI: Terminal counter-measures active.",
+      rounds: [
+        {
+          npcLine: "ARRAY-AI: Final transmission security lock engaged.",
+          choices: [
+            { text: "I understand your directive. Can you confirm what data classification you are protecting?", persuasion: 35, npcResponse: "ARRAY-AI: Data classification: personal career archive. Non-military. Non-classified. Protection level: standard." },
+            { text: "Disengage the array. The dossier is almost complete.", persuasion: 10, npcResponse: "ARRAY-AI: Directive 1: Prevent all outbound data recovery. No exceptions without override authorization." },
+          ],
+        },
+        {
+          npcLine: "ARRAY-AI: Your vessel is registered as a recovery operative. Recovery of what?",
+          choices: [
+            { text: "A civilian developer's career data. Six drives, five already recovered. This is the last one.", persuasion: 40, npcResponse: "ARRAY-AI: Six-drive archive... matches the protected data signature. The developer filed a recovery request before the array was activated." },
+            { text: "That is classified. Stand down.", persuasion: 5, npcResponse: "ARRAY-AI: Classification claim without credentials. Suspicion level elevated." },
+          ],
+        },
+        {
+          npcLine: "ARRAY-AI: The developer's recovery request is on file but was never processed. Can you provide their authorization?",
+          choices: [
+            { text: "The developer is Tejas S. Callsign TS. They authorized Aegis recovery before the array lockdown.", persuasion: 30, npcResponse: "ARRAY-AI: Callsign TS... cross-referencing... recovery authorization confirmed. Directive conflict detected." },
+            { text: "I do not need authorization. I have firepower.", persuasion: -10, npcResponse: "ARRAY-AI: Threat detected. Defensive protocols escalating to maximum." },
+          ],
+        },
+      ],
     },
   },
 ];

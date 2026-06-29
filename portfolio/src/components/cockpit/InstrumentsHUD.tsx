@@ -1,10 +1,51 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 import type { MutableRefObject } from "react";
 import type { PlayerState } from "../../three/cockpit/usePlayerState";
 
 interface Props {
   player: MutableRefObject<PlayerState>;
 }
+
+const SegmentedBar = memo(function SegmentedBar({
+  value,
+  color,
+  segments = 20,
+  glow = false,
+  label,
+}: {
+  value: number;
+  color: string;
+  segments?: number;
+  glow?: boolean;
+  label: string;
+}) {
+  const activeSegments = Math.ceil((value / 100) * segments);
+  return (
+    <div
+      className="flex gap-[2px] h-3 w-full skew-x-[-15deg]"
+      role="meter"
+      aria-valuenow={value}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-label={label}
+    >
+      {Array.from({ length: segments }).map((_, i) => {
+        const isActive = i < activeSegments;
+        return (
+          <div
+            key={i}
+            className="flex-1 transition-all duration-150"
+            style={{
+              backgroundColor: isActive ? color : "rgba(30, 41, 59, 0.5)",
+              boxShadow: isActive && glow ? `0 0 8px ${color}` : "none",
+              opacity: isActive ? 1 : 0.3,
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+});
 
 export default function InstrumentsHUD({ player }: Props) {
   const [, setTick] = useState(0);
@@ -24,38 +65,6 @@ export default function InstrumentsHUD({ player }: Props) {
 
   const isCritical = hull < 30;
 
-  const SegmentedBar = ({
-    value,
-    color,
-    segments = 20,
-    glow = false,
-  }: {
-    value: number;
-    color: string;
-    segments?: number;
-    glow?: boolean;
-  }) => {
-    const activeSegments = Math.ceil((value / 100) * segments);
-    return (
-      <div className="flex gap-[2px] h-3 w-full skew-x-[-15deg]">
-        {Array.from({ length: segments }).map((_, i) => {
-          const isActive = i < activeSegments;
-          return (
-            <div
-              key={i}
-              className="flex-1 transition-all duration-150"
-              style={{
-                backgroundColor: isActive ? color : "rgba(30, 41, 59, 0.5)",
-                boxShadow: isActive && glow ? `0 0 8px ${color}` : "none",
-                opacity: isActive ? 1 : 0.3,
-              }}
-            />
-          );
-        })}
-      </div>
-    );
-  };
-
   return (
     <div className="relative flex justify-center items-end pointer-events-none select-none">
       <div className="relative flex flex-col md:flex-row items-end gap-6 pb-4">
@@ -66,7 +75,7 @@ export default function InstrumentsHUD({ player }: Props) {
               <span className="text-[10px] font-bold text-cyan-400 uppercase tracking-widest">Deflector</span>
               <span className="text-xs text-cyan-200 font-mono tracking-wider">{shield}%</span>
             </div>
-            <SegmentedBar value={shield} color="#06b6d4" glow />
+            <SegmentedBar value={shield} color="#06b6d4" glow label="Shield integrity" />
           </div>
         </div>
 
@@ -75,8 +84,10 @@ export default function InstrumentsHUD({ player }: Props) {
           {/* Critical Warning Banner */}
           <div
             className={`w-full py-1 text-center bg-rose-600/20 border border-rose-500/50 text-[10px] font-bold text-rose-400 uppercase tracking-[0.3em] transition-opacity ${isCritical ? "opacity-100 animate-pulse" : "opacity-0"}`}
+            role="alert"
+            aria-live="assertive"
           >
-            Critical Hull Integrity
+            {isCritical ? "⚠ Critical Hull Integrity" : "Critical Hull Integrity"}
           </div>
 
           <div className="bg-slate-950/80 backdrop-blur-md border-t-2 border-cyan-500/50 px-6 py-3 rounded-t-2xl w-full flex flex-col items-center relative overflow-hidden shadow-[0_-10px_20px_rgba(6,182,212,0.1)]">
@@ -141,7 +152,7 @@ export default function InstrumentsHUD({ player }: Props) {
                 Integrity
               </span>
             </div>
-            <SegmentedBar value={hull} color={isCritical ? "#f43f5e" : "#10b981"} glow={!isCritical} />
+            <SegmentedBar value={hull} color={isCritical ? "#f43f5e" : "#10b981"} glow={!isCritical} label="Hull integrity" />
           </div>
         </div>
       </div>

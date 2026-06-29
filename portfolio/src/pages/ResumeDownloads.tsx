@@ -59,9 +59,12 @@ export default function ResumeDownloads() {
                 {variant.highlights.map((item) => (
                   <li
                     key={item}
-                    className="flex items-start gap-3 text-sm leading-relaxed text-app-muted"
+                    className="grid grid-cols-[1.25rem_1fr] text-sm leading-relaxed text-soft"
                   >
-                    <span className="mt-1 text-cyan-300/60">▸</span>
+                    <span
+                      className="mt-2 h-px w-3"
+                      style={{ background: "var(--accent)" }}
+                    />
                     <span>{item}</span>
                   </li>
                 ))}

@@ -6,7 +6,6 @@ import { useGameAsset } from "../cockpit/AssetPipeline";
 function ShipModel() {
   const ship = useGameAsset("player");
   const groupRef = useRef<THREE.Group>(null);
-  const lightRef = useRef<THREE.PointLight>(null);
 
   useFrame(({ clock }) => {
     const t = clock.elapsedTime;
@@ -14,15 +13,16 @@ function ShipModel() {
       groupRef.current.position.y = 0.6 + Math.sin(t * 0.8) * 0.06;
       groupRef.current.rotation.y = Math.sin(t * 0.25) * 0.08;
     }
-    if (lightRef.current) {
-      lightRef.current.intensity = 8 + Math.sin(t * 2.5) * 2;
-    }
   });
 
   return (
-    <group ref={groupRef} position={[0, 0.6, 0]}>
+    <group ref={groupRef} position={[-4.5, 0.6, 1.5]}>
       <mesh geometry={ship.geometry} material={ship.material} scale={1.5} />
-      <pointLight ref={lightRef} position={[0, 4, 0]} intensity={10} distance={14} color="#fbbf24" />
+      {/* Replaced expensive pointLight with emissive glow mesh */}
+      <mesh position={[0, 3.5, 0]}>
+        <sphereGeometry args={[0.4, 8, 8]} />
+        <meshBasicMaterial color="#fbbf24" transparent opacity={0.15} />
+      </mesh>
       {/* Thruster cones */}
       <mesh position={[0, -0.4, 1.8]} rotation={[Math.PI / 2 + 0.2, 0, 0]}>
         <coneGeometry args={[0.25, 0.8, 8]} />
@@ -63,7 +63,11 @@ export default function LandingPad() {
             <cylinderGeometry args={[0.1, 0.14, 5, 8]} />
             <meshStandardMaterial color="#475569" metalness={0.9} roughness={0.15} />
           </mesh>
-          <pointLight position={[0, 5, 0]} intensity={3} distance={14} color={x > 0 ? "#22d3ee" : "#f59e0b"} />
+          {/* Reduced from pointLight to emissive sphere for performance */}
+          <mesh position={[0, 5, 0]}>
+            <sphereGeometry args={[0.12, 8, 8]} />
+            <meshBasicMaterial color={x > 0 ? "#22d3ee" : "#f59e0b"} transparent opacity={0.8} />
+          </mesh>
         </group>
       ))}
       <ShipModel />

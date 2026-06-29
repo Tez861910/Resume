@@ -28,6 +28,9 @@ export default function DriveReadoutModal({ missionId }: { missionId: MissionId 
         exit={{ scale: 0.92, opacity: 0 }}
         transition={{ type: "spring", stiffness: 240, damping: 22 }}
         className="relative w-full max-w-lg rounded-2xl border bg-slate-950/90 backdrop-blur-xl overflow-hidden shadow-2xl"
+        role="dialog"
+        aria-modal="true"
+        aria-label={`${readout.headline} drive readout`}
         style={{
           borderColor: `${mission.accent}66`,
           boxShadow: `0 0 40px ${mission.accent}33`,

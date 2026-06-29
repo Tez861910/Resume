@@ -6,7 +6,7 @@ import * as THREE from "three";
  * Distant star field using a single Points object. Purely decorative — it
  * follows the camera so stars feel at infinity.
  */
-export default function Starfield({ count = 2500 }: { count?: number }) {
+export default function Starfield({ count = 1200 }: { count?: number }) {
   const pointsRef = useRef<THREE.Points>(null);
 
   const { geometry, material } = useMemo(() => {

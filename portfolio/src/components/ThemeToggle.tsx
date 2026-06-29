@@ -9,12 +9,12 @@ export default function ThemeToggle() {
     <button
       type="button"
       onClick={toggleTheme}
-      className="inline-flex h-11 w-11 items-center justify-center rounded-full border transition-all duration-200 hover:-translate-y-0.5"
+      className="inline-flex h-11 w-11 items-center justify-center border transition-colors duration-200"
       style={{
-        background: "var(--surface-soft)",
-        borderColor: "var(--panel-border)",
-        color: "var(--text-primary)",
-        boxShadow: "var(--shadow-soft)",
+        borderRadius: "4px",
+        background: "transparent",
+        borderColor: "var(--rule-strong)",
+        color: "var(--ink)",
       }}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       title={isDark ? "Switch to light mode" : "Switch to dark mode"}

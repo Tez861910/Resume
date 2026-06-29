@@ -60,6 +60,28 @@ export default function MobileControls({ input }: Props) {
       >
         BOOST
       </button>
+      <button
+        onTouchStart={(e) => {
+          e.preventDefault();
+          input.triggerMissile();
+        }}
+        onClick={() => input.triggerMissile()}
+        className="absolute right-6 bottom-[175px] w-12 h-12 rounded-full border-2 border-rose-400/60 bg-rose-500/15 backdrop-blur-sm text-rose-100 font-bold text-[10px] pointer-events-auto active:scale-90"
+        aria-label="Fire missile"
+      >
+        MSL
+      </button>
+      <button
+        onTouchStart={(e) => {
+          e.preventDefault();
+          input.triggerTargetLock();
+        }}
+        onClick={() => input.triggerTargetLock()}
+        className="absolute right-[88px] bottom-[175px] w-10 h-10 rounded-full border-2 border-amber-400/50 bg-amber-500/10 backdrop-blur-sm text-amber-100 font-bold text-[9px] pointer-events-auto active:scale-90"
+        aria-label="Cycle target lock"
+      >
+        TGT
+      </button>
     </>
   );
 }

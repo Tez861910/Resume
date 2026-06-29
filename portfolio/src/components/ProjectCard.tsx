@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaArrowRight, FaGithub, FaGlobe } from "react-icons/fa";
@@ -10,277 +9,97 @@ interface ProjectCardProps {
   inView: boolean;
 }
 
-const STATUS_TONE: Record<
-  string,
-  {
-    badge: string;
-    glow: string;
-    label: string;
-  }
-> = {
-  "In Progress": {
-    badge: "border-amber-300/35 bg-amber-300/12 text-amber-100",
-    glow: "from-amber-300/35 via-amber-200/10 to-transparent",
-    label: "In Progress",
-  },
-  Live: {
-    badge: "border-emerald-300/35 bg-emerald-300/12 text-emerald-100",
-    glow: "from-emerald-300/35 via-emerald-200/10 to-transparent",
-    label: "Live",
-  },
-  Shipped: {
-    badge: "border-cyan-300/35 bg-cyan-300/12 text-cyan-100",
-    glow: "from-cyan-300/35 via-cyan-200/10 to-transparent",
-    label: "Shipped",
-  },
-};
+const liveStatuses = new Set(["Live", "Shipped"]);
 
-function inferMissionType(project: Project) {
-  const tech = project.tech.join(" ").toLowerCase();
-  const skills = project.skills.join(" ").toLowerCase();
-  const combined = `${tech} ${skills}`;
-
-  if (
-    combined.includes("wpf") ||
-    combined.includes("winui") ||
-    combined.includes("win2d") ||
-    combined.includes("directx") ||
-    combined.includes("desktop")
-  ) {
-    return "Desktop app";
-  }
-
-  if (
-    combined.includes("flutter") ||
-    combined.includes("dart") ||
-    combined.includes("cross-platform")
-  ) {
-    return "Cross-platform app";
-  }
-
-  if (
-    combined.includes("node") ||
-    combined.includes("express") ||
-    combined.includes("mysql") ||
-    combined.includes("postgres") ||
-    combined.includes("prisma") ||
-    combined.includes("api")
-  ) {
-    return "Full-stack app";
-  }
-
-  if (
-    combined.includes("react") ||
-    combined.includes("tailwind") ||
-    combined.includes("frontend")
-  ) {
-    return "Frontend app";
-  }
-
-  return "Product build";
-}
-
-function inferImpactLabel(project: Project) {
-  const text = `${project.tagline} ${project.description} ${project.highlights.join(" ")}`;
-  const lowerText = text.toLowerCase();
-
-  if (lowerText.includes("local-first")) return "Local-first build";
-  if (text.includes("30+") || lowerText.includes("utilities")) return "Utility suite";
-  if (
-    lowerText.includes("four business verticals") ||
-    lowerText.includes("four verticals") ||
-    lowerText.includes("service lines")
-  ) {
-    return "Multi-vertical build";
-  }
-  if (
-    lowerText.includes("workstreams") ||
-    lowerText.includes("role-aware") ||
-    lowerText.includes("role-based")
-  ) {
-    return "Operational platform";
-  }
-  if (
-    lowerText.includes("manufacturing") ||
-    lowerText.includes("3d model") ||
-    lowerText.includes("desktop")
-  ) {
-    return "Desktop workflow";
-  }
-  if (
-    lowerText.includes("content-rich") ||
-    lowerText.includes("knowledge content") ||
-    lowerText.includes("company platform")
-  ) {
-    return "Content platform";
-  }
-  if (lowerText.includes("uploads") || lowerText.includes("protected")) {
-    return "Workflow platform";
-  }
-
-  return "Production-focused build";
-}
-
-export default function ProjectCard({
-  project,
-  index,
-  inView,
-}: ProjectCardProps) {
+export default function ProjectCard({ project, index, inView }: ProjectCardProps) {
   const thumbnail = project.media.find((media) => media.type === "image");
-
-  const missionType = useMemo(
-    () => project.category ?? inferMissionType(project),
-    [project],
-  );
-  const impactLabel = useMemo(() => inferImpactLabel(project), [project]);
-  const statusTone = STATUS_TONE[project.status ?? ""] ?? {
-    badge: "border-white/15 bg-white/[0.06] text-slate-100",
-    glow: "from-white/20 via-white/5 to-transparent",
-    label: project.status ?? "Active",
-  };
+  const status = project.status ?? "Active";
+  const isLive = liveStatuses.has(status);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 18 }}
+    <motion.article
+      initial={{ opacity: 0, y: 16 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.35, delay: index * 0.08 }}
-      className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/12 bg-slate-950/55 shadow-lg shadow-black/15 backdrop-blur-sm"
+      transition={{ duration: 0.4, delay: index * 0.06 }}
+      className="group flex h-full flex-col border border-rule bg-surface-2 transition-colors hover:border-[var(--accent-line)]"
+      style={{ borderRadius: "5px" }}
     >
-      <div
-        className={`pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-r ${statusTone.glow} opacity-70`}
-      />
-
-      <div className="relative flex items-center justify-between border-b border-white/10 px-5 py-3">
-        <div className="min-w-0">
-          <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">
-            Project snapshot
-          </p>
-          <p className="truncate text-xs font-semibold uppercase tracking-[0.16em] text-slate-300/80">
-            {missionType}
-          </p>
+      <div className="flex items-center justify-between border-b border-rule px-5 py-3">
+        <div className="flex items-baseline gap-2">
+          <span className="num-index text-base">
+            {String(index + 1).padStart(2, "0")}
+          </span>
+          <span className="mono-label">{project.category ?? "Project"}</span>
         </div>
-
-        <span
-          className={`rounded-full border px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] ${statusTone.badge}`}
-        >
-          {statusTone.label}
+        <span className="inline-flex items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-[0.16em] text-faint">
+          <span
+            className="h-1.5 w-1.5 rounded-full"
+            style={{ background: isLive ? "var(--accent)" : "var(--faint)" }}
+          />
+          {status}
         </span>
       </div>
 
       {thumbnail ? (
         <Link
           to={`/project/${project.id}`}
-          className="relative block h-44 overflow-hidden border-b border-white/10"
+          className="relative block h-44 overflow-hidden border-b border-rule"
         >
           <img
             src={thumbnail.src}
             alt={thumbnail.alt}
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.015]"
+            className="h-full w-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0"
             loading="lazy"
           />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
         </Link>
-      ) : (
-        <Link
-          to={`/project/${project.id}`}
-          className="relative block h-44 overflow-hidden border-b border-white/10"
-          tabIndex={-1}
-        >
-          <div className="absolute inset-0 bg-slate-950" />
-          <div className="relative flex h-full items-end p-5">
-            <div>
-              <span className="rounded-full border border-cyan-300/25 bg-cyan-300/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-cyan-100">
-                {missionType}
-              </span>
-              <p className="mt-3 max-w-[16rem] text-lg font-semibold text-slate-50">
-                {project.title}
-              </p>
-            </div>
-          </div>
-        </Link>
-      )}
+      ) : null}
 
-      <div className="flex flex-1 flex-col px-5 py-5">
-        <div className="mb-4 flex flex-wrap items-center gap-2">
-          <span className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-cyan-100">
-            Case study
-          </span>
-          <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-300">
-            {impactLabel}
-          </span>
-        </div>
-
-        <div className="mb-3">
-          <h3 className="text-xl font-bold leading-snug text-slate-50 transition-colors group-hover:text-amber-200">
+      <div className="flex flex-1 flex-col p-5">
+        <h3 className="font-display text-[1.45rem] leading-tight text-ink">
+          <Link
+            to={`/project/${project.id}`}
+            className="transition-colors hover:text-accent"
+          >
             {project.title}
-          </h3>
-        </div>
+          </Link>
+        </h3>
 
-        <p className="mb-4 line-clamp-2 text-sm leading-relaxed text-slate-200/85">
+        <p className="mt-2 line-clamp-2 text-[0.95rem] leading-relaxed text-soft">
           {project.tagline}
         </p>
 
-        <div className="mb-4 grid grid-cols-2 gap-3">
-          <div className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2">
-            <div className="mb-1 text-[10px] uppercase tracking-[0.16em] text-slate-500">
-              Stack
-            </div>
-            <div className="text-xs font-semibold text-slate-100">
-              {project.tech.slice(0, 3).join(" · ")}
-            </div>
-          </div>
-
-          <div className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2">
-            <div className="mb-1 text-[10px] uppercase tracking-[0.16em] text-slate-500">
-              Skills
-            </div>
-            <div className="text-xs font-semibold text-slate-100">
-              {project.skills.slice(0, 2).join(" · ")}
-            </div>
-          </div>
+        <div className="mt-5 flex flex-wrap gap-1.5">
+          {project.tech.slice(0, 4).map((tech) => (
+            <span key={tech} className="tag">
+              {tech}
+            </span>
+          ))}
+          {project.tech.length > 4 && (
+            <span className="self-center font-mono text-[10.5px] text-faint">
+              +{project.tech.length - 4}
+            </span>
+          )}
         </div>
 
-        <div className="mb-5">
-          <div className="mb-2 text-[10px] uppercase tracking-[0.18em] text-slate-500">
-            Tech used
-          </div>
-          <div className="flex flex-wrap gap-1.5">
-            {project.tech.slice(0, 4).map((tech) => (
-              <span
-                key={tech}
-                className="rounded-md border border-white/10 bg-white/[0.06] px-2.5 py-0.5 text-xs text-amber-100"
-              >
-                {tech}
-              </span>
-            ))}
-            {project.tech.length > 4 && (
-              <span className="px-2.5 py-0.5 text-xs text-slate-400">
-                +{project.tech.length - 4} more
-              </span>
-            )}
-          </div>
-        </div>
-
-        <div className="mt-auto flex items-center justify-between gap-3 border-t border-white/10 pt-4">
+        <div className="mt-auto flex items-center justify-between gap-3 border-t border-rule pt-4">
           <div className="flex items-center gap-2">
             {project.github && (
               <a
                 href={project.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-slate-300 transition-colors hover:border-white/20 hover:text-white"
-                aria-label={`${project.title} GitHub`}
+                className="icon-link h-9 w-9"
+                aria-label={`${project.title} on GitHub`}
               >
                 <FaGithub className="text-sm" />
               </a>
             )}
-
             {project.live && (
               <a
                 href={project.live}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-slate-300 transition-colors hover:border-white/20 hover:text-white"
+                className="icon-link h-9 w-9"
                 aria-label={`${project.title} live site`}
               >
                 <FaGlobe className="text-sm" />
@@ -290,13 +109,13 @@ export default function ProjectCard({
 
           <Link
             to={`/project/${project.id}`}
-            className="inline-flex items-center gap-2 text-sm font-medium text-amber-200 transition-colors hover:text-amber-100 group/link"
+            className="link-arrow group/link"
           >
-            Open case study
-            <FaArrowRight className="text-xs transition-transform group-hover/link:translate-x-1" />
+            Read case study
+            <FaArrowRight className="text-[10px] transition-transform group-hover/link:translate-x-1" />
           </Link>
         </div>
       </div>
-    </motion.div>
+    </motion.article>
   );
 }

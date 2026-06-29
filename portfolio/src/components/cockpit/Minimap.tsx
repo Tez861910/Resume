@@ -12,8 +12,13 @@ export default function Minimap() {
   // High-frequency poll for UI update
   useEffect(() => {
     let raf = 0;
+    let lastUpdate = 0;
     const loop = () => {
-      tick((v) => (v + 1) % 1_000_000);
+      const now = performance.now();
+      if (now - lastUpdate >= 66) {
+        tick((v) => (v + 1) % 1_000_000);
+        lastUpdate = now;
+      }
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);

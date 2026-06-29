@@ -1,8 +1,9 @@
 import { useCockpit } from "../../three/cockpit/CockpitModeProvider";
 import { MISSIONS } from "../../three/cockpit/missions";
+import { motion } from "framer-motion";
 
 export default function InventoryRail() {
-  const { collected, openDrive, readoutsUnlocked } = useCockpit();
+  const { collected, openDrive, readoutsUnlocked, lastCollectedDrive } = useCockpit();
 
   return (
     <div className="flex flex-col gap-1.5 sm:gap-2 items-end">
@@ -13,9 +14,11 @@ export default function InventoryRail() {
         {MISSIONS.map((m) => {
           const owned = collected.has(m.id);
           const canOpen = owned && readoutsUnlocked;
+          const justCollected = lastCollectedDrive === m.id;
           return (
-            <button
+            <motion.button
               key={m.id}
+              animate={justCollected ? { scale: [1, 1.15, 1], transition: { duration: 0.5 } } : {}}
               onClick={() => canOpen && openDrive(m.id)}
               className={`group relative w-12 h-8 sm:w-14 sm:h-9 rounded-md border transition flex items-center justify-center ${
                 canOpen
@@ -43,7 +46,7 @@ export default function InventoryRail() {
               disabled={!canOpen}
             >
               <span
-                className="text-[8px] font-bold uppercase tracking-wider"
+                className="text-[10px] font-bold uppercase tracking-wider"
                 style={{ color: canOpen ? m.accent : owned ? "#fbbf24" : "#475569" }}
               >
                 {m.codename.split("-")[0].slice(0, 4)}
@@ -57,7 +60,7 @@ export default function InventoryRail() {
                   }}
                 />
               )}
-            </button>
+            </motion.button>
           );
         })}
       </div>

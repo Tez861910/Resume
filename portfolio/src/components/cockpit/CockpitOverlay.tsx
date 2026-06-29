@@ -19,12 +19,17 @@ import CockpitChrome from "./CockpitChrome";
 import DriveReadoutModal from "./DriveReadoutModal";
 import DialogueOverlay from "./DialogueOverlay";
 import InteractPrompt from "./InteractPrompt";
+import DeathOverlay from "./DeathOverlay";
+import DriveSecuredBanner from "./DriveSecuredBanner";
+import OpeningCinematic from "./OpeningCinematic";
+import MissionCompleteSummary from "./MissionCompleteSummary";
 import usePortraitTouchLayout from "./usePortraitTouchLayout";
 
 function HomeBaseHUD() {
   const { close, progress, resetProgress } = useCockpit();
   const [showHint, setShowHint] = useState(true);
   const [showIntro, setShowIntro] = useState(true);
+  const [pointerLocked, setPointerLocked] = useState(false);
 
   useEffect(() => {
     const t = setTimeout(() => setShowHint(false), 8000);
@@ -34,6 +39,12 @@ function HomeBaseHUD() {
   useEffect(() => {
     const t = setTimeout(() => setShowIntro(false), 5000);
     return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    const onChange = () => setPointerLocked(!!document.pointerLockElement);
+    document.addEventListener("pointerlockchange", onChange);
+    return () => document.removeEventListener("pointerlockchange", onChange);
   }, []);
 
   useEffect(() => {
@@ -140,15 +151,37 @@ function HomeBaseHUD() {
       </AnimatePresence>
 
       <InteractPrompt />
+
+      <AnimatePresence>
+        {!pointerLocked && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 flex items-center justify-center pointer-events-none z-30"
+          >
+            <div className="text-center space-y-2 bg-slate-950/60 backdrop-blur-sm rounded-xl px-8 py-5 border border-cyan-500/20">
+              <div className="text-lg font-bold text-cyan-50 tracking-wider">
+                Click to look around
+              </div>
+              <div className="text-[10px] text-slate-400 uppercase tracking-[0.3em]">
+                WASD to move · Esc to release
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
 export default function CockpitOverlay() {
-  const { isActive, openDriveId, gamePhase, currentDialogue } = useCockpit();
+  const { isActive, openDriveId, gamePhase, currentDialogue, readoutsUnlocked } = useCockpit();
   const isPortraitTouch = usePortraitTouchLayout(isActive);
   const input = useCockpitInput(isActive);
   const player = usePlayerState();
+  const [showCinematic, setShowCinematic] = useState(true);
+  const [showSummary, setShowSummary] = useState(false);
   const lasersRef = useRef<LasersHandle | null>(null);
   const enemyLasersRef = useRef<LasersHandle | null>(null);
   const missilesRef = useRef<MissilesHandle | null>(null);
@@ -157,6 +190,13 @@ export default function CockpitOverlay() {
   const enemyCountsRef = useRef<Record<MissionId, number>>(
     {} as Record<MissionId, number>,
   );
+
+  useEffect(() => {
+    if (readoutsUnlocked && !showSummary) {
+      const t = setTimeout(() => setShowSummary(true), 2000);
+      return () => clearTimeout(t);
+    }
+  }, [readoutsUnlocked, showSummary]);
 
   const runtime = useMemo<CockpitRuntime>(
     () => ({
@@ -206,16 +246,26 @@ export default function CockpitOverlay() {
 
           {gamePhase === "homebase" && <HomeBaseHUD />}
 
+          {gamePhase === "homebase" && showCinematic && (
+            <OpeningCinematic onComplete={() => setShowCinematic(false)} />
+          )}
+
           {(gamePhase === "space" || gamePhase === "dialogue") && (
             <>
-              <CockpitChrome input={input} player={player} enemyCounts={enemyCountsRef} />
+              <CockpitChrome input={input} player={player} enemyCounts={enemyCountsRef} isDialogue={gamePhase === "dialogue"} />
               {gamePhase === "dialogue" && currentDialogue && <DialogueOverlay />}
+              <DeathOverlay player={player} />
+              <DriveSecuredBanner />
             </>
           )}
 
           <AnimatePresence>
             {openDriveId && <DriveReadoutModal missionId={openDriveId} />}
           </AnimatePresence>
+
+          {gamePhase === "homebase" && showSummary && !openDriveId && (
+            <MissionCompleteSummary />
+          )}
         </div>
         {isPortraitTouch && (
           <div className="pointer-events-none absolute inset-x-0 bottom-3 z-[220] px-4 text-center text-[11px] tracking-[0.12em] text-slate-400/80">
