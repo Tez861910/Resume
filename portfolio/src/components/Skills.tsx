@@ -1,125 +1,99 @@
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { FaReact, FaNode, FaDatabase, FaCode } from "react-icons/fa";
-import { SiTypescript, SiDotnet } from "react-icons/si";
 
-const Skills = () => {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
+const skillCategories = [
+  {
+    index: "01",
+    title: "Languages",
+    detail: "Primary implementation languages across product, desktop, and local-first work.",
+    skills: ["TypeScript", "JavaScript", "C#", "Dart", "Rust", "SQL"],
+  },
+  {
+    index: "02",
+    title: "Frontend & product UI",
+    detail: "Interfaces, routing, motion, and design-system level delivery.",
+    skills: [
+      "React",
+      "Next.js",
+      "Vite",
+      "Tailwind CSS",
+      "Material UI",
+      "Framer Motion",
+      "React Router",
+      "TanStack Router",
+    ],
+  },
+  {
+    index: "03",
+    title: "Backend & APIs",
+    detail: "Service layers, validation, and protected workflow handling.",
+    skills: ["Node.js", "Express", "REST APIs", "Prisma", "Sequelize", "Auth & Validation"],
+  },
+  {
+    index: "04",
+    title: "Desktop & 3D",
+    detail: "Windows app delivery, rendering, reports, and workflow tooling.",
+    skills: [".NET 8", "WinUI 3", "Win2D", "AssimpNet", "MVVM", "iText 7"],
+  },
+  {
+    index: "05",
+    title: "Cross-platform & local-first",
+    detail: "Cross-platform delivery and on-device processing patterns.",
+    skills: ["Flutter", "Flutter Rust Bridge", "FFI", "On-Device Processing", "Encrypted Storage"],
+  },
+  {
+    index: "06",
+    title: "Data & delivery",
+    detail: "Persistence, versioning, CI, and release workflow support.",
+    skills: ["PostgreSQL", "MySQL", "SQLite", "Git", "GitHub Actions", "Build & Release"],
+  },
+];
 
-  const skillCategories = [
-    {
-      title: "Languages",
-      detail: "Primary implementation languages across product, desktop, and local-first work",
-      icon: <FaCode className="text-4xl text-cyan-300" />,
-      skills: ["TypeScript", "JavaScript", "C#", "Dart", "Rust", "SQL"],
-    },
-    {
-      title: "Frontend & Product UI",
-      detail: "Interfaces, routing, motion, and design-system level delivery",
-      icon: <FaReact className="text-4xl text-cyan-300" />,
-      skills: [
-        "React",
-        "Next.js",
-        "Vite",
-        "Tailwind CSS",
-        "Material UI",
-        "Framer Motion",
-        "React Router",
-        "TanStack Router",
-      ],
-    },
-    {
-      title: "Backend & APIs",
-      detail: "Service layers, validation, and protected workflow handling",
-      icon: <FaNode className="text-4xl text-cyan-300" />,
-      skills: [
-        "Node.js",
-        "Express",
-        "REST APIs",
-        "Prisma",
-        "Sequelize",
-        "Auth & Validation",
-      ],
-    },
-    {
-      title: "Desktop & 3D",
-      detail: "Windows app delivery, rendering, reports, and workflow tooling",
-      icon: <SiDotnet className="text-4xl text-cyan-300" />,
-      skills: [".NET 8", "WinUI 3", "Win2D", "AssimpNet", "MVVM", "iText 7"],
-    },
-    {
-      title: "Cross-Platform & Local-First",
-      detail: "Cross-platform delivery and on-device processing patterns",
-      icon: <FaDatabase className="text-4xl text-cyan-300" />,
-      skills: [
-        "Flutter",
-        "Flutter Rust Bridge",
-        "FFI",
-        "On-Device Processing",
-        "Encrypted Storage",
-      ],
-    },
-    {
-      title: "Data & Delivery",
-      detail: "Persistence, versioning, CI, and release workflow support",
-      icon: <SiTypescript className="text-4xl text-cyan-300" />,
-      skills: [
-        "PostgreSQL",
-        "MySQL",
-        "SQLite",
-        "Git",
-        "GitHub Actions",
-        "Build & Release Automation",
-      ],
-    },
-  ];
+export default function Skills() {
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.08 });
 
   return (
     <section id="skills" className="section-container">
       <motion.div
         ref={ref}
-        initial={{ opacity: 0, y: 50 }}
+        initial={{ opacity: 0, y: 24 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.6 }}
       >
-        <div className="mb-10 text-center">
-          <p className="section-eyebrow">Capabilities</p>
-          <h2 className="section-title">Technical skills</h2>
+        <header className="max-w-3xl">
+          <p className="section-kicker">
+            <span className="font-mono text-faint">02</span> Capabilities
+          </p>
+          <h2 className="section-title">The tools I keep returning to.</h2>
           <p className="section-copy">
-            The technologies and delivery surfaces I keep returning to across
+            A working map of the technologies and delivery surfaces behind
             product platforms, desktop tooling, and local-first app work.
           </p>
-        </div>
+        </header>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="mt-12 border-t border-rule">
           {skillCategories.map((category, index) => (
             <motion.div
-              key={index}
-              className="card border border-white/15"
-              initial={{ opacity: 0, y: 30 }}
+              key={category.title}
+              initial={{ opacity: 0, y: 12 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.3 + index * 0.08 }}
+              transition={{ duration: 0.4, delay: index * 0.06 }}
+              className="grid gap-x-8 gap-y-4 border-b border-rule py-7 lg:grid-cols-12"
             >
-              <div className="flex items-center gap-3 mb-4">
-                {category.icon}
-                <div>
-                  <h3 className="text-xl font-bold text-slate-50">
+              <div className="lg:col-span-5">
+                <div className="flex items-baseline gap-3">
+                  <span className="num-index text-lg">{category.index}</span>
+                  <h3 className="font-display text-xl text-ink">
                     {category.title}
                   </h3>
-                  <p className="mt-1 text-xs leading-relaxed text-slate-300/70">
-                    {category.detail}
-                  </p>
                 </div>
+                <p className="mt-2 max-w-md text-sm leading-relaxed text-faint lg:pl-9">
+                  {category.detail}
+                </p>
               </div>
-              <div className="flex flex-wrap gap-2">
-                {category.skills.map((skill, skillIndex) => (
-                  <span
-                    key={skillIndex}
-                    className="px-3 py-1 bg-white/10 text-amber-100 rounded-full text-sm font-medium border border-white/10"
-                  >
+              <div className="flex flex-wrap content-start gap-2 lg:col-span-7">
+                {category.skills.map((skill) => (
+                  <span key={skill} className="tag">
                     {skill}
                   </span>
                 ))}
@@ -130,6 +104,4 @@ const Skills = () => {
       </motion.div>
     </section>
   );
-};
-
-export default Skills;
+}

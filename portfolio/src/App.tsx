@@ -1,19 +1,28 @@
-import { useEffect, useState } from "react";
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import { lazy, Suspense, useEffect, useState } from "react";
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import About from "./components/About";
 import Skills from "./components/Skills";
 import Experience from "./components/Experience";
 import Projects from "./components/Projects";
-import Challenge from "./components/Challenge";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import ProjectDetail from "./pages/ProjectDetail";
-import CockpitGame from "./pages/CockpitGame";
 import ResumeDownloads from "./pages/ResumeDownloads";
 import { CockpitModeProvider } from "./three/cockpit/CockpitModeProvider";
 import { ThemeProvider } from "./theme/ThemeProvider";
+import { siteConfig } from "./config/site";
+
+// Lazy-loaded so the GPU-heavy three.js/r3f cockpit bundle is only fetched
+// when the (currently disabled) /cockpit route is actually entered.
+const CockpitGame = lazy(() => import("./pages/CockpitGame"));
 
 function ScrollToHash() {
   const { hash } = useLocation();
@@ -40,7 +49,6 @@ function HomePage() {
       <Skills />
       <Experience />
       <Projects />
-      <Challenge />
       <Contact />
     </>
   );
@@ -67,7 +75,20 @@ function AppShell() {
           <Route path="/" element={<HomePage />} />
           <Route path="/resume" element={<ResumeDownloads />} />
           <Route path="/project/:id" element={<ProjectDetail />} />
-          <Route path="/cockpit/*" element={<CockpitGame />} />
+          {/* Cockpit is temporarily disabled (siteConfig.cockpit.enabled).
+              The route stays registered but redirects home until it is fixed. */}
+          <Route
+            path="/cockpit/*"
+            element={
+              siteConfig.cockpit.enabled ? (
+                <Suspense fallback={null}>
+                  <CockpitGame />
+                </Suspense>
+              ) : (
+                <Navigate to="/" replace />
+              )
+            }
+          />
         </Routes>
         <Footer />
       </div>

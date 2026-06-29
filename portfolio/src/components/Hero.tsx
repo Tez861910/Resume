@@ -1,107 +1,114 @@
 import { motion } from "framer-motion";
-import {
-  FaArrowRight,
-  FaDownload,
-  FaGamepad,
-  FaGithub,
-  FaLinkedin,
-} from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { FaArrowDown, FaArrowRight, FaGithub, FaLinkedin } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import { siteConfig } from "../config/site";
 
-export default function Hero() {
-  const navigate = useNavigate();
+const specs = [
+  {
+    label: "What I build",
+    value:
+      "Operational dashboards, company platforms, local-first utilities, and desktop workflows.",
+  },
+  {
+    label: "Range",
+    value:
+      "Comfortable moving between product narrative, interface decisions, and implementation.",
+  },
+  { label: "Preferred work", value: "Product engineering" },
+  { label: "Based in", value: siteConfig.location },
+];
 
+const stats = [
+  {
+    index: "01",
+    label: "Current work",
+    value: "Product platforms",
+    detail: "Operational tools, company platforms, and local-first apps.",
+  },
+  {
+    index: "02",
+    label: "Platforms",
+    value: "Web · Desktop · Cross-platform",
+    detail: "React, Next.js, .NET, Flutter, and Rust.",
+  },
+  {
+    index: "03",
+    label: "Approach",
+    value: "Clarity first",
+    detail: "Useful flows, maintainable code, and a stronger handoff.",
+  },
+];
+
+export default function Hero() {
   return (
     <section
       id="home"
-      className="relative flex min-h-[100svh] items-center overflow-hidden pt-28 sm:pt-32"
+      className="relative overflow-hidden pt-28 sm:pt-32 lg:pt-36"
     >
-      <div className="relative z-10 section-container py-12 sm:py-16">
+      <div className="section-container !pt-0">
+        {/* Masthead meta row */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="grid items-center gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:gap-10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6 }}
+          className="flex flex-wrap items-center justify-between gap-3 border-t border-rule pt-4 font-mono text-[11px] uppercase tracking-[0.22em] text-faint"
         >
-          <div className="text-center lg:text-left">
-            <span className="app-chip-accent mb-5">
-              Open to full-stack and product engineering roles
+          <span>Portfolio — {new Date().getFullYear()}</span>
+          <span className="hidden sm:inline">{siteConfig.location}</span>
+          <span className="inline-flex items-center gap-2 text-soft">
+            <span
+              className="h-1.5 w-1.5 rounded-full"
+              style={{ background: "var(--accent)" }}
+            />
+            Available for work
+          </span>
+        </motion.div>
+
+        {/* Headline */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.05 }}
+          className="mt-10 sm:mt-14"
+        >
+          <p className="section-kicker">{siteConfig.role}</p>
+          <h1 className="max-w-5xl font-display text-[2.6rem] font-medium leading-[1.02] tracking-[-0.015em] text-ink sm:text-6xl lg:text-[4.6rem]">
+            I build product software across web, desktop &amp; cross-platform —{" "}
+            <span className="italic text-soft">
+              clear, fast, and ready for real workflows.
             </span>
+          </h1>
+        </motion.div>
 
-            <h1 className="mb-5 text-4xl font-bold leading-tight tracking-tight text-app-primary sm:text-5xl lg:text-6xl xl:text-7xl">
-              I build product software across web, desktop, and cross-platform that
-              feels clear, fast, and ready for real workflows.
-            </h1>
-
-            <p className="mb-4 max-w-3xl text-base leading-relaxed text-app-secondary sm:text-lg">
+        {/* Lede + actions / spec sheet */}
+        <div className="mt-12 grid gap-10 border-t border-rule pt-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.12 }}
+          >
+            <p className="max-w-xl text-[1.0625rem] leading-relaxed text-soft">
               Recent work spans React and Next.js product platforms, a .NET
-              Windows app for 3D manufacturing workflows, and a cross-platform Flutter + Rust
-              utility suite. I care about practical UX, clear
+              Windows app for 3D manufacturing workflows, and a cross-platform
+              Flutter + Rust utility suite. I care about practical UX, clear
               architecture, and software that holds up once people actually use
               it.
             </p>
 
-            <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap lg:justify-start">
-              <a href="#projects" className="btn-primary w-full sm:w-auto">
-                <span>View projects</span>
-                <FaArrowRight className="text-xs" />
+            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+              <a href="#projects" className="btn-primary">
+                <span>View selected work</span>
+                <FaArrowRight className="text-[10px]" />
               </a>
-              <button
-                type="button"
-                onClick={() => navigate(siteConfig.resumePagePath)}
-                className="btn-secondary w-full sm:w-auto"
-              >
-                <FaDownload className="text-xs" />
-                <span>Download resume</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => navigate(siteConfig.cockpit.route)}
-                className="btn-ghost w-full sm:w-auto"
-              >
-                <FaGamepad className="text-sm" />
-                <span>Open cockpit</span>
-              </button>
+              <Link to={siteConfig.resumePagePath} className="btn-secondary">
+                <FaArrowDown className="text-[10px]" />
+                <span>Download résumé</span>
+              </Link>
             </div>
 
-            <div className="mb-8 grid gap-3 sm:grid-cols-3">
-              {[
-                {
-                  label: "Current work",
-                  value: "Product platforms",
-                  detail: "Operational tools, company platforms, and local-first apps",
-                },
-                {
-                  label: "Platforms",
-                  value: "Web + Desktop + Cross-Platform",
-                  detail: "React, Next.js, .NET, Flutter, Rust",
-                },
-                {
-                  label: "Approach",
-                  value: "Clarity first",
-                  detail: "Useful flows, maintainable code, stronger handoff",
-                },
-              ].map((stat, index) => (
-                <motion.div
-                  key={stat.label}
-                  className="app-card px-4 py-4 text-left"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.35, delay: 0.18 + index * 0.08 }}
-                >
-                  <div className="mb-1 text-[11px] uppercase tracking-[0.18em] text-amber-200/80">
-                    {stat.label}
-                  </div>
-                  <div className="mb-1 text-lg font-bold text-amber-100 sm:text-xl">
-                    {stat.value}
-                  </div>
-                  <p className="text-xs text-slate-300/75">{stat.detail}</p>
-                </motion.div>
-              ))}
-            </div>
-
-            <div className="flex justify-center gap-3 lg:justify-start">
+            <div className="mt-9 flex items-center gap-4">
+              <span className="mono-label">Find me</span>
+              <span className="h-px w-8" style={{ background: "var(--rule)" }} />
               <a
                 href={siteConfig.github}
                 target="_blank"
@@ -121,83 +128,58 @@ export default function Hero() {
                 <FaLinkedin />
               </a>
             </div>
-          </div>
+          </motion.div>
 
+          {/* Spec sheet */}
           <motion.aside
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="app-panel p-6 sm:p-7"
+            transition={{ duration: 0.6, delay: 0.18 }}
+            className="panel"
           >
-            <div className="mb-5 flex flex-wrap items-center gap-2">
-              <span className="app-chip-cyan">Product systems</span>
-              <span className="app-chip">Web + desktop + cross-platform</span>
+            <div className="flex items-center justify-between border-b border-rule px-5 py-3">
+              <span className="mono-label">Profile</span>
+              <span className="mono-label">/ 04</span>
             </div>
-
-            <div className="space-y-4">
-              <div className="app-card-soft">
-                <p className="mb-1 text-[10px] uppercase tracking-[0.22em] text-slate-500">
-                  What I build
-                </p>
-                <p className="text-sm leading-relaxed text-slate-100">
-                  Operational dashboards, company platforms, local-first
-                  utilities, and desktop workflows where clarity matters.
-                </p>
-              </div>
-
-              <div className="app-card-soft">
-                <p className="mb-1 text-[10px] uppercase tracking-[0.22em] text-slate-500">
-                  Range
-                </p>
-                <p className="text-sm leading-relaxed text-slate-100">
-                  Comfortable moving between product narrative, UI decisions, and
-                  implementation details.
-                </p>
-              </div>
-
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div className="app-card-soft">
-                  <p className="mb-1 text-[10px] uppercase tracking-[0.22em] text-slate-500">
-                    Preferred work
-                  </p>
-                  <p className="text-sm font-semibold text-slate-100">
-                    Product engineering
-                  </p>
+            <dl>
+              {specs.map((spec, i) => (
+                <div
+                  key={spec.label}
+                  className={`grid grid-cols-[7.5rem_1fr] gap-4 px-5 py-4 sm:grid-cols-[9rem_1fr] ${
+                    i !== specs.length - 1 ? "border-b border-rule" : ""
+                  }`}
+                >
+                  <dt className="mono-label pt-0.5">{spec.label}</dt>
+                  <dd className="text-[0.95rem] leading-relaxed text-ink">
+                    {spec.value}
+                  </dd>
                 </div>
-                <div className="app-card-soft">
-                  <p className="mb-1 text-[10px] uppercase tracking-[0.22em] text-slate-500">
-                    Location
-                  </p>
-                  <p className="text-sm font-semibold text-slate-100">
-                    {siteConfig.location}
-                  </p>
-                </div>
-              </div>
-
-              <div className="rounded-3xl border border-cyan-300/20 bg-cyan-300/8 p-5">
-                <p className="mb-2 text-[10px] uppercase tracking-[0.22em] text-cyan-200/80">
-                  Cockpit mode
-                </p>
-                <p className="text-sm leading-relaxed text-slate-100">
-                  An immersive route that turns the portfolio into mission
-                  briefings and recovered drive dossiers.
-                </p>
-                <p className="mt-2 text-xs leading-relaxed text-slate-400/80">
-                  Still evolving, especially as the touch layout and mission UI
-                  keep getting refined.
-                </p>
-                <ul className="mt-4 space-y-2 text-xs leading-relaxed text-slate-300/80">
-                  {siteConfig.cockpit.requirements.map((item) => (
-                    <li key={item} className="flex gap-2">
-                      <span className="text-cyan-200">•</span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+              ))}
+            </dl>
           </motion.aside>
-        </motion.div>
+        </div>
+
+        {/* Stat strip */}
+        <div className="mt-12 grid gap-px overflow-hidden border-y border-rule sm:grid-cols-3">
+          {stats.map((stat, index) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.22 + index * 0.08 }}
+              className="relative py-6 sm:px-6 sm:[&:not(:first-child)]:border-l sm:[&:not(:first-child)]:border-rule"
+            >
+              <div className="mb-2 flex items-baseline gap-2">
+                <span className="num-index text-lg">{stat.index}</span>
+                <span className="mono-label">{stat.label}</span>
+              </div>
+              <p className="font-display text-xl text-ink">{stat.value}</p>
+              <p className="mt-1 text-sm leading-relaxed text-faint">
+                {stat.detail}
+              </p>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );

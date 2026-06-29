@@ -1,116 +1,63 @@
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+    /* ──────────────────────────────────────────────────────────────────────
+       Editorial "paper & ink" system.
+       Light = warm paper; Dark = warm near-black. One terracotta accent.
+       Color is driven by semantic CSS variables so both themes stay in sync.
+       ────────────────────────────────────────────────────────────────────── */
     :root {
-        --bg-top: #f7f8fc;
-        --bg-bottom: #eef1f8;
-        --depth-glow:
-            radial-gradient(
-                ellipse 55% 32% at 78% 104%,
-                rgba(245, 158, 11, 0.03),
-                transparent 62%
-            ),
-            radial-gradient(
-                ellipse 115% 52% at 50% -6%,
-                rgba(99, 102, 241, 0.05),
-                transparent 64%
-            );
-        --grain-opacity: 0.022;
-        --text-primary: #081120;
-        --text-secondary: #223044;
-        --text-muted: #5f6f84;
-        --surface-soft: rgba(255, 255, 255, 0.78);
-        --surface-strong: rgba(255, 255, 255, 0.9);
-        --surface-card: rgba(255, 255, 255, 0.74);
-        --surface-card-muted: rgba(255, 255, 255, 0.58);
-        --panel-bg: linear-gradient(
-            180deg,
-            rgba(255, 255, 255, 0.92),
-            rgba(255, 255, 255, 0.72)
-        );
-        --panel-border: rgba(148, 163, 184, 0.22);
-        --panel-shadow:
-            0 28px 80px -42px rgba(59, 130, 246, 0.18),
-            0 22px 58px -40px rgba(244, 114, 182, 0.16);
-        --shadow-soft:
-            0 20px 44px -34px rgba(15, 23, 42, 0.14),
-            0 18px 34px -34px rgba(59, 130, 246, 0.1);
-        --chip-bg: rgba(255, 255, 255, 0.72);
-        --chip-border: rgba(148, 163, 184, 0.24);
-        --chip-text: #1f2937;
-        --chip-accent-bg: rgba(251, 191, 36, 0.16);
-        --chip-accent-border: rgba(245, 158, 11, 0.26);
-        --chip-accent-text: #92400e;
-        --chip-cyan-bg: rgba(34, 211, 238, 0.14);
-        --chip-cyan-border: rgba(8, 145, 178, 0.22);
-        --chip-cyan-text: #0f766e;
-        --action-primary-bg: #0f172a;
-        --action-primary-border: rgba(15, 23, 42, 0.18);
-        --action-primary-text: #f8fafc;
-        --action-primary-shadow:
-            0 18px 34px -26px rgba(15, 23, 42, 0.32),
-            0 10px 24px -20px rgba(8, 145, 178, 0.18);
-        --ghost-bg: rgba(34, 211, 238, 0.1);
-        --ghost-border: rgba(34, 211, 238, 0.22);
-        --ghost-text: #0f172a;
+        --paper: #f0eadd;
+        --paper-2: #e7e0d0;
+        --surface: #f7f2e8;
+        --surface-2: #fbf8f0;
+        --ink: #1b1613;
+        --ink-2: #463f37;
+        --muted: #837a6c;
+        --faint: #a89e8d;
+        --rule: rgba(27, 22, 19, 0.16);
+        --rule-strong: rgba(27, 22, 19, 0.34);
+        --accent: #b5451f;
+        --accent-strong: #8f3417;
+        --accent-text: #8f3417;
+        --accent-soft: rgba(181, 69, 31, 0.1);
+        --accent-line: rgba(181, 69, 31, 0.45);
+        --grain-opacity: 0.03;
+        --shadow-card: 0 1px 0 rgba(27, 22, 19, 0.04);
+
+        /* legacy aliases kept so any untouched markup stays coherent */
+        --text-primary: var(--ink);
+        --text-secondary: var(--ink-2);
+        --text-muted: var(--muted);
+        --panel-border: var(--rule);
+        --surface-soft: var(--surface);
+        --surface-strong: var(--surface-2);
+        --panel-shadow: var(--shadow-card);
+        --shadow-soft: var(--shadow-card);
     }
 
     html.dark {
-        --bg-top: #030912;
-        --bg-bottom: #030710;
-        --depth-glow:
-            radial-gradient(
-                ellipse 62% 38% at 82% 108%,
-                rgba(245, 158, 11, 0.042),
-                transparent 66%
-            ),
-            radial-gradient(
-                ellipse 136% 68% at 48% -12%,
-                rgba(79, 70, 229, 0.10),
-                transparent 70%
-            );
-        --grain-opacity: 0.036;
-        --text-primary: #f8fafc;
-        --text-secondary: rgba(226, 232, 240, 0.92);
-        --text-muted: rgba(148, 163, 184, 0.82);
-        --surface-soft: rgba(10, 15, 29, 0.72);
-        --surface-strong: rgba(10, 15, 29, 0.88);
-        --surface-card: rgba(12, 18, 34, 0.78);
-        --surface-card-muted: rgba(255, 255, 255, 0.05);
-        --panel-bg: linear-gradient(
-            180deg,
-            rgba(12, 18, 34, 0.84),
-            rgba(5, 9, 20, 0.78)
-        );
-        --panel-border: rgba(148, 163, 184, 0.18);
-        --panel-shadow:
-            0 30px 90px -42px rgba(6, 182, 212, 0.22),
-            0 22px 64px -40px rgba(168, 85, 247, 0.24);
-        --shadow-soft:
-            0 18px 44px -34px rgba(2, 6, 23, 0.54),
-            0 14px 28px -28px rgba(6, 182, 212, 0.16);
-        --chip-bg: rgba(255, 255, 255, 0.06);
-        --chip-border: rgba(255, 255, 255, 0.12);
-        --chip-text: rgba(226, 232, 240, 0.9);
-        --chip-accent-bg: rgba(251, 191, 36, 0.14);
-        --chip-accent-border: rgba(251, 191, 36, 0.28);
-        --chip-accent-text: #fef3c7;
-        --chip-cyan-bg: rgba(34, 211, 238, 0.14);
-        --chip-cyan-border: rgba(34, 211, 238, 0.28);
-        --chip-cyan-text: #cffafe;
-        --action-primary-bg: #155e75;
-        --action-primary-border: rgba(34, 211, 238, 0.26);
-        --action-primary-text: #ecfeff;
-        --action-primary-shadow:
-            0 20px 40px -28px rgba(6, 182, 212, 0.28),
-            0 14px 30px -24px rgba(8, 145, 178, 0.2);
-        --ghost-bg: rgba(34, 211, 238, 0.12);
-        --ghost-border: rgba(34, 211, 238, 0.28);
-        --ghost-text: #cffafe;
+        --paper: #15110c;
+        --paper-2: #110d09;
+        --surface: #1c1711;
+        --surface-2: #221c15;
+        --ink: #f4eee2;
+        --ink-2: #cabfae;
+        --muted: #8d8273;
+        --faint: #6f6557;
+        --rule: rgba(244, 238, 226, 0.16);
+        --rule-strong: rgba(244, 238, 226, 0.32);
+        --accent: #e07a47;
+        --accent-strong: #ef9469;
+        --accent-text: #ef9469;
+        --accent-soft: rgba(224, 122, 71, 0.12);
+        --accent-line: rgba(224, 122, 71, 0.5);
+        --grain-opacity: 0.04;
+        --shadow-card: 0 1px 0 rgba(0, 0, 0, 0.2);
     }
 
     html {
@@ -121,41 +68,40 @@
         position: relative;
         min-height: 100vh;
         isolation: isolate;
-        color: var(--text-primary);
+        color: var(--ink);
         font-family:
-            "Space Grotesk",
+            "Inter",
             system-ui,
             -apple-system,
             BlinkMacSystemFont,
             "Segoe UI",
             sans-serif;
-        background: linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
+        font-feature-settings: "cv05" 1, "ss01" 1;
+        background: var(--paper);
         overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
         transition:
             background 220ms ease,
             color 220ms ease;
     }
 
-    body::before,
+    /* Warm paper grain — a print texture, not a digital glow. */
     body::after {
         content: "";
         position: fixed;
         inset: 0;
-        pointer-events: none;
-    }
-
-    body::before {
-        z-index: -2;
-        background: var(--depth-glow);
-    }
-
-    body::after {
         z-index: -1;
-        /* SVG fractal noise grain — the premium texture detail */
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.88' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-        background-size: 200px 200px;
+        pointer-events: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        background-size: 180px 180px;
         background-repeat: repeat;
         opacity: var(--grain-opacity);
+    }
+
+    h1, h2, h3, h4 {
+        font-family: "Fraunces", Georgia, "Times New Roman", serif;
+        font-weight: 500;
     }
 
     a,
@@ -164,117 +110,199 @@
     }
 
     ::selection {
-        background: rgba(251, 191, 36, 0.32);
-        color: #0f172a;
+        background: var(--accent);
+        color: #fff;
     }
 }
 
 @layer components {
     .section-container {
-        @apply relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8;
+        @apply relative mx-auto w-full max-w-6xl px-5 py-20 sm:px-8 sm:py-24 lg:py-28;
+    }
+
+    /* Editorial section header — left aligned, mono kicker, serif title. */
+    .section-kicker,
+    .section-eyebrow {
+        @apply mb-5 inline-flex items-center gap-3 font-mono text-[11px] font-medium uppercase tracking-[0.28em];
+        color: var(--muted);
+        background: none;
+        -webkit-background-clip: border-box;
+    }
+
+    .section-kicker::before,
+    .section-eyebrow::before {
+        content: "";
+        display: inline-block;
+        width: 30px;
+        height: 1px;
+        background: var(--accent);
     }
 
     .section-title {
-        @apply mb-4 text-center text-3xl font-bold tracking-tight sm:text-4xl;
-        color: var(--text-primary);
-    }
-
-    .section-eyebrow {
-        @apply mb-3 text-center text-xs font-semibold uppercase tracking-[0.24em];
-        background: linear-gradient(90deg, #f59e0b, #22d3ee, #818cf8);
-        -webkit-background-clip: text;
-        color: transparent;
+        @apply font-display text-[2rem] font-medium leading-[1.04] tracking-[-0.01em] sm:text-[2.75rem];
+        color: var(--ink);
     }
 
     .section-copy {
-        @apply mx-auto max-w-3xl text-center text-sm leading-relaxed sm:text-base;
-        color: var(--text-muted);
+        @apply mt-4 max-w-2xl text-base leading-relaxed sm:text-[1.0625rem];
+        color: var(--ink-2);
     }
 
+    /* Surfaces — bordered, flat, print-like. No glass, no glow. */
+    .panel,
     .app-panel {
-        @apply overflow-hidden rounded-[28px] border backdrop-blur-xl;
-        background: var(--panel-bg);
-        border-color: var(--panel-border);
-        box-shadow: var(--panel-shadow);
+        @apply overflow-hidden border;
+        border-radius: 6px;
+        background: var(--surface);
+        border-color: var(--rule);
+        box-shadow: var(--shadow-card);
     }
 
     .app-card {
-        @apply rounded-2xl border p-5 backdrop-blur-sm;
-        background: var(--surface-card);
-        border-color: var(--panel-border);
-        box-shadow: var(--shadow-soft);
+        @apply border p-5;
+        border-radius: 4px;
+        background: var(--surface-2);
+        border-color: var(--rule);
     }
 
     .app-card-soft {
-        @apply rounded-2xl border p-4;
-        background: var(--surface-card-muted);
-        border-color: var(--panel-border);
+        @apply border p-4;
+        border-radius: 4px;
+        background: transparent;
+        border-color: var(--rule);
     }
 
+    /* Tags — mono, hairline, no fill. */
+    .tag,
     .app-chip,
     .app-chip-accent,
     .app-chip-cyan {
-        @apply inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em];
-        background: var(--chip-bg);
-        border-color: var(--chip-border);
-        color: var(--chip-text);
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        @apply inline-flex items-center gap-2 border px-2.5 py-1 font-mono text-[10.5px] font-medium uppercase tracking-[0.16em];
+        border-radius: 3px;
+        background: transparent;
+        border-color: var(--rule);
+        color: var(--muted);
     }
 
-    .app-chip-accent {
-        background: var(--chip-accent-bg);
-        border-color: var(--chip-accent-border);
-        color: var(--chip-accent-text);
-    }
-
+    .tag-accent,
+    .app-chip-accent,
     .app-chip-cyan {
-        background: var(--chip-cyan-bg);
-        border-color: var(--chip-cyan-border);
-        color: var(--chip-cyan-text);
+        border-color: var(--accent-line);
+        color: var(--accent-text);
     }
 
+    /* Semantic colour + surface helpers (theme-aware via vars). */
+    .text-ink,
     .text-app-primary {
-        color: var(--text-primary);
+        color: var(--ink);
     }
-
+    .text-soft,
     .text-app-secondary {
-        color: var(--text-secondary);
+        color: var(--ink-2);
     }
-
+    .text-faint,
     .text-app-muted {
-        color: var(--text-muted);
+        color: var(--muted);
+    }
+    .text-accent {
+        color: var(--accent-text);
+    }
+    .bg-surface {
+        background: var(--surface);
+    }
+    .bg-surface-2 {
+        background: var(--surface-2);
+    }
+    .border-rule {
+        border-color: var(--rule);
+    }
+    .border-rule-strong {
+        border-color: var(--rule-strong);
     }
 
+    .mono-label {
+        @apply font-mono text-[10.5px] font-medium uppercase tracking-[0.22em];
+        color: var(--muted);
+    }
+
+    .num-index {
+        @apply font-display leading-none;
+        color: var(--accent-text);
+    }
+
+    /* Buttons — rectangular, restrained, one accent on hover. */
     .btn-primary {
-        @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-transparent px-5 py-2 text-sm font-semibold transition-all duration-200 sm:px-6 sm:text-base;
-        color: var(--action-primary-text);
-        background: var(--action-primary-bg);
-        border-color: var(--action-primary-border);
-        box-shadow: var(--action-primary-shadow);
+        @apply inline-flex min-h-11 items-center justify-center gap-2 border px-5 py-2.5 text-[13px] font-medium transition-colors duration-200;
+        border-radius: 4px;
+        color: var(--paper);
+        background: var(--ink);
+        border-color: var(--ink);
+    }
+    .btn-primary:hover {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
     }
 
     .btn-secondary {
-        @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full border px-5 py-2 text-sm font-semibold transition-all duration-200 sm:px-6 sm:text-base;
-        background: var(--surface-strong);
-        border-color: var(--panel-border);
-        color: var(--text-primary);
-        box-shadow: var(--shadow-soft);
+        @apply inline-flex min-h-11 items-center justify-center gap-2 border px-5 py-2.5 text-[13px] font-medium transition-colors duration-200;
+        border-radius: 4px;
+        background: transparent;
+        border-color: var(--rule-strong);
+        color: var(--ink);
+    }
+    .btn-secondary:hover {
+        border-color: var(--accent);
+        color: var(--accent-text);
     }
 
     .btn-ghost {
-        @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full border px-5 py-2 text-sm font-semibold transition-all duration-200 sm:px-6 sm:text-base;
-        background: var(--ghost-bg);
-        border-color: var(--ghost-border);
-        color: var(--ghost-text);
-        box-shadow: var(--shadow-soft);
+        @apply inline-flex min-h-11 items-center justify-center gap-2 border border-transparent px-4 py-2.5 text-[13px] font-medium transition-colors duration-200;
+        border-radius: 4px;
+        background: transparent;
+        color: var(--ink-2);
+    }
+    .btn-ghost:hover {
+        color: var(--accent-text);
+    }
+
+    .link-arrow {
+        @apply inline-flex items-center gap-2 text-[13px] font-medium transition-colors;
+        color: var(--accent-text);
+    }
+    .link-arrow:hover {
+        color: var(--accent);
+    }
+
+    .nav-underline {
+        position: relative;
+    }
+    .nav-underline::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -4px;
+        width: 100%;
+        height: 1px;
+        background: var(--accent);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 220ms ease;
+    }
+    a:hover .nav-underline::after {
+        transform: scaleX(1);
     }
 
     .icon-link {
-        @apply inline-flex h-11 w-11 items-center justify-center rounded-full border transition-all duration-200 hover:-translate-y-0.5;
-        background: var(--surface-strong);
-        border-color: var(--panel-border);
-        color: var(--text-primary);
-        box-shadow: var(--shadow-soft);
+        @apply inline-flex h-11 w-11 items-center justify-center border transition-colors duration-200;
+        border-radius: 4px;
+        background: transparent;
+        border-color: var(--rule-strong);
+        color: var(--ink);
+    }
+    .icon-link:hover {
+        border-color: var(--accent);
+        color: var(--accent-text);
     }
 
     .cockpit-banner {
@@ -337,155 +365,16 @@
     }
 
     .card {
-        @apply rounded-2xl border p-6 backdrop-blur-sm transition-all duration-300;
-        background: var(--surface-card);
-        border-color: var(--panel-border);
-        box-shadow: var(--shadow-soft);
+        @apply border p-6 transition-colors duration-200;
+        border-radius: 4px;
+        background: var(--surface-2);
+        border-color: var(--rule);
+    }
+    .card:hover {
+        border-color: var(--accent-line);
     }
 }
 
-@layer base {
-    /* ── Borders ──────────────────────────────────────────────────────────── */
-    html:not(.dark) .border-white\/10,
-    html:not(.dark) .border-white\/12,
-    html:not(.dark) .border-white\/15,
-    html:not(.dark) .border-white\/20 {
-        border-color: rgba(148, 163, 184, 0.22) !important;
-    }
-
-    html:not(.dark) .border-amber-300\/20,
-    html:not(.dark) .border-amber-300\/30,
-    html:not(.dark) .border-amber-300\/35,
-    html:not(.dark) .border-amber-300\/40,
-    html:not(.dark) .border-amber-200\/30,
-    html:not(.dark) .border-amber-200\/40 {
-        border-color: rgba(245, 158, 11, 0.22) !important;
-    }
-
-    html:not(.dark) .border-cyan-300\/20,
-    html:not(.dark) .border-cyan-300\/25,
-    html:not(.dark) .border-cyan-300\/30,
-    html:not(.dark) .border-cyan-300\/35,
-    html:not(.dark) .border-cyan-500\/20 {
-        border-color: rgba(8, 145, 178, 0.2) !important;
-    }
-
-    html:not(.dark) .border-emerald-300\/20,
-    html:not(.dark) .border-emerald-300\/25,
-    html:not(.dark) .border-emerald-300\/30,
-    html:not(.dark) .border-emerald-300\/35 {
-        border-color: rgba(16, 185, 129, 0.2) !important;
-    }
-
-    /* ── Slate backgrounds ────────────────────────────────────────────────── */
-    /* Solid bg-slate-950 (e.g. experience timeline dot) → light surface */
-    html:not(.dark) .bg-slate-950 {
-        background: var(--surface-strong) !important;
-    }
-
-    html:not(.dark) .bg-slate-950\/55,
-    html:not(.dark) .bg-slate-950\/75,
-    html:not(.dark) .bg-slate-950\/80,
-    html:not(.dark) .bg-slate-900\/70 {
-        background: rgba(255, 255, 255, 0.82) !important;
-        box-shadow: var(--shadow-soft);
-    }
-
-    /* ── White/transparent backgrounds ───────────────────────────────────── */
-    html:not(.dark) .bg-white\/\[0\.03\],
-    html:not(.dark) .bg-white\/\[0\.04\],
-    html:not(.dark) .bg-white\/\[0\.06\],
-    html:not(.dark) .bg-white\/5,
-    html:not(.dark) .bg-white\/10 {
-        background: rgba(255, 255, 255, 0.68) !important;
-    }
-
-    /* ── Amber accent backgrounds ─────────────────────────────────────────── */
-    html:not(.dark) .bg-amber-200\/15,
-    html:not(.dark) .bg-amber-200\/20,
-    html:not(.dark) .bg-amber-300\/8,
-    html:not(.dark) .bg-amber-300\/10,
-    html:not(.dark) .bg-amber-300\/12 {
-        background: rgba(251, 191, 36, 0.1) !important;
-    }
-
-    /* ── Cyan accent backgrounds ──────────────────────────────────────────── */
-    html:not(.dark) .bg-cyan-300\/8,
-    html:not(.dark) .bg-cyan-300\/10,
-    html:not(.dark) .bg-cyan-300\/12 {
-        background: rgba(34, 211, 238, 0.08) !important;
-    }
-
-    /* ── Emerald accent backgrounds ───────────────────────────────────────── */
-    html:not(.dark) .bg-emerald-300\/8,
-    html:not(.dark) .bg-emerald-300\/10,
-    html:not(.dark) .bg-emerald-300\/12 {
-        background: rgba(52, 211, 153, 0.08) !important;
-    }
-
-    /* ── Text: slate primary/body ─────────────────────────────────────────── */
-    html:not(.dark) .text-slate-50,
-    html:not(.dark) .text-slate-100 {
-        color: var(--text-primary) !important;
-    }
-
-    html:not(.dark) .text-slate-200\/90,
-    html:not(.dark) .text-slate-200\/85,
-    html:not(.dark) .text-slate-300,
-    html:not(.dark) .text-slate-300\/80,
-    html:not(.dark) .text-slate-300\/78,
-    html:not(.dark) .text-slate-300\/75,
-    html:not(.dark) .text-slate-300\/70,
-    html:not(.dark) .text-slate-400 {
-        color: var(--text-secondary) !important;
-    }
-
-    html:not(.dark) .text-slate-400\/80,
-    html:not(.dark) .text-slate-400\/70,
-    html:not(.dark) .text-slate-500 {
-        color: var(--text-muted) !important;
-    }
-
-    /* Very low-opacity slate text — keep it muted but legible */
-    html:not(.dark) .text-slate-400\/45 {
-        color: rgba(100, 116, 139, 0.55) !important;
-    }
-
-    /* ── Text: amber accent ───────────────────────────────────────────────── */
-    html:not(.dark) .text-amber-100,
-    html:not(.dark) .text-amber-200,
-    html:not(.dark) .text-amber-300,
-    html:not(.dark) .text-amber-200\/80,
-    html:not(.dark) .text-amber-200\/75,
-    html:not(.dark) .text-amber-200\/70 {
-        color: #b45309 !important;
-    }
-
-    /* Hover states for amber — slightly darker so hover feels distinct */
-    html:not(.dark) .hover\:text-amber-200:hover,
-    html:not(.dark) .hover\:text-amber-100:hover {
-        color: #92400e !important;
-    }
-
-    /* ── Text: cyan accent ────────────────────────────────────────────────── */
-    html:not(.dark) .text-cyan-100,
-    html:not(.dark) .text-cyan-200,
-    html:not(.dark) .text-cyan-200\/80,
-    html:not(.dark) .text-cyan-300 {
-        color: #0f766e !important;
-    }
-
-    /* ── Text: emerald accent ─────────────────────────────────────────────── */
-    html:not(.dark) .text-emerald-200,
-    html:not(.dark) .text-emerald-300 {
-        color: #047857 !important;
-    }
-
-    /* ── Hover states: white text → invisible on white background ─────────── */
-    html:not(.dark) .hover\:text-white:hover {
-        color: var(--text-primary) !important;
-    }
-}
 
 /* ── Project hologram animations ──────────────────────────────────────────────
    These run entirely on the browser compositor thread — no WebGL context,

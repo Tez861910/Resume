@@ -8,6 +8,9 @@ export const siteConfig = {
   linkedin: "https://www.linkedin.com/in/tejas-s-57138816a/",
   resumePagePath: "/resume",
   cockpit: {
+    // Temporarily disabled while the 3D cockpit experience is being fixed.
+    // Set back to true to re-expose all cockpit entry points across the site.
+    enabled: false,
     route: "/cockpit",
     badge: "Detailed immersive route",
     title: "Cockpit dossier",
