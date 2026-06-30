@@ -28,7 +28,7 @@ const stats = [
   {
     index: "02",
     label: "Platforms",
-    value: "Web · Desktop · Cross-platform",
+    value: "Mobile · Web · Desktop · Cross-platform",
     detail: "React, Next.js, .NET, Flutter, and Rust.",
   },
   {
@@ -73,7 +73,7 @@ export default function Hero() {
         >
           <p className="section-kicker">{siteConfig.role}</p>
           <h1 className="max-w-5xl font-display text-[2.6rem] font-medium leading-[1.02] tracking-[-0.015em] text-ink sm:text-6xl lg:text-[4.6rem]">
-            I build product software across web, desktop &amp; cross-platform —{" "}
+            I build product software for mobile, web, and desktop apps, plus cross-platform products —{" "}
             <span className="italic text-soft">
               clear, fast, and ready for real workflows.
             </span>

@@ -6,7 +6,7 @@
 
 ## Summary
 
-I build product software across web, desktop, and cross-platform applications with a bias toward clarity, maintainability, and real operational usefulness. The common thread in my recent work is not a single framework but a type of problem: software that has to carry actual workflow load, whether that means multi-role dashboards, content-heavy company platforms, internal manufacturing tools, or local-first utility suites. I am most useful in product engineering roles where interface decisions, content structure, and implementation details need to reinforce one another.
+I build product software for mobile, web, and desktop apps, plus cross-platform applications with a bias toward clarity, maintainability, and real operational usefulness. The common thread in my recent work is not a single framework but a type of problem: software that has to carry actual workflow load, whether that means multi-role dashboards, content-heavy company platforms, internal manufacturing tools, or local-first utility suites. I am most useful in product engineering roles where interface decisions, content structure, and implementation details need to reinforce one another.
 
 ## Product Focus
 
