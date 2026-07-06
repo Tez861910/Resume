@@ -90,7 +90,7 @@ export default function ProjectDetail() {
                   rel="noopener noreferrer"
                   className="btn-primary"
                 >
-                  <FaExternalLinkAlt className="text-[11px]" /> Live site
+                  <FaExternalLinkAlt className="text-[11px]" /> {project.liveLabel ?? "Live site"}
                 </a>
               )}
             </div>

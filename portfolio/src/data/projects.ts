@@ -23,6 +23,7 @@ export interface Project {
   media: ProjectMedia[]
   github?: string
   live?: string
+  liveLabel?: string
   status?: string
 }
 
@@ -64,6 +65,8 @@ const projects: Project[] = [
     tech: ['Flutter', 'Dart', 'Rust', 'Flutter Rust Bridge', 'SQLite', 'FFmpeg'],
     skills: ['Local-First Product Design', 'Cross-Platform Development', 'Rust Integration', 'Privacy-Focused Architecture', 'Native Performance', 'Release Engineering'],
     media: [],
+    live: 'https://apps.microsoft.com/detail/9n5pvgmpv9wk?ocid=webpdpshare',
+    liveLabel: 'Microsoft Store',
     status: 'Shipped',
   },
   {

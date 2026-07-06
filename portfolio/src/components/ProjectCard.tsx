@@ -100,7 +100,7 @@ export default function ProjectCard({ project, index, inView }: ProjectCardProps
                 target="_blank"
                 rel="noopener noreferrer"
                 className="icon-link h-9 w-9"
-                aria-label={`${project.title} live site`}
+                aria-label={`${project.title} ${project.liveLabel ?? "live link"}`}
               >
                 <FaGlobe className="text-sm" />
               </a>
