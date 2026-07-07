@@ -22,13 +22,16 @@ I build product software for mobile, web, and desktop apps, plus cross-platform 
 - Prefer maintainable systems with clear extension paths over one-off hero implementations
 - Stay comfortable moving between product framing, implementation detail, and final presentation quality
 
-## Core Stack
+## Core Skills
 
-- **Frontend:** React, Next.js, TypeScript, Vite, Tailwind CSS, Framer Motion, routed SPA and app-router delivery
-- **Backend:** Node.js, Express, Prisma, REST APIs, validation, uploads, security middleware, operational scripts
-- **Desktop:** .NET 8, C#, WinUI 3, Win2D, AssimpNet, document and screenshot workflows
-- **Cross-platform:** Flutter, Dart, Rust, Flutter Rust Bridge, local-first architecture, multi-platform packaging
-- **Data & tooling:** PostgreSQL, MySQL, SQLite, Git, GitHub Actions, production-oriented repository structure
+- **Full-stack web development (primary):** React, Node.js, Express, MySQL, PostgreSQL
+
+## Additional Skills
+
+- **Web dependencies:** Next.js, TypeScript, JavaScript, Vite, Tailwind CSS, Framer Motion, Material UI, React Router, TanStack Router, Prisma, Sequelize, REST APIs, auth, validation, uploads
+- **Desktop development:** .NET 8, C#, WinUI 3, Win2D, AssimpNet, MVVM, iText 7, screenshot and document workflows
+- **Cross-platform and local-first:** Flutter, Dart, Rust, Flutter Rust Bridge, FFI, on-device processing, encrypted storage, FFmpeg, multi-platform release
+- **Data and delivery tooling:** SQLite, Git, Docker, GitHub Actions, CI/CD pipelines, build and release workflow support
 
 ## Experience
 
@@ -124,7 +127,7 @@ I build product software for mobile, web, and desktop apps, plus cross-platform 
 ## Education
 
 **Bachelor of Computer Applications (BCA) — Computer Science**  
-Bengaluru North University · Aug 2018 – Aug 2024
+Bengaluru North University · Aug 2018 – Aug 2024 *(6 years: extended due to COVID-related semester delays and a 1-year gap)*
 
 - Built a foundation in DBMS, web development, data structures, and algorithms.
 - Completed a final-year project centred on full-stack web application development with MySQL.
