@@ -25,7 +25,7 @@ import { siteConfig } from "./config/site";
 const CockpitGame = lazy(() => import("./pages/CockpitGame"));
 
 function ScrollToHash() {
-  const { hash } = useLocation();
+  const { hash, pathname } = useLocation();
 
   useEffect(() => {
     if (hash) {
@@ -36,7 +36,7 @@ function ScrollToHash() {
     } else {
       window.scrollTo(0, 0);
     }
-  }, [hash]);
+  }, [hash, pathname]);
 
   return null;
 }
