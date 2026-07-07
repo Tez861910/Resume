@@ -398,7 +398,7 @@ export const DRIVE_READOUTS: Record<MissionId, DriveReadout> = {
       "Built and evolved MIND (.NET 8 Windows app) for 3D model inspection, manufacturing guidance, and report generation.",
       "Delivered React and Node-based systems with upload-heavy flows, protected operations, and maintainable structure.",
       "Volunteer Full-Stack Developer at Old Dominion University (Norfolk, VA, Oct 2023 - Jan 2024). Built a university threads platform with role-based access, discussion flows, and real-time messaging.",
-      "Bachelor of Computer Applications at Bengaluru North University (Bengaluru, Aug 2018 - Aug 2024). Foundation in DBMS, web development, DSA. Final-year full-stack project with MySQL.",
+      "Bachelor of Computer Applications at Bengaluru North University (Bengaluru, Aug 2018 - Aug 2024). 6 years extended due to COVID-related semester delays and a 1-year gap. Foundation in DBMS, web development, DSA. Final-year full-stack project with MySQL.",
     ],
   },
   "mission-ops": {

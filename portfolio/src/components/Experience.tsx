@@ -47,6 +47,7 @@ const experiences: ExperienceEntry[] = [
     kind: "Education",
     focus: "Core training",
     achievements: [
+      "6 years: extended due to COVID-related semester delays and a 1-year gap.",
       "Built a strong foundation in DBMS, web development, data structures, and algorithms.",
       "Completed a final-year project centered on full-stack web application development with MySQL.",
     ],

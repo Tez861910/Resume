@@ -27,7 +27,7 @@ const MILESTONES = [
   {
     label: "BCA — Computer Science",
     company: "Bengaluru North University",
-    period: "2018 – 2024",
+    period: "2018 – 2024 (6 years: COVID delays + 1-year gap)",
     t: 0.25,
     pos: new THREE.Vector3(-2, 0.5, -6),
     color: PALETTE.EMERALD,
